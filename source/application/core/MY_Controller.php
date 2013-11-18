@@ -23,9 +23,10 @@ class Lis_Controller extends CI_Controller {
     // Reads configuration data (from ini file) for group or admin account
     protected function loadProperties($conf_location) {
 	    $propertiesFile = CIPATH.$conf_location;
-	    $properties = parse_ini_file($propertiesFile,false,INI_SCANNER_RAW);
+	    $properties = parse_ini_file($propertiesFile,false,INI_SCANNER_RAW); // INI_SCANNER_RAW is used in order not
+										// to convert 'true' and 'false' values to 1 and o
 
-	    return $properties;
+	    return $properties;		    
     }
     
 }
@@ -49,6 +50,26 @@ class Admin_Controller extends Lis_Controller {
 	    $this->properties['home.directory'] = CIPATH."/admin/";
 	}
 	
+	// Returns an array which contains one data record for each administrator
+	protected function loadUsers() {
+	    
+	    $users = array();
+	
+	    $userdata = array(
+		'userid'    =>	'johnsmith', 
+		'password'  =>	'john$^&100', 
+		'role'	    =>	'admin', 
+		'name'	    =>	'John Smith',
+		'email'	    =>	'john@mylis.net', 
+		'status'    =>	'present', 
+		'info'	    =>	'Administrator'
+	    );
+	    
+	    $this->load->library('user',$userdata);
+	    $users['johnsmith'] = $this->user;
+	    return $users;
+	}
+	
 	// This function should be called by every admin page or before
 	// any admin action to prevent unauathorized access
 	public function restrict_access(){
@@ -68,19 +89,17 @@ class Admin_Controller extends Lis_Controller {
 
 // Super class for group-related controllers
 class Group_Controller extends Lis_Controller {
-
-	public $groupname = null;
     
 	public function __construct() {
 	    parent::__construct();
 
 	    // Read the group name (wether the user is logged in or this is 
 	    // the login page. If neither is the case then the URL is not
-	    // a legal URL.
+	    // a legal URL)
 	    if ($this->session->userdata('group'))
-		$this->groupname = $this->session->userdata('group');
+		$groupname = $this->session->userdata('group');
 	    elseif (!empty($_GET['group']))
-		$this->groupname = $_GET['group'];
+		$groupname = $_GET['group'];
 	    else {
 		// user is not logged in neither this is a login request (maybe the session 
 		// has been timed out or a visitor tries to access a group's page)
@@ -90,12 +109,12 @@ class Group_Controller extends Lis_Controller {
 	    // set the default time zone
 	    date_default_timezone_set('America/New_York');
 	    // Load some configuration from the ini file
-	    $conf_location = '/accounts/mylis_'.$this->groupname.'/conf/lis.ini';
+	    $conf_location = '/accounts/mylis_'.$groupname.'/conf/lis.ini';
 	    $this->properties = $this->loadProperties($conf_location);
 	    // Add some extra configuration data
 	    $this->properties['version_number'] = "1.31";
 	    $this->properties['version'] = $this->properties['version_number']." 01/30/2012";
-	    $this->properties['home.directory'] = CIPATH."/accounts/mylis_".$this->groupname;
+	    $this->properties['home.directory'] = CIPATH."/accounts/mylis_".$groupname;
 	}	
 	
 	// This function is called by every group page or before any 

@@ -20,26 +20,6 @@ class Login extends Admin_Controller {
 	    }
 	}
 	
-	// Returns an array which contains one data record for each administrator
-	private function loadUsers() {
-	    
-	    $users = array();
-	
-	    $userdata = array(
-		'userid'    =>	'johnsmith', 
-		'password'  =>	'john$^&100', 
-		'role'	    =>	'admin', 
-		'name'	    =>	'John Smith',
-		'email'	    =>	'john@mylis.net', 
-		'status'    =>	'present', 
-		'info'	    =>	'Administrator'
-	    );
-	    
-	    $this->load->library('user',$userdata);
-	    $users['johnsmith'] = $this->user;
-	    return $users;
-	}
-	
 	// Validates the user's credentials
 	private function validateUser($userid, $password) {
 	    

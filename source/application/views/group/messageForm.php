@@ -15,12 +15,12 @@ background-color: rgb(240,240,240);" border="0" cellpadding="2" cellspacing="2">
 if(!empty($messageItem['file_id'])) {
     $file_id = $messageItem['file_id'];
     $delete_link = base_url()."group/messages/deleteMessageFile/".$file_id;
-    $output .= "[ <a href=\"$delete_link\">delete file</a> ]";
+    echo "[ <a href=\"$delete_link\">delete file</a> ]";
 }
 
 if(!empty($message_id)) {
     $add_link = base_url()."/group/main";
-    $output .= " [ <a href=\"$add_link\">new message</a> ]";
+    echo " [ <a href=\"$add_link\">new message</a> ]";
 }
 
 echo '</small></td></tr>';

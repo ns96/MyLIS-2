@@ -19,7 +19,7 @@ if(!empty($edit_link)) {
 }
 
 if(!empty($delete_link)) {
-    $delete_link = $base."messages/delete/".$message_id;
+    echo "[ <a href=\"$delete_link\" target=\"_parent\">delete</a> ]";
 }
 
 echo '</small></td></tr>';

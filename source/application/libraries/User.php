@@ -1,11 +1,5 @@
 <?php
-/**
-User objects for the mylis system
-Copyright (c) 2007 Nathan Stevens
 
-@author Nathan Stevens
-@version 0.1 10-31-07
-*/
 // The user object
 class User {
   var $userid;

@@ -18,7 +18,7 @@
   $folder_link = $base."file_folder";
   $manage_link = $base."manage";
   $backup_link = $base."backup";
-  $profile_link = $base."accounts/profile";
+  $profile_link = $base."accounts/user_profile";
   $group_profile_link = $base."accounts/group_profile";
   $help_link = 'http://docs.google.com/Doc?id=dg5bsrjs_28dqsgkk5m';
   $logout_link = $base."login/logout";

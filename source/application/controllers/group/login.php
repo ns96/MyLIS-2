@@ -2,6 +2,8 @@
 
 class Login extends Group_Controller {
     
+	public $groupname = null;
+	
 	public function __construct(){
 	    parent::__construct();
 	}
@@ -62,7 +64,8 @@ class Login extends Group_Controller {
 		} else { 
 		// If the username or password were empty
 		    if(!empty($logintry)) {
-			$this->load->view('errors/group_login_failed');
+			$data['groupname'] = $this->properties['lis.account'];
+			$this->load->view('errors/group_login_failed',$data);
 		    } else { // the session timed out
 			$this->load->view('errors/session_timeout');
 		    }
@@ -128,7 +131,7 @@ class Login extends Group_Controller {
 
 	    // Load users from the database
 	    $this->load->model('user_model');
-	    $userList = $this->user_model->getGroupUsers($this->groupname);
+	    $userList = $this->user_model->getGroupUsers($this->properties['lis.account']);
 	    
 	    $total = count($userList);
 	    if($total>=1) {

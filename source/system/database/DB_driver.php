@@ -264,7 +264,7 @@ class CI_DB_driver {
 		{
 			$sql = preg_replace("/(\W)".$this->swap_pre."(\S+?)/", "\\1".$this->dbprefix."\\2", $sql);
 		}
-
+		
 		// Compile binds if needed
 		if ($binds !== FALSE)
 		{
@@ -285,7 +285,7 @@ class CI_DB_driver {
 				}
 			}
 		}
-
+		
 		// Save the  query for debugging
 		if ($this->save_queries == TRUE)
 		{
@@ -366,7 +366,7 @@ class CI_DB_driver {
 		{
 			return TRUE;
 		}
-
+		
 		// Load and instantiate the result driver
 
 		$driver			= $this->load_rdriver();

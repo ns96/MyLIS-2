@@ -1,11 +1,4 @@
 <?php
-/**
-A utility Script containing common functions shared by different scripts
-Copyright (c) 2008 Nathan Stevens
-
-@author Nathan Stevens
-@version 1.1 8/22/08
-*/
 
 // checks if a role has the right to view a page-link
 // (not implemented yet)
@@ -148,13 +141,13 @@ function getLISDateTimeFrom($edatetime) {
 
 // function to check to see if a date is in the correct LIS format
 function checkLISDate($date) {
-  $sa  = split('/', $date);
+  $sa  = explode('/', $date);
   return checkdate($sa[0], $sa[1], $sa[2]);
 }
 
 // function to add a number of days to a given date
 function addDaysToDate($date, $days) {
-  $sa  = split('/', $date);
+  $sa  = explode('/', $date);
   $old_date = mktime(0, 0, 0, $sa[0], $sa[1], $sa[2]);
   $new_date = $old_date + $days*86400;
   $array = getdate($new_date);
@@ -163,11 +156,11 @@ function addDaysToDate($date, $days) {
 }
 
 // function to return days remaining from todays date and the date variable
-function getDaysRemaining($date) {
+function getDaysRemaining($date,$timediff) {
   $days = 0;
-  $sa  = split('/', $date);
+  $sa  = explode('/', $date);
   $date_utc = mktime(0, 0, 0, $sa[0], $sa[1], $sa[2]);
-  $now_utc = mktime() + $lis_tz[$properties['lis.timezone']];
+  $now_utc = mktime() + $timediff;
   $diff_seconds = $date_utc - $now_utc;
   $days = floor($diff_seconds/86400);
   return $days;
@@ -200,3 +193,15 @@ function getExpireDate($activate_date, $status, $term) {
 function printColoredLine($color, $size) {
   echo "<div style='border-bottom:$size $color solid; width:100%;'></div>";
 }
+
+// add the http to the  any url
+function checkURL($url) {
+	$new_url = '';
+	if(!stristr($url, 'http')) {
+	    $new_url = 'http://'.$url;
+	}
+	else {
+	    $new_url = $url;
+	}
+	return $new_url;
+    }

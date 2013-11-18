@@ -1,11 +1,4 @@
 <?php
-/**
-Handels the loading of custom code from the account directory
-Copyright (c) 2005-2009 Nathan Stevens
-
-@author Nathan Stevens
-@version 0.1 8-20-08
-*/
 
 class plugin_loader {
   var $properties = null;

@@ -26,6 +26,20 @@ class User_model extends CI_Model {
 	return $user;
     }
     
+    public function getUserPassword($userid){
+	$table = $this->session->userdata('group')."_users";
+	$lisdb = $this->load->database('lisdb',TRUE);
+	$lisdb->where('userid',$userid);
+	$record = $lisdb->get($table)->result_array();
+	
+	if (count($record)>0){	
+	    $password = $record[0]['password'];
+	} else {
+	    $password = null;
+	}
+	return $password;
+    }
+    
     public function getGroupUsers($groupname){
 	$lisdb = $this->load->database('lisdb',TRUE);
 	$table = $groupname.'_users';

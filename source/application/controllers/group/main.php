@@ -16,8 +16,8 @@ class Main extends Group_Controller {
 	// Load a Message_model model
 	$this->load->model('message_model');
 	// Load a Proputil model
-	$this->load->model('proputil');
-	$this->proputil->initialize($params);
+	$this->load->model('proputil_model');
+	$this->proputil_model->initialize($params);
 	// Load a FileManager model
 	$this->load->model('filemanager');
 	$this->filemanager->initialize($params);
@@ -48,8 +48,14 @@ class Main extends Group_Controller {
 	$data['group_name']	    = $this->session->userdata('group');
 	$data['properties']	    = $this->properties;
 	$data['storageQuotaText']   = $this->filemanager->getStorageQuotaText();
-	$data['messageForm']	    = $this->loadMessageForm();
 	$data['menu_image']	    = base_url()."images/".$this->properties['background.image'];
+	// If the user clicked on a message edit link there should be a message id in the URL
+	// and in that case we should load the 'Edit Message' and not the 'Post Message' form
+	if ($this->input->get('message_id'))
+	    $data['messageForm']	    = $this->loadMessageForm($this->input->get('message_id'));
+	else
+	    $data['messageForm']	    = $this->loadMessageForm();
+	
 	if (isset($plugins))
 		$data['plugins'] = $plugins; 
 	$data['ads_html'] = $this->google_ads->displayAds();
@@ -68,7 +74,7 @@ class Main extends Group_Controller {
 	    $activated = $_GET['activated'];
 	$output = '';
 	
-	if($this->proputil->getProperty('show.welcome.'.$userid) != 'no') {
+	if($this->proputil_model->getProperty('show.welcome.'.$userid) != 'no') {
 	    $output .= $this->loadWelcome($status);
 	}
 	if($status == 'trial' || isset($activated)) {
@@ -99,16 +105,15 @@ class Main extends Group_Controller {
 	    $data['title'] = 'Edit Message ('.$message_id.')';
 	    $this->load->model('message_model');
 	    $data['messageItem'] = $this->message_model->getMessage($message_id);
-	    $data['target_url'] = "";
+	    $data['target_url'] = base_url()."group/messages/edit";
 	} else {
 	    $data['title'] = 'Post Message';
-	    $data['target_url'] = "";
+	    $data['target_url'] = base_url()."group/messages/add";
 	    $messageItem['url'] = '';
 	    $messageItem['message'] = '';
 	    $messageItem['file_id'] = '';
 	    $data['messageItem'] = $messageItem;
 	}
-
 	// Return the view as a string
 	$output = $this->load->view('group/messageForm',$data,true);	
 	return $output;
@@ -119,9 +124,9 @@ class Main extends Group_Controller {
 	$data['base'] = base_url()."group/";
 	$role = $this->session->userdata('user')->role;
 	$data['date'] = getLISDate();
-	$data['hide_link'] = base_url()."messages/hide_welcome";
-	$data['sales_link'] = base_url()."accounts/upgrade";
-	$data['manage_link'] = base_url()."manage";
+	$data['hide_link'] = base_url()."group/messages/hide_welcome";
+	$data['sales_link'] = base_url()."group/accounts/upgrade";
+	$data['manage_link'] = base_url()."group/manage";
 	$data['signup_link'] = '../../../signup.html';
 	$data['help_link'] = 'http://docs.google.com/Doc?id=dg5bsrjs_28dqsgkk5m';
 
@@ -165,15 +170,16 @@ class Main extends Group_Controller {
     }
     
     // Checks if the message should be posted
-    function postMessage($post_start, $post_end) {
-	$post = false;
-	$days1 = getDaysRemaining($post_start);
-	$days2 = getDaysRemaining($post_end);
+    function shouldBePosted($post_start, $post_end) {
+	$decision = false;
+	$timediff = $this->lis_tz[$this->properties['lis.timezone']];
+	$days1 = getDaysRemaining($post_start,$timediff);
+	$days2 = getDaysRemaining($post_end,$timediff);
 
 	if($days1 <= 0 && $days2 >= 0) {
-	$post = true;
+	    $decision = true;
 	}
-	return $post;
+	return $decision;
     }
 
     // function to echo html code for a user's message 
@@ -185,6 +191,7 @@ class Main extends Group_Controller {
 	$userid = $messageItem['userid'];
 	$message_id = $messageItem['message_id'];
 	
+	$data['base'] = $base;
 	$data['date'] = $messageItem['date'];
 	$data['message_id'] = $messageItem['message_id'];
 	$data['message'] = $messageItem['message'];
@@ -200,13 +207,13 @@ class Main extends Group_Controller {
 	}
 
 	if($this->userobj->userid == $userid || $this->userobj->role == 'admin') {
-	    $data['edit_link'] = $base."messages/edit/".$message_id;
+	    $data['edit_link'] = $base."main?message_id=".$message_id;
 	}
 
-	if($this->userobj->userid == $userid || $this->userobj->role == 'admin') {
+	if(($this->userobj->userid == $userid) || ($this->userobj->role == 'admin')) {
 	    $data['delete_link'] = $base."messages/delete/".$message_id;
 	}
-	
+
 	$table = $this->load->view('group/userMessageTable',$data,true);
 	return $table;
     }
@@ -247,7 +254,7 @@ class Main extends Group_Controller {
 	
 	if(count($messageList)>0) {
 	    foreach($messageList as $messageItem){
-		if($this->postMessage($messageItem[post_start], $messageItem[post_end])) {
+		if($this->shouldBePosted($messageItem['post_start'], $messageItem['post_end'])) {
 		    $smessages .= $this->loadSystemTable($messageItem);
 		}
 	    }

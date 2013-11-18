@@ -15,8 +15,8 @@ class Main extends Admin_Controller {
 	// Load a Message_model model
 	$this->load->model('message_model');
 	// Load a Proputil model
-	$this->load->model('proputil');
-	$this->proputil->initialize($params);
+	$this->load->model('proputil_model');
+	$this->proputil_model->initialize($params);
 	// Load a FileManager model
 	$this->load->model('filemanager');
 	$this->filemanager->initialize($params);

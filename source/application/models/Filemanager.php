@@ -1,11 +1,4 @@
 <?php
-/** The message helper class
-Displays messages for the users
-Copyright (c) 2008 Nathan Stevens
-
-@author Nathan Stevens
-@version 0.1 6-07-09
-*/
 
 class Filemanager extends CI_Model {
   var $user = null;
@@ -122,7 +115,7 @@ class Filemanager extends CI_Model {
       move_uploaded_file($tmp_name, $new_name) or die ("Couldn't Upload file");
     }
     else if($file_type == 'url') {
-      $url = $this->checkURL($url);
+      $url = checkURL($url);
       
       // add file info to files table now
       $sql = "INSERT INTO $this->table VALUES('', 'url','$description', '$url', '$table_name', '$table_id', '$size', '$userid', '$userid')";
@@ -173,7 +166,7 @@ class Filemanager extends CI_Model {
       move_uploaded_file($tmp_name, $new_name) or die ("Couldn't Upload file");
     }
     else if($file_type == 'url') {
-      $url = $this->checkURL($url);
+      $url = checkURL($url);
       
       // add file info to files table now
       $lisdb = $this->load->database('lisdb',TRUE);
@@ -238,18 +231,6 @@ class Filemanager extends CI_Model {
       $filetype = substr($filename, $sp + 1);
     }
     return $filetype;
-  }
-  
-  // add the http to the  any url
-  function checkURL($url) {
-    $new_url = '';
-    if(!stristr($url, 'http')) {
-      $new_url = 'http://'.$url;
-    }
-    else {
-      $new_url = $url;
-    }
-    return $new_url;
   }
   
   // function to return space usage

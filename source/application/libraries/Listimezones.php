@@ -1,11 +1,4 @@
 <?php
-/**
-Stores the timezone for the MyLIS scripts
-Copyright (c) 2006 Nathan Stevens
-
-@author Nathan Stevens
-@version 0.1 1-22-06
-*/
 
 class Listimezones {
     
