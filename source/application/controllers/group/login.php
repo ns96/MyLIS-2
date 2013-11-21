@@ -26,14 +26,12 @@ class Login extends Group_Controller {
 	// Handles the login requests
 	public function login_request()
 	{
-	    echo "<pre>"; var_dump($_POST);
 	    // if the user is not logged in
 	    if (!$this->session->userdata('userid')) {
 		
 		//get the posted data
 		$userid	    = $this->input->post('userid');
 		$password   = $this->input->post('password');
-		$logintry   = $this->input->post('logintry');
 		
 		// If the username or password were not empty
 		if(!empty($userid) && !empty($password)) {
@@ -64,13 +62,8 @@ class Login extends Group_Controller {
 			}
 		    }
 		} else { 
-		// If the username or password were empty
-		    if(!empty($logintry)) {
-			$data['groupname'] = $this->properties['lis.account'];
-			$this->load_view('errors/group_login_failed',$data);
-		    } else { // the session timed out
-			$this->load_view('errors/session_timeout');
-		    }
+		    $data['groupname'] = $this->properties['lis.account'];
+		    $this->load_view('errors/group_login_failed',$data);
 		}
 	    } else {
 		// If this is an already logged in user
