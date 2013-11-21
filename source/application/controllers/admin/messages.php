@@ -73,7 +73,7 @@ class Messages extends Admin_Controller {
 	    $data['accounts'] = $this->loadUsers();
 	    $data['title'] = 'Message Poster';
 	
-	    $this->load->view('admin/messagePoster',$data);
+	    $this->load_view('admin/messagePoster',$data);
 	}
     }
     
@@ -116,7 +116,7 @@ class Messages extends Admin_Controller {
 	    $data['back_link'] = encodeUrl(base_url()."admin/messages");
 	    $data['messageItem'] = $message;
 	    
-	    $this->load->view('admin/editMessageForm',$data);
+	    $this->load_view('admin/editMessageForm',$data);
 	}
 	
     }

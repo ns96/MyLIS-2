@@ -41,15 +41,15 @@ class Weblinks extends Group_Controller {
 	    $data2['link_id'] = $link_id;
 	    $data2['weblinkItem'] = $this->weblinks_model->getWeblink($link_id);
 	    $data2['target_link'] = base_url()."group/weblinks/update";
-	    $data['addForm'] = $this->load->view('group/weblinkEditForm',$data2,TRUE);
+	    $data['addForm'] = $this->load_view('group/weblinkEditForm',$data2,TRUE);
 	} else { // otherzise, we are adding a new weblink
 	    $data2['title'] = 'Add Weblink';
 	    $data2['target_link'] = base_url()."group/weblinks/add";
-	    $data['addForm'] = $this->load->view('group/weblinkAddForm',$data2,TRUE);
+	    $data['addForm'] = $this->load_view('group/weblinkAddForm',$data2,TRUE);
 	}
 	
 	//
-	$this->load->view('group/displayWeblinkCategories',$data);
+	$this->load_view('group/displayWeblinkCategories',$data);
     }
     
     // Handles the posting of a new weblink
@@ -148,7 +148,7 @@ class Weblinks extends Group_Controller {
 	    $data['role'] = $role;
 	    $data['weblinkList'] = $weblinkList;
 	    $data['category'] = $category;
-	    $output .= $this->load->view('group/categoryWeblinks',$data,TRUE);
+	    $output .= $this->load_view('group/categoryWeblinks',$data,TRUE);
 	}
 	
 	return $output; 

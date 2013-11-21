@@ -2,11 +2,17 @@
 
 class User_model extends CI_Model {
     
+    var $lisdb = null;
+    
+    public function __construct() {
+	parent::__construct();
+	$this->lisdb = $this->load->database('lisdb',TRUE);
+    }
+    
     public function getUser($userid){
 	$table = $this->session->userdata('group')."_users";
-	$lisdb = $this->load->database('lisdb',TRUE);
-	$lisdb->where('userid',$userid);
-	$record = $lisdb->get($table)->result_array();
+	$this->lisdb->where('userid',$userid);
+	$record = $this->lisdb->get($table)->result_array();
 	
 	if (count($record)>0){	    
 	    $userdata['userid'] = $record[0]['userid'];
@@ -22,7 +28,7 @@ class User_model extends CI_Model {
 	} else {
 	    $user = null;
 	}
-	
+
 	return $user;
     }
     

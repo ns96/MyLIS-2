@@ -265,6 +265,14 @@ class Filemanager extends CI_Model {
     return 'Using '.$usage.'MB ('.$per.'%) of '.$quota.'MB file storage space ...';
   }
   
+  function getQuotaUsage(){
+    $usage = round($this->getFileSpaceUsage()/1048576, 2);
+    $total = $this->properties['storage.quota'];
+    $quota['used'] = $usage;
+    $quota['total'] = $total;
+    return $quota;
+  }
+  
   // function to update the initiation file
   function modifyInitiationFile($new_props) {
     foreach ($this->properties as $key => $value) {

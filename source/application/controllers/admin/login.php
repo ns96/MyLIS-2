@@ -11,12 +11,12 @@ class Login extends Admin_Controller {
 	{
 	    if ($this->session->userdata('userid')) {
 		if (!($this->session->userdata('role') == 'admin')){
-		    $this->load->view('errors/unauthorized'); 
+		    $this->load_view('errors/unauthorized'); 
 		} else {
 		    redirect('admin/main');
 		}
 	    } else {
-		$this->load->view('admin/login'); 
+		$this->load_view('admin/login'); 
 	    }
 	}
 	
@@ -52,7 +52,7 @@ class Login extends Admin_Controller {
 		if(!empty($userid) && !empty($password)) {
 		    $user = $this->validateUser($userid, $password);
 		    if(empty($user)) {
-			$this->load->view('errors/admin_login_failed');
+			$this->load_view('errors/admin_login_failed');
 		    } else {
 			// If credentials are valid set the session variables
 			// and redirect to main admin page
@@ -68,9 +68,9 @@ class Login extends Admin_Controller {
 		    }
 		} else { // if the 'logintry' field has been posted then someone entered empty username/password
 		    if(!empty($logintry)) {
-			$this->load->view('errors/admin_login_failed');
+			$this->load_view('errors/admin_login_failed');
 		    } else { // else the session has been timed out
-			$this->load->view('errors/session_timeout');
+			$this->load_view('errors/session_timeout');
 		    }
 		}
 	    } else {

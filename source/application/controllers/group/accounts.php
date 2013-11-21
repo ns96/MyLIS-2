@@ -10,9 +10,11 @@ class Accounts extends Group_Controller {
     }
     
     public function user_profile(){
-	$base = base_url()."group/";
-	$post_link = $base."accounts/user_profile";
+	$this->restrict_access();
 	
+	$base = base_url()."group/";
+	
+	// If an updated profile has been posted
 	if ($this->input->post('profile_update_form')){
 	    if($this->checkFormInput()) {
 		$data['name'] = $this->input->post('name'); // users fullname
@@ -28,57 +30,24 @@ class Accounts extends Group_Controller {
 		redirect($base."accounts/user_profile");
 	    }
 	} else {
-	    $ok_link = $base."main";
 
 	    $this->load->model('user_model');
 	    $password = $this->user_model->getUserPassword($this->userobj->userid);
 	    
-	    echo "<form action=\"$post_link\" method=\"POST\">";
-	    echo "<input type='hidden' name='profile_update_form' value='posted' />";
-	    echo '<table style="text-align: left; width: 100%;" border="0" cellpadding="2" 
-	    cellspacing="2"><tbody>
-	    <tr>
-	    <td style="background-color: rgb(180,200,230);" colspan="2" rowspan="1"><small>
-	    <span style="font-weight: bold;">Update Your Profile</span></small></td></tr>';
-
-	    echo '
-	    </tr>
-	    <tr>
-	    <td>User ID :</td>
-	    <td><b>'.$this->userobj->userid.'</b></td>
-	    </tr>
-	    </tr>
-	    <tr>
-	    <td>Full Name :</td>
-	    <td><input size="50" name="name" value="'.htmlentities($this->userobj->name).'"></td>
-	    </tr>
-	    <tr>
-	    <td>Password :</td>
-	    <td><input size="50" name="password" value="'.$password.'"></td>
-	    </tr>
-	    <tr>
-	    <td>E-mail :</td>
-	    <td><input size="50" name="email" value="'.$this->userobj->email.'"></td>
-	    </tr>
-	    <tr>
-	    <td>Additonal Info:</td>
-	    <td><input size="50" name="info" value="'.$this->userobj->info.'"></td>
-	    </tr>';
-
-	    echo '<tr>';
-	    echo '<td><br></td>';
-	    echo '<td style="text-align: right;">';
-	    echo "[ <a href=\"$ok_link\" target=\"_parent\">OK</a> ] ";
-	    echo '<input value="Update Profile" type="submit" 
-	    style="background: rgb(238, 238, 238); color: rgb(51, 102, 255)"></td>';
-	    echo '</tr>';
-	    echo '</tbody></table>';
-
-	    printColoredLine('rgb(180,200,230)', '2px');
+	    $data['page_title'] = "My Profile";
+	    $data['userid'] = $this->userobj->userid;
+	    $data['name'] = $this->userobj->name;
+	    $data['email'] = $this->userobj->email;
+	    $data['info'] = $this->userobj->info;
+	    $data['password'] = $password;
+	    
+	    $this->load_view('group/myprofile',$data);
 	}
     }
     
     public function group_profile(){
+	$this->restrict_access();
+	
 	$base = base_url()."group/";
 	
 	if ($this->input->post('group_profile_update_form')){
@@ -101,8 +70,6 @@ class Accounts extends Group_Controller {
 		redirect($base."accounts/group_profile");
 	    }
 	} else {
-	    $post_link = $base."accounts/group_profile";
-	    $ok_link = $base."main";
 	    $group = $this->session->userdata('group');
 
 	    $this->load->model('profile_model');
@@ -112,58 +79,15 @@ class Accounts extends Group_Controller {
 
 	    $this->load->model('user_model');
 	    $editor = $this->user_model->getUser($edit_user);
+	    
+	    $data['page_title'] = "Group Research Profile";
+	    $data['group'] = $group;
+	    $data['info'] = $info;
+	    $data['editor'] = $editor;
+	    
+	    $this->load_view('group/groupProfile',$data);
 
-	    echo "<form action=\"$post_link\" method=\"POST\">";
-	    echo "<input type='hidden' name='group_profile_update_form' value='posted' />";
-	    echo '<table style="text-align: left; width: 100%;" border="0" cellpadding="2" 
-	    cellspacing="2"><tbody>
-	    <tr>
-	    <td style="background-color: rgb(100,255,100);" colspan="2" rowspan="1"><small>
-	    <span style="font-weight: bold;">Update Group Research Profile</span> ';
-	    echo '|| Last updated on '.$edit_date.' by '.$editor->name.'</small></td></tr>';
-
-	    echo '
-	    </tr>
-	    <tr>
-	    <td>Group ID :</td>
-	    <td><b>'.$group.'</b></td>
-	    </tr>
-	    </tr>
-	    <tr>
-	    <td>PI Name :</td>
-	    <td><input size="50" name="pi_name" value="'.htmlentities($info['pi_name']).'"></td>
-	    </tr>
-	    <tr>
-	    <td>PI Email :</td>
-	    <td><input size="50" name="pi_email" value="'.$info['pi_email'].'"></td>
-	    </tr>
-	    <tr>
-	    <td>Group Site URL :</td>
-	    <td><input size="50" name="url" value="'.$info['url'].'"></td>
-	    </tr>
-	    <tr>
-	    <td>Research Keywords :</td>
-	    <td><input size="50" name="keywords" value="'.$info['keywords'].'"></td>
-	    </tr>
-	    <tr>
-	    <td style="vertical-align: top;">Research Description :</td>
-	    <td><textarea cols="50" rows="6" name="description">'.$info['description'].'</textarea></td>
-	    </tr>
-	    <tr>
-	    <td style="vertical-align: top;">Instrument List :</td>
-	    <td><textarea cols="50" rows="6" name="instruments">'.$info['instruments'].'</textarea></td>
-	    </tr>';
-
-	    echo '<tr>';
-	    echo '<td><br></td>';
-	    echo '<td style="text-align: right;">';
-	    echo "[ <a href=\"$ok_link\" target=\"_parent\">OK</a> ] ";
-	    echo '<input value="Update Profile" type="submit" 
-	    style="background: rgb(238, 238, 238); color: rgb(51, 102, 255)"></td>';
-	    echo '</tr>';
-	    echo '</tbody></table>';
-
-	    printColoredLine('rgb(100,255,100)', '2px');
+	    
 	}
     }
     

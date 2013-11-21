@@ -15,6 +15,7 @@ class Lis_Controller extends CI_Controller {
 	parent::__construct();
 	// Load some helpful functions
 	$this->load->helper('lisutils');
+	$this->load->helper('myhtml');
 	// load the timezones array
 	$this->load->library('listimezones');
 	$this->lis_tz = $this->listimezones->get_tz();
@@ -29,6 +30,51 @@ class Lis_Controller extends CI_Controller {
 	    return $properties;		    
     }
     
+    protected function load_view($viewname,$data=null,$asString=false){
+	    if ($asString) {
+		$output = $this->load->view($viewname,$data,TRUE);
+		return $output;	exit();
+	    }
+	
+	    if (is_null($data))
+		    $data = array(
+			'view_name'	=>  $viewname,
+		    );
+	    else
+		$data['view_name']	=  $viewname;
+	    
+	    $last_slash = strrpos($viewname, "/");
+	    $found = false;
+	    
+	    // το full path για το τοπικό template.php - θα χρειαστεί στην file_exists
+	    $view_dir = FCPATH."/application/views/".substr($viewname, 0, strrpos($viewname, "/"));
+	    // το short path για το τοπικό template - θα χρειαστεί στην $this->load_view
+	    $view_short_path = substr($viewname, 0, strrpos($viewname, "/"));
+	    
+	    // όσο δεν έχει βρεθεί τοπικό template.php και υπάρχει slash
+	    while (($last_slash > 0)&&(!$found)) {
+		// Αν υπάρχει τοπικό template.php σε αυτό το επίπεδο
+		if (file_exists($view_dir."/template.php")){
+		    $template = $view_short_path."/template";
+		    $found = true;
+		} else { // αλλιώς πάμε ένα επίπεδο πιο πάνω
+		    $view_dir = substr($view_dir, 0, strrpos($view_dir, "/"));
+		    $view_short_path = substr($viewname, 0, strrpos($view_short_path, "/"));
+		    $last_slash = strrpos($view_short_path, "/");
+		}
+	    }
+	    // Τώρα που έφυγαν όλα τα slash έμεινε ακόμα ένα επίπεδο
+	    if (file_exists($view_dir."/template.php")){
+		$template = $view_short_path."/template";
+		$found = true;
+	    } else { // αν δεν βρέθηκε τοπικό template φόρτωσε το master template
+		$template = "template";
+	    }
+	    
+	    // Load the template
+	    $this->load->view($template,$data);
+	}
+	
 }
 
 // Super class for admin-related controllers
@@ -76,12 +122,12 @@ class Admin_Controller extends Lis_Controller {
 	    if ($this->session->userdata('user')) {
 		if (!($this->session->userdata('group') == 'admin')){
 		    // The user is logged in but is not an admin
-		    $this->load->view('errors/unauthorized'); 
+		    $this->load_view('errors/unauthorized'); 
 		    $this->output->_display(); die();
 		}
 	    } else {
 		// The user is not logged in
-		$this->load->view('admin/login');
+		$this->load_view('admin/login');
 		$this->output->_display(); die();
 	    }
 	}
@@ -103,8 +149,7 @@ class Group_Controller extends Lis_Controller {
 	    else {
 		// user is not logged in neither this is a login request (maybe the session 
 		// has been timed out or a visitor tries to access a group's page)
-		$this->load->view('intro');
-		$this->output->_display(); die();
+		redirect('welcome');
 	    }
 	    // set the default time zone
 	    date_default_timezone_set('America/New_York');
@@ -115,6 +160,7 @@ class Group_Controller extends Lis_Controller {
 	    $this->properties['version_number'] = "1.31";
 	    $this->properties['version'] = $this->properties['version_number']." 01/30/2012";
 	    $this->properties['home.directory'] = CIPATH."/accounts/mylis_".$groupname;
+	    
 	}	
 	
 	// This function is called by every group page or before any 
@@ -122,9 +168,9 @@ class Group_Controller extends Lis_Controller {
 	public function restrict_access(){
 	    if (!$this->session->userdata('user')) {
 		// the user is not logged in
-		$this->load->view('admin/login');
+		$this->load->view('group/login');
 		$this->output->_display(); die();
-	    }
+	    } 
 	}
 	
 }

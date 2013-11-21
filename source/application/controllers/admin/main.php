@@ -34,7 +34,7 @@ class Main extends Admin_Controller {
 	$data['menu_image']	    = base_url()."images/".$this->properties['background.image'];
 	$data['messages_html'] = $this->displayMessages();
 	
-	$this->load->view('admin/main',$data);
+	$this->load_view('admin/main',$data);
     }
     
      function displayMessages() {

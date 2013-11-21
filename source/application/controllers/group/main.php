@@ -39,41 +39,47 @@ class Main extends Group_Controller {
     }
     
     public function index() {   
+	
 	$this->restrict_access();
 
 	// Load necessery data for the view
 	$data = array();
+	$data['page_title'] = "Home Page";
 	$data['fullname']	    = $this->userobj->name;
 	$data['role']		    = $this->userobj->role;
 	$data['group_name']	    = $this->session->userdata('group');
 	$data['properties']	    = $this->properties;
-	$data['storageQuotaText']   = $this->filemanager->getStorageQuotaText();
+	$data['quotaUsage']   = $this->filemanager->getQuotaUsage();
 	$data['menu_image']	    = base_url()."images/".$this->properties['background.image'];
+	
 	// If the user clicked on a message edit link there should be a message id in the URL
 	// and in that case we should load the 'Edit Message' and not the 'Post Message' form
 	if ($this->input->get('message_id'))
 	    $data['messageForm']	    = $this->loadMessageForm($this->input->get('message_id'));
 	else
 	    $data['messageForm']	    = $this->loadMessageForm();
-	
+
 	if (isset($plugins))
 		$data['plugins'] = $plugins; 
 	$data['ads_html'] = $this->google_ads->displayAds();
 	
-	$this->load->view('group/main',$data);
-
+	$this->load_view('group/main',$data);
     }
 	
     // This function is a URL destination ( .../group/main/displayMessages ) and not
     // a helper function. This URL is used as an 'src' property for an iframe.
-    public function displayMessages() {
+    public function displayMessages() { 
 	$userid = $this->userobj->userid;
 	$status = $this->userobj->status;
 	$expire = $this->properties['lis.expire'];
 	if (isset($_GET['activated']))
 	    $activated = $_GET['activated'];
-	$output = '';
 	
+	// Note: The messages (and so the HTML that is being returned by this
+	// function) are being loaded inside an iFrame. So, we have a new
+	// <head> section where we need to load the necessery CSS and Javascript
+	$output = '';
+	$output .= $this->load_view('group/iFrameHeader',null,TRUE);
 	if($this->proputil_model->getProperty('show.welcome.'.$userid) != 'no') {
 	    $output .= $this->loadWelcome($status);
 	}
@@ -86,11 +92,11 @@ class Main extends Group_Controller {
 	if(!$this->filemanager->hasSpace()) {
 	    $output .= $this->loadQuotaUsedMessage();
 	}
-	
 	$output .= $this->loadSystemMessages();
 	$output .= $this->loadUserMessages();
-	
+	$output .= $this->load_view('group/iFrameFooter',null,TRUE);
 	echo $output;
+
     }
     
     // Display the Post/Edit message form
@@ -102,20 +108,16 @@ class Main extends Group_Controller {
 	$data['message_id'] = $message_id;
 	
 	if(!empty($message_id)) {
-	    $data['title'] = 'Edit Message ('.$message_id.')';
 	    $this->load->model('message_model');
 	    $data['messageItem'] = $this->message_model->getMessage($message_id);
-	    $data['target_url'] = base_url()."group/messages/edit";
 	} else {
-	    $data['title'] = 'Post Message';
-	    $data['target_url'] = base_url()."group/messages/add";
 	    $messageItem['url'] = '';
 	    $messageItem['message'] = '';
 	    $messageItem['file_id'] = '';
 	    $data['messageItem'] = $messageItem;
 	}
 	// Return the view as a string
-	$output = $this->load->view('group/messageForm',$data,true);	
+	$output = $this->load_view('group/messageForm',$data,true);	
 	return $output;
     }
     
@@ -145,7 +147,7 @@ class Main extends Group_Controller {
 	    $data['case'] = 'other';
 	}
 
-	$output = $this->load->view('group/welcomeMessage',$data,true);
+	$output = $this->load_view('group/welcomeMessage',$data,true);
 	return $output;
     }
     
@@ -155,7 +157,7 @@ class Main extends Group_Controller {
 	$data['sales_link'] = $base."accounts/upgrade";
 	$data['quota'] = $this->properties['storage.quota'];
 
-	$message = $this->load->view('group/quotaUsedMessage',$data,true);
+	$message = $this->load_view('group/quotaUsedMessage',$data,true);
 	return $message;
     }
 
@@ -165,7 +167,7 @@ class Main extends Group_Controller {
 	$data['date'] = getLISDate();
 	$data['account_id'] = $this->properties['lis.account'];
 
-	$form = $this->load->view('group/activateForm',$data,true);
+	$form = $this->load_view('group/activateForm',$data,true);
 	return $form;
     }
     
@@ -185,6 +187,7 @@ class Main extends Group_Controller {
     // function to echo html code for a user's message 
     function loadUserTable($messageItem) {
 	//global $file_directory;
+	
 	$link = $messageItem['url'];
 	$file_id = $messageItem['file_id'];
 	$base = base_url()."group/";
@@ -194,11 +197,12 @@ class Main extends Group_Controller {
 	$data['base'] = $base;
 	$data['date'] = $messageItem['date'];
 	$data['message_id'] = $messageItem['message_id'];
-	$data['message'] = $messageItem['message'];
-	
+	$data['message'] = $messageItem['message']; 
+
 	$this->load->model('user_model');
+
 	$data['poster'] = $this->user_model->getUser($messageItem['userid']);
-	
+
 	if(!empty($link)) 
 	    $data['link'] = $link;
 
@@ -214,17 +218,15 @@ class Main extends Group_Controller {
 	    $data['delete_link'] = $base."messages/delete/".$message_id;
 	}
 
-	$table = $this->load->view('group/userMessageTable',$data,true);
+	$table = $this->load_view('group/userMessageTable',$data,true);
+
 	return $table;
     }
     
     // function to display user messages
     function loadUserMessages() {
-
-	$this->load->model('message_model');
 	$messageList = $this->message_model->getUserMessages();
 	$umessages = '';
-
 	if(count($messageList)>0) {
 	    foreach($messageList as $messageItem){
 		$umessages .= $this->loadUserTable($messageItem);
@@ -239,7 +241,7 @@ class Main extends Group_Controller {
 	$data['message_date'] = $messageItem['message_date'];
 	$data['link'] = $messageItem['url'];
 
-	$table = $this->load->view('group/systemMessageTable',$data,true);
+	$table = $this->load_view('group/systemMessageTable',$data,true);
 	return $table;
     }
     
@@ -247,8 +249,6 @@ class Main extends Group_Controller {
     function loadSystemMessages() {
 
 	$account_id = $this->session->userdata('group');
-	
-	$this->load->model('message_model');
 	$messageList = $this->message_model->getSystemMessages($account_id);
 	$smessages = '';
 	

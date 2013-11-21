@@ -1,56 +1,60 @@
-<?php
-    echo "<html>";
-    echo "<head>";
-    echo "<title>MyLIS Login</title>";
-    echo "</head>";
-    echo '<body>';
-    echo '<hr style="width: 100%; height: 1px;">';
-    echo '<div style="text-align: center;">';
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title><?php echo $page_title; ?></title>
+<link rel="stylesheet" type="text/css" href="<? echo base_url().'css/bootstrap.css'; ?>" />
+<link rel="stylesheet" type="text/css" href="<? echo base_url().'css/my.css'; ?>" />
 
-    // The form
-    echo '<form method="post" action="'.base_url().'group/login/login_request?group='.$this->properties['lis.account'].'">';
-    echo '<input type="hidden" name="logintry" value="yes">';
+<script type='text/javascript' src="<? echo base_url(); ?>/js/jquery.min.js"></script>
+<script type='text/javascript' src="<? echo base_url(); ?>/js/bootstrap.min.js"></script>
+</head>
+<body>
 
-    // Add the outer table
-    echo "<table style=\"background-color: rgb(204, 204, 204); margin-left: auto; margin-right: auto; width: 40%; text-align: left;\"
-    border=\"0\" cellpadding=\"1\" cellspacing=\"0\">";
-    echo '<tbody>';
-    echo '<tr align="center"><td style="vertical-align: top;">';
-    echo "<br><big><big style=\"font-weight: bold; color: rgb(51, 102, 255) \">The ".$this->properties['group.name']." Group Login<br><br></big></big></td></tr>";
-    echo '<td style="vertical-align: top;">';
-
-    // the middle table
-    echo '<table style="background-color: rgb(255, 255, 255); text-align: left; width: 100%; height: 100%;"
-    border="0" cellpadding="2" cellspacing="2"><tbody>';
-    echo '<tr> <td style="vertical-align: top; text-align: center;">';
-
-    // the inner table
-    echo '<table style="margin-left: auto; margin-right: auto; width: 80%; text-align: left;"
-    border="0" cellpadding="2" cellspacing="0"><tbody>';
-
-    echo '<tr> <td style="vertical-align: top; text-align: right;">';
-    echo '<img alt="" src="'.base_url().'/images/userid.gif" style="width: 84px; height: 23px;"> </td>';
-    echo '<td style="vertical-align: top;"><input name="userid" size="25"> </td></tr>';
-
-    echo '<tr><td style="vertical-align: top; text-align: right;">';
-    echo '<img alt="" src="'.base_url().'/images/password.gif" style="width: 84px; height: 23px;"> </td>';
-    echo '<td style="vertical-align: top;"><input type="password" name="password" size="25"> </td></tr>';
-
-    echo '</tbody></table>'; // inner table end
-
-    echo '<div style="text-align: center;">';
-    echo '<input name="log in" value="Log in" style="margin: 10px 5px 5px 120px; background: rgb(238, 238, 238); color: rgb(51, 102, 255);"
-    type="submit"> </div></td></tr>';
-
-    echo '</tbody></table>'; // middle table end
-
-    echo '</td></tr>';
-    echo '</tbody></table>'; // the outer table end
-    echo '</form>';
-
-    echo "<hr style=\"width: 100%; height: 1px;\">";
-    echo 'Please contact your <a href="mailto:'.$this->properties['site.manager.email'].'">site administrator</a> if you have trouble logging in.';
-    echo '<hr style="width: 100%; height: 1px;"></div>';
-
-    echo "</body>";
-    echo "</html>";
+<div class="container">
+    <div class="row">
+	<div class="span4"></div>
+	<div class="span4">
+	    <div class="login-well">
+		
+		<div class="login-well2">
+			<table style="margin:0 auto">
+			    <tr>
+				<td><img src='<?=base_url()."images/icons/mylis.png"?>' /></td>
+				<td vertical-align="middle">The <?=$this->properties['group.name']?>'s Group Login</td>
+			    </tr>
+			</table>
+		    </div>
+		
+		<form action="<?=$target?>" method="POST" class="form-horizontal" style="margin:20px">
+		   <table style="margin:0 auto; border-spacing: 10px; border-collapse: separate">
+		       <tr>
+			   <td>
+				<label for="userid">Username:</label>
+			   </td>
+			   <td>
+				<input type="text" id="userid" name="userid" class="input-block-level input-large" >
+			   </td>
+		       </tr>
+			<tr>
+			    <td>
+				<label for="password">Password:</label>
+			    </td>
+			    <td>
+				<input type="password" id="password" name="password" class="input-block-level input-large" >
+			    </td>
+			</tr>
+		   </table>
+		    
+		    <div class="control-group">
+			<button type="submit" class="btn btn-primary btn-medium">Login</button>
+		    </div>
+		    
+		</form>
+	    </div>
+	</div>
+	<div class="span4"></div>
+    </div>
+</div>
+    
+</body>
+</html>

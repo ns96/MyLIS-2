@@ -13,18 +13,20 @@ class Login extends Group_Controller {
 	{
 	    if ($this->session->userdata('userid')) {
 		if ((empty($_GET['group'])) || ($this->session->userdata('group') != $_GET['group']))
-		    $this->load->view('errors/unauthorized'); 
+		    $this->load_view('errors/unauthorized'); 
 		else {
 		    redirect('group/main');
 		}
 	    } else {
-		$this->load->view('group/login'); 
+		$data['target'] = base_url().'group/login/login_request?group='.$this->properties['lis.account'];
+		$this->load->view('group/login',$data); 
 	    }
 	}
 	
 	// Handles the login requests
 	public function login_request()
 	{
+	    echo "<pre>"; var_dump($_POST);
 	    // if the user is not logged in
 	    if (!$this->session->userdata('userid')) {
 		
@@ -39,7 +41,7 @@ class Login extends Group_Controller {
 
 		    // If the user credentials were not valid
 		    if(empty($user)) {
-			$this->load->view('errors/group_login_failed');
+			$this->load_view('errors/group_login_failed');
 		    } else {  
 		    // If the credentials were valid
 			//  If the account has not been expired
@@ -58,16 +60,16 @@ class Login extends Group_Controller {
 			    redirect('group/main');
 			} else {
 			    // If the account has been expired
-			    $this->load->view('errors/expired_account');
+			    $this->load_view('errors/expired_account');
 			}
 		    }
 		} else { 
 		// If the username or password were empty
 		    if(!empty($logintry)) {
 			$data['groupname'] = $this->properties['lis.account'];
-			$this->load->view('errors/group_login_failed',$data);
+			$this->load_view('errors/group_login_failed',$data);
 		    } else { // the session timed out
-			$this->load->view('errors/session_timeout');
+			$this->load_view('errors/session_timeout');
 		    }
 		}
 	    } else {

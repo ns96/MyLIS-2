@@ -1,36 +1,76 @@
-<?php
-
-echo '<br><br><br>';
-printColoredLine('rgb(0,0,100)', '2px');
-echo "<form action=\"$target_url\" method=\"POST\" enctype=\"multipart/form-data\">";
-echo '<input type="hidden" name="message_id" value="'.$message_id.'">';
-
-echo '<table style="text-align: left; width: 100%; 
-background-color: rgb(240,240,240);" border="0" cellpadding="2" cellspacing="2"><tbody>
-<tr>
-<td style="background-color: rgb(180,200,230); width: 25%;"><small>
-<span style="font-weight: bold;">'.$title.'</span></small></td>
-<td style="background-color: rgb(180,200,230); text-align: right;"><small>';
-
-if(!empty($messageItem['file_id'])) {
-    $file_id = $messageItem['file_id'];
-    $delete_link = base_url()."group/messages/deleteMessageFile/".$file_id;
-    echo "[ <a href=\"$delete_link\">delete file</a> ]";
-}
-
+<?
 if(!empty($message_id)) {
-    $add_link = base_url()."/group/main";
-    echo " [ <a href=\"$add_link\">new message</a> ]";
+    $title = "Edit Message <img src='".base_url()."images/icons/edit.png' class='icon' />";
+    $target_url = base_url()."group/messages/edit";
+} else {
+    $title = "Post Message <img src='".base_url()."images/icons/add.png' class='icon' />";
+    $target_url = base_url()."group/messages/add";
 }
+?>
 
-echo '</small></td></tr>';
-echo '<tr><td><small>Website Link : </small></td>
-<td><input size="50" name="url" value="'.$messageItem['url'].'"></td></tr>
-<tr><td style="vertical-align: top;"><small>Message :</small></td>
-<td><textarea cols="50" rows="2" name="message">'.$messageItem['message'].'</textarea></td></tr>
-<tr><td><small>Attach File (2MB Max)</small></td><td>
-<small>'.$this->filemanager->getFileUploadField(1).'</small></td></tr>
-<tr><td><br></td><td style="text-align: left;">
-<input value="'.$title.'" type="submit" 
-style="background: rgb(238, 238, 238); color: rgb(51, 102, 255)"></td></tr>';
-echo '</tbody></table></form>';
+<table id="messageFormTopBar" style="width: 100%" cellpadding="4" cellspacing="2"><tbody>
+<tr>
+    <td style="background-color: rgb(180,200,230); width: 25%;">
+	<small><span style="font-weight: bold;"><?=$title?></span></small>
+    </td>
+    <td style="background-color: rgb(180,200,230); text-align: right;">
+	<small>
+	<?
+	if(!empty($messageItem['file_id'])) {
+	    $file_id = $messageItem['file_id'];
+	    $delete_link = base_url()."group/messages/deleteMessageFile/".$file_id;
+	    echo "[ <a href=\"$delete_link\">delete file</a> ]";
+	}
+
+	if(!empty($message_id)) {
+	    $add_link = base_url()."group/main";
+	    echo " [ <a href=\"$add_link\">new message</a> ]";
+	}
+	?>
+	</small>
+    </td>
+</tr>
+</tbody>
+</table>
+<br>
+<form action="$target_url" method="POST" enctype="multipart/form-data" class="form-horizontal" style="margin-right:10px">
+  <input type="hidden" name="message_id" value="<?=$message_id ?>">
+  <div class="control-group">
+    <label for="website_link" class="control-label">Website Link:</label>
+    <div class="controls">
+      <input type="text" id="website_link" name="url" class="input-block-level" placeholder="Relevant website" value="<?=$messageItem['url'] ?>">
+    </div>
+  </div>
+  <div class="control-group">
+    <label for="message_area" class="control-label">Message:</label>
+    <div class="controls">
+      <textarea rows="3" id="message_area" name="message" class="input-block-level" placeholder="Type your message here..."><?=$messageItem['message'] ?></textarea>
+    </div>
+  </div>
+  <div class="control-group">
+      <label for="fileupload_1" class="control-label">Attach file:</label>
+      <div align="left" class="controls">
+	<input id="fileupload_1" name="fileupload_1" class="filestyle" type="file" data-icon="false" style="position: fixed; left: -500px;">  
+      <span style="color:grey; margin-left: 5px; margin-right: 10px">(maximum filesize: 2MB)</span>
+      Select Type :
+	<select name="filetype_1" class="input-medium">
+	    <option value="none">No File</option>
+	    <option value="pdf">PDF</option>
+	    <option value="doc">Word</option>
+	    <option value="ppt">Powerpoint</option>
+	    <option value="xls">Excel</option>
+	    <option value="rtf">RTF</option>
+	    <option value="odt">OO Text</option>
+	    <option value="odp">OO Impress</option>
+	    <option value="ods">OO Calc</option>
+	    <option value="zip">Zip</option>
+	    <option value="other">Other</option>
+	</select>
+      </div>
+  </div>
+  <div class="control-group">
+      <button type="submit" class="btn btn-primary btn-small">
+	  <? if(!empty($message_id)) echo 'Update Message'; else echo 'Post Message'; ?>
+      </button>
+  </div>
+</form>
