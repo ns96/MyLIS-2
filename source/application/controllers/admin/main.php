@@ -28,11 +28,13 @@ class Main extends Admin_Controller {
 	
 	// Load necessery data for the view
 	$data = array();
+	$data['page_title']	    = "Home Page";
 	$data['properties']	    = $this->properties;
 	$data['fullname']	    = $this->userobj->name;
 	$data['role']		    = $this->userobj->role;
 	$data['menu_image']	    = base_url()."images/".$this->properties['background.image'];
 	$data['messages_html'] = $this->displayMessages();
+	$data['user'] = $this->userobj;
 	
 	$this->load_view('admin/main',$data);
     }

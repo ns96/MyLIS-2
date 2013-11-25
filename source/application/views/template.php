@@ -19,7 +19,7 @@
 	<!-- TOP SECTION -->
 	<div class="span12">
 	    <div class="topwell">
-		<? loadTopArea(); ?>
+		<? loadGroupTopArea(); ?>
 	    </div>
 	</div>
     </div>

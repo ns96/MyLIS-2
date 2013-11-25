@@ -77,7 +77,80 @@ function loadGroupMenu(){
     echo $menuHTML;
 }
 
-function loadTopArea(){
+function loadAdminMenu(){
+	
+    $base = base_url()."admin/";
+    $CI = & get_instance();
+    $role = $CI->session->userdata('user')->role;
+
+    $menu = array(
+	'managedb'	=>  array(
+		'controller'	=>  "managedb",
+		'title'		=>  'Manage DB',
+		'icon'		=>  base_url().'images/icons/tube.png',
+	),
+	'emaillist'	=>  array(
+		'controller'	=>  "emails",
+		'title'		=>  'Email List Manager',
+		'icon'		=>  base_url().'images/icons/supplies.png',
+	),
+	'view'		=>  array(
+		'controller'	=>  "accounts",
+		'title'	    	=>  'View Accounts',
+		'icon'		=>  base_url().'images/icons/tube.png',
+	),
+	'add	'	=>  array(
+		'controller'	=>  "accounts",
+		'title'		=>  'Add account',
+		'icon'		=>  base_url().'images/icons/meeting.png',
+	),
+	'test'	=>  array(
+		'controller'	=>  "accounts",
+		'title'		=>  'Add Test Account',
+		'icon'		=>  base_url().'images/icons/orders2.png',
+	),
+	'sandbox'	=>  array(
+		'controller'	=>  "accounts",
+		'title'		=>  'Add Sandbox Account',
+		'icon'		=>  base_url().'images/icons/pdfs.png',
+	),
+	'messages'	=>  array(
+		'controller'	=>  "messages",
+		'title'		=>  'Message Poster',
+		'icon'		=>  base_url().'images/icons/log.png',
+	),
+	'managefiles'	=>  array(
+		'controller'	=>  "managefiles",
+		'title'		=>  'File Manager',
+		'icon'		=>  '',
+	),
+	'update'	=>  array(
+		'controller'	=>  "accounts",
+		'title'		=>  'Update Accounts',
+		'icon'		=>  '',
+	),
+	'manage'	=>  array(
+		'controller'	=>  "manage",
+		'title'		=>  'Manage',
+		'icon'		=>  base_url().'images/icons/weblink.png',
+	),
+    );
+
+    $menuHTML = '';
+    foreach($menu as $key => $menuItem){
+	if ($CI->uri->segment(2) == $menuItem['controller']) 
+	    $classHTML = "class='active'";
+	else 
+	    $classHTML = '';
+	$menuHTML .= "<li $classHTML><a href='".$base.$menuItem['controller']."'>".$menuItem['title']."<img src='".$menuItem['icon']."' class='menu_image' /></a></li>";
+    }
+
+    $menuHTML .= "<li><a href='http://docs.google.com/Doc?id=dg5bsrjs_28dqsgkk5m'>Help<img src='".base_url()."images/icons/help.png' class='menu_image' /></a></li>";
+
+    echo $menuHTML;
+}
+
+function loadGroupTopArea(){
     $CI = & get_instance();
     $fullname = $CI->session->userdata('user')->name;
     
@@ -97,6 +170,32 @@ function loadTopArea(){
 		<li><a href="<?=$home_link ?>">Home</a></li>
 		<li><a href="<?=$profile_link ?>">My Profile</a></li>
 		<li><a href="<?=$group_profile_link ?>">Group Research Profile</a></li>
+		<li class="divider"></li>
+		<li><a href="<?=$logout_link ?>">Logout</a></li>
+	    </ul>
+	</div>
+    <div style="clear:both"></div>
+    <? }
+}
+
+function loadAdminTopArea(){
+    $CI = & get_instance();
+    $fullname = $CI->session->userdata('user')->name;
+    
+    $home_link = base_url().'admin/main';
+    $profile_link = base_url().'admin/accounts/user_profile';
+    $logout_link = base_url()."admin/login/logout";
+    
+    if ('1' == '1') { ?>
+    <a href='<?=base_url()."admin/main"?>' style="text-decoration:none; color:#285E8E"><img class="toparea_image" src="<? echo base_url()."images/icons/mylis.png" ?>" />
+	My Laboratory Information System</a>
+	<div class="btn-group toparea_dropdown">
+	    <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+		<?=$fullname ?> <span class="caret"></span>
+	    </button>
+	    <ul class="dropdown-menu" role="menu">
+		<li><a href="<?=$home_link ?>">Home</a></li>
+		<li><a href="<?=$profile_link ?>">My Profile</a></li>
 		<li class="divider"></li>
 		<li><a href="<?=$logout_link ?>">Logout</a></li>
 	    </ul>

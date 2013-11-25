@@ -11,8 +11,8 @@ class Filemanager extends CI_Model {
   public function initialize($params) {
     $this->user = $params['user'];
     $this->table = $params['account'].'_files';
-    $home_dir = CIPATH."/application/accounts/".$params['account']."/";
-    $home_url = base_url()."application/accounts/".$params['account']."/";
+    $home_dir = CIPATH."/accounts/mylis_".$params['account']."/";
+    $home_url = base_url()."accounts/mylis_".$params['account']."/";
     
     $this->file_directory = $home_dir.'files/';
     $this->file_url = $home_url.'files/';
@@ -178,6 +178,7 @@ class Filemanager extends CI_Model {
   // function to delete a file
   function deleteFile($file_id) {
     $file_info = $this->getFileInfo($file_id);
+    
     if($file_info['type'] != 'url') {
 	$fullname = $this->file_directory.'file_'.$file_id.'.'.$file_info['type'];
 	if(file_exists($fullname)) {

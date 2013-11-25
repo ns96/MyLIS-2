@@ -16,7 +16,7 @@ class Login extends Admin_Controller {
 		    redirect('admin/main');
 		}
 	    } else {
-		$this->load_view('admin/login'); 
+		$this->load->view('admin/login'); 
 	    }
 	}
 	
