@@ -173,4 +173,78 @@ class Group_Controller extends Lis_Controller {
 	    } 
 	}
 	
+	// function to get a list of only current users, not past, of a group
+	function getCurrentUsers() {
+	   $users = $this->loadUsers();
+	    $current_users = array();
+
+	    foreach($users as $user) {
+		$userid= $user->userid;
+		$status = $user->status;
+		if($status == 'present' || $status == 'Group PI') {
+		    $current_users[$userid] = $user;
+		}
+	    }
+
+	    return $current_users;
+	}
+	
+	// load the default user
+	function getDefaultUser() {
+	    $userdata = array(
+		    'userid'    =>	'myadmin', 
+		    'password'  =>	'change_password', 
+		    'role'	=>	'admin', 
+		    'name'	=>	'MyLIS Admin',
+		    'email'	=>	'n/a', 
+		    'status'    =>	'present', 
+		    'info'	=>	''
+		);
+
+	    $this->load->library('user',$userdata);
+	    return $this->user;
+	}
+
+	// funtion to return an array of users
+	function loadUsers() {
+	    $users = array();
+
+	    // get the default user account
+	    $du = $this->getDefaultUser();
+	    $users["$du->userid"] = $du;
+
+	    // Load users from the database
+	    $this->load->model('user_model');
+	    $userList = $this->user_model->getGroupUsers($this->properties['lis.account']);
+	    
+	    $total = count($userList);
+	    if($total>=1) {
+		$counter = 0;
+		// For each user create a User object and add it to the user's list
+		while($counter<$total) {
+		    $userid = $userList[$counter]['userid'];
+		    $password = $userList[$counter]['password'];
+		    $role = $userList[$counter]['role'];
+		    $name = $userList[$counter]['name'];
+		    $email = $userList[$counter]['email'];
+		    $status = $userList[$counter]['status'];
+		    $info = $userList[$counter]['info'];
+		    $userdata = array(
+			'userid'    =>	$userid, 
+			'password'  =>	$password, 
+			'role'	=>	$role, 
+			'name'	=>	$name,
+			'email'	=>	$email, 
+			'status'    =>	$status, 
+			'info'	=>	$info
+		    );
+		    $this->load->library('user',$userdata,$userid);
+		    $users[$userid] = $this->{$userid};
+		    $counter++;
+		}
+	    }
+
+	    return $users;
+	}
+	
 }
