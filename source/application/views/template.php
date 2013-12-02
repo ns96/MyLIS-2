@@ -7,10 +7,13 @@
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <title><?php echo $page_title; ?></title>
 <link rel="stylesheet" type="text/css" href="<? echo base_url().'css/bootstrap.css'; ?>" />
+<link rel="stylesheet" type="text/css" href="<? echo base_url().'css/jquery-ui-1.10.3.custom.min.css'; ?>" />
 <link rel="stylesheet" type="text/css" href="<? echo base_url().'css/my.css'; ?>" />
 
 <script type='text/javascript' src="<? echo base_url(); ?>/js/jquery.min.js"></script>
+<script type='text/javascript' src="<? echo base_url(); ?>/js/jquery-ui-1.10.3.custom.min.js"></script>
 <script type='text/javascript' src="<? echo base_url(); ?>/js/bootstrap.min.js"></script>
+<script type='text/javascript' src="<? echo base_url(); ?>/js/my.js"></script>
 </head>
 <body>
 

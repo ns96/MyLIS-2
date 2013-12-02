@@ -145,6 +145,12 @@ function checkLISDate($date) {
   return checkdate($sa[0], $sa[1], $sa[2]);
 }
 
+function dateToLIS($date) {
+  $sa  = explode('-', $date);
+  $date = "$sa[1]/$sa[2]/$sa[0]";
+  return $date;
+}
+
 // function to add a number of days to a given date
 function addDaysToDate($date, $days) {
   $sa  = explode('/', $date);
@@ -205,3 +211,59 @@ function checkURL($url) {
 	}
 	return $new_url;
     }
+    
+  // function to display the list of location
+  function displayLocationList($locations,$users,$home) {
+
+    // display the main page now
+    echo "<html>";
+    echo "<head>";
+    echo "<title>Location List</title>";
+    echo "</head>";
+    echo "<body>";
+
+    // add the table that allows uploading of file
+    $cell_color1 = 'rgb(180,200,235)';
+    $cell_color2 = 'rgb(240,240,240)';
+
+    echo '<table style="background-color: rgb(255, 255, 255); width: 100%; text-align: left;"
+    border="0" cellpadding="2" cellspacing="2"><tbody>';
+
+    echo '<tr>';
+    echo '<td style="vertical-align: top; background-color: '.$cell_color1.';">
+    <small><b>Location ID</b></small></td>';
+    echo '<td style="vertical-align: top; background-color: '.$cell_color1.';">
+    <small><b>Room #</b></small></td>';
+    echo '<td style="vertical-align: top; background-color: '.$cell_color1.';">
+    <small><b>Description</b></small></td>';
+    echo '<td style="vertical-align: top; background-color: '.$cell_color1.';">
+    <small><b>Assigned To</b></small></td>';
+    echo '</tr>';
+
+    foreach ($locations as $location){
+	$location_id = $location['location_id'];
+	$room = $location['room'];
+	$description = $location['description'];
+	$owner = $location['owner'];
+	$owner_name = $owner;
+
+	if(isset($users[$owner])) {
+	    $owner_name = $users[$owner]->name;
+	}
+	$user_id = $location['userid'];
+
+	echo '<tr>';
+	echo '<td style="vertical-align: center; background-color: '.$cell_color2.';">
+	<small><b>'.$location_id.'</b></small></td>';
+	echo '<td style="vertical-align: center; background-color: '.$cell_color2.';">
+	<small>'.$room.'</small></td>';
+	echo '<td style="vertical-align: center; background-color: '.$cell_color2.';">
+	<small>'.$description.'</small></td>';
+	echo '<td style="vertical-align: center; background-color: '.$cell_color2.';">
+	<small>'.$owner_name.'</small></td>';
+	echo '</tr>';
+    }
+
+    echo '</tbody></table>';
+    echo '</body></html>';
+  }

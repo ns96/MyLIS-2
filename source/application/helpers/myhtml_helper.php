@@ -213,3 +213,15 @@ function showPageTitle($title){
 	</div>
     <? }
 }
+
+function showModal($title,$message,$destination=''){
+  
+    echo "<html><head>
+    <link rel='stylesheet' type='text/css' href='".base_url().'css/jquery-ui-1.10.3.custom.min.css'."' />
+    <link rel='stylesheet' type='text/css' href='".base_url().'css/my.css'."' />
+    <script type='text/javascript' src='".base_url()."/js/jquery.min.js'></script>
+    <script type='text/javascript' src='".base_url()."/js/jquery-ui-1.10.3.custom.min.js'></script>
+    <script type='text/javascript' src='".base_url()."/js/my.js'></script></head><body>";
+    echo "<script type='text/javascript'>myModalMessage('$title','$message','$destination');</script>";
+    echo "</body></html>";
+}
