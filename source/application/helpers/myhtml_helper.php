@@ -28,7 +28,7 @@ function loadGroupMenu(){
 		'icon'		=>  base_url().'images/icons/meeting.png',
 	),
 	'orderbook'	=>  array(
-		'controller'	=>  "orders",
+		'controller'	=>  "orderbook",
 		'title'		=>  'Order Book',
 		'icon'		=>  base_url().'images/icons/orders2.png',
 	),
@@ -160,7 +160,7 @@ function loadGroupTopArea(){
     $logout_link = base_url()."group/login/logout";
     
     if ('1' == '1') { ?>
-    <a href='<?=base_url()."group/main"?>' style="text-decoration:none; color:#285E8E"><img class="toparea_image" src="<? echo base_url()."images/icons/mylis.png" ?>" />
+    <a href='<?=base_url()."group/main"?>' style="text-decoration:none; color:#285E8E"><img class="toparea_image" src='<?= base_url()."images/icons/mylis.png" ?>' />
 	My Laboratory Information System</a>
 	<div class="btn-group toparea_dropdown">
 	    <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
