@@ -9,6 +9,79 @@ class Accounts extends Group_Controller {
 	$this->userobj = $this->session->userdata('user');
     }
     
+    public function upgrade(){
+        $this->load->model('account_model');
+        
+        if (isset($_POST['upgrade_form'])){
+            if($this->checkupgradeForm()) {
+              
+                $data['name']         = $this->input->post('name'); // Users name
+                $data['pi_name']      = $this->input->post('pi_name'); // PI name
+                $data['email']        = $this->input->post('email');
+                $data['pi_email']     = $this->input->post('pi_email');
+                $data['phone']        = $this->input->post('phone'); // phone number to contact user
+                $data['po_number']    = $this->input->post('po_number'); // po number
+                $data['address']      = trim($this->input->post('address')); // institution adress
+                $agree        = $this->input->post('agree'); // the group web page of the PI
+                
+                $storage = $this->input->post('storage'); // amount of storage requested
+                
+                $data['sale_type'] = $storage.'MB'; // the type of sale
+                $data['date'] = getLISDateTime(); // get the current date and time
+                $data['cost'] = $this->properties["storage.cost.".$storage.'MB']; // get cost of this storage
+                $data['userid'] = $this->userobj->userid;
+                $data['account_id'] = $this->properties['lis.account'];
+                
+                // add to the sales table
+                $order_id = $this->account_model->update_sales($data) + 1000;  // get the sale ID and add 1000
+
+                // now update the accounts table
+                $data1['expire_date'] = $this->getExpireDate();
+                $data1['status'] = 'premium';
+                $data1['account_id'] = $this->properties['lis.account'];
+                $data1['storage'] = $storage;
+                $data1['cost'] = $data['cost'];
+                $this->account_model->upgrade_account($data1);
+
+                // update the initiation file
+                $new_props = array(
+                    'lis.expire' => $data1['expire_date'],
+                    'lis.status' => $data1['status'],
+                    'storage.quota' => $storage
+                );
+                
+                $params['user'] = $this->userobj;
+                $params['account'] = $this->session->userdata('group');
+                $params['properties'] = $this->properties;
+                // Load a FileManager model
+                $this->load->model('filemanager');
+                $this->filemanager->initialize($params);
+                $this->filemanager->modifyInitiationFile($new_props);
+
+                // send email to confirm sale
+                $sale_info = array($data['email'], $data['pi_email'], $data['name'], $order_id, $data['date'], $storage, $data['cost']);
+                $this->sendConfirmEmail($sale_info);
+
+                // display confirmation message now
+                $data2['page_title'] = 'Account upgraded!';
+                $data2['sale_info'] = $sale_info;
+                $this->load_view('group/account/confirmation',$data2);
+            } else {
+                $data['page_title'] = 'Error message';
+                $data['error_message'] = $this->error_message;
+                $this->load_view('error/error_and_back',$data);
+            }
+        } else {       
+            $data['page_title'] = 'Upgrade your Account';
+            $data['user'] = $this->userobj;
+            $data['info'] = $this->account_model->getAccountInfo($this->properties['lis.account']);
+            $data['cost1'] = $this->properties['storage.cost.200MB'];
+            $data['cost2'] = $this->properties['storage.cost.1000MB'];
+            $data['cost3'] = $this->properties['storage.cost.5000MB'];
+            $this->load_view('group/account/upgradeForm',$data);
+        }
+    }
+    
     public function user_profile(){
 	$this->restrict_access();
 	
@@ -103,7 +176,7 @@ class Accounts extends Group_Controller {
 	    $error .= '<li>Please Enter Your Full Name</li>';
 	}
 
-	if(empty($email) || !$this->valid_email($email)) {
+	if(empty($email) || !valid_email($email)) {
 	    $error .= '<li>Please Enter Valid Email Address </li>';
 	}
 
@@ -131,6 +204,65 @@ class Accounts extends Group_Controller {
 	}
     }
     
+    // function to check the form data
+    function checkUpgradeForm() {
+      $error = '';
+
+      $name         = $this->input->post('name'); // Users name
+      $pi_name      = $this->input->post('pi_name'); // PI name
+      $email        = $this->input->post('email');
+      $pi_email     = $this->input->post('pi_email');
+      $phone        = $this->input->post('phone'); // phone number to contact user
+      $po_number    = $this->input->post('po_number'); // po number
+      $address      = trim($this->input->post('address')); // institution adress
+      $agree        = $this->input->post('agree'); // the group web page of the PI
+
+      if(empty($name)) {
+        $error .= '<li>Please Your Name</li>';
+      }
+
+      if(empty($pi_name)) {
+        $error .= '<li>Please Enter PI\'s Name</li>';
+      }
+
+       if(empty($email) || !valid_email($email)) {
+        $error .= '<li>Please Enter Valid Email Address </li>';
+      }
+
+      if(empty($pi_email) || !valid_email($pi_email)) {
+        $error .= '<li>Please Enter Valid PI Email Address </li>';
+      }
+
+      if(empty($phone) || strlen($phone) < 10) {
+        $error .= '<li>Please Enter Phone Number </li>';
+      }
+
+      if(empty($po_number)) {
+        $error .= '<li>Please Enter P.O. Number</li>';
+      }
+
+      if(empty($address)) {
+        $error .= '<li>Please Enter Billing Address</li>';
+      }
+
+      if(empty($agree)) {
+        $error .= '<li>You Must Agree to the Terms In Order for Order to be Processed</li>';
+      }
+
+      if(!empty($error)) {
+        $back_link =  base_url()."group/main";
+
+        $this->error_message = '<h4><span style="background-color: rgb(255, 100, 100);">
+        Error, the following value(s) were not entered, or the formating is 
+        incorrect. Please <b><a href="'.$back_link.'">Go Back</a></b> and correct the values.</span></h4>
+       <ul style="list-style-type: square;"> '.$error.'</ul>';
+        return false;
+      }
+      else {
+        return true;
+      }
+    }
+    
     // function to check the input form data
     private function checkGroupFormInput() {
 	$error = '';
@@ -145,7 +277,7 @@ class Accounts extends Group_Controller {
 	    $error .= '<li>Please Enter PI\'s Name</li>';
 	}
 
-	if(empty($pi_email) || !$this->valid_email($pi_email)) {
+	if(empty($pi_email) || !valid_email($pi_email)) {
 	    $error .= '<li>Please Enter Valid PI\'s Email Address </li>';
 	}
 
@@ -175,35 +307,6 @@ class Accounts extends Group_Controller {
 	    return true;
 	}
     }
-
-    // used to check to see if we have an email address
-    private function valid_email($email) {
-	// First, we check that there's one @ symbol, and that the lengths are right
-	if (!preg_match("/^[^@]{1,64}@[^@]{1,255}$/", $email)) {
-	    // Email invalid because wrong number of characters in one section, or wrong number of @ symbols.
-	    return false;
-	}
-	// Split it into sections to make life easier
-	$email_array = explode("@", $email);
-	$local_array = explode(".", $email_array[0]);
-	for ($i = 0; $i < sizeof($local_array); $i++) {
-	    if (!preg_match("@^(([A-Za-z0-9!#$%&#038;'*+/=?^_`{|}~-][A-Za-z0-9!#$%&#038;'*+/=?^_`{|}~\.-]{0,63})|(\"[^(\\|\")]{0,62}\"))$@", $local_array[$i])) {
-		return false;
-	    }
-	}  
-	if (!preg_match("/^\[?[0-9\.]+\]?$/", $email_array[1])) { // Check if domain is IP. If not, it should be valid domain name
-	    $domain_array = explode(".", $email_array[1]);
-	    if (sizeof($domain_array) < 2) {
-		return false; // Not enough parts to domain
-	    }
-	    for ($i = 0; $i < sizeof($domain_array); $i++) {
-		if (!preg_match("/^(([A-Za-z0-9][A-Za-z0-9-]{0,61}[A-Za-z0-9])|([A-Za-z0-9]+))$/", $domain_array[$i])) {
-		    return false;
-		}
-	    }
-	}
-	return true;
-    }
     
     // function to check to see if the password is valid
     private function valid_password($password) {
@@ -213,4 +316,55 @@ class Accounts extends Group_Controller {
 	}
 	return $valid;
     }
+    
+    // function to get the new expiration date
+    private function getExpireDate() {
+      $expire_date = '';
+      $account_info = $this->account_model->getAccountInfo($this->properties['lis.account']);
+
+      $old_expire_date = $account_info['expire_date'];
+      $status = $account_info['status'];
+
+      if($status == 'premium') {
+        $timediff = $this->lis_tz[$this->properties['lis.timezone']];
+        $days_remaining = getDaysRemaining($old_expire_date,$timediff);
+        if($days_remaining <= 60) { // only if the days remaining are less than 60 then add a year
+          $expire_date = addDaysToDate($old_expire_date, 365);
+        }
+      }
+      else {
+        $expire_date = addDaysToDate(getLISDate(), 365);
+      }
+      return $expire_date;
+    }
+    
+    
+    
+    // function to send a conformation email
+    function sendConfirmEmail($sale_info) {
+      $subject  = 'MyLIS Account Upgraded';
+      $headers = 'From: sales@mylis.net'."\r\n".
+      'Reply-To: sales@mylis.net'."\r\n".
+      'X-Mailer: PHP/'.phpversion();
+
+      $body = "This is an automated response to inform you the MyLIS account has been upgraded. \n \n";
+      $body .= "Order ID : $sale_info[3] \n";
+      $body .= "Placed By : $sale_info[2] at $sale_info[4] \n";
+      $body .= "New File Storage Limit : $sale_info[5]MB \n";
+      $body .= 'Cost Per Year : $'.$sale_info[6].".00 \n \n";
+      $body .= "As per the sales agreement, payment must be made within 30 ";
+      $body .= "days after receipt of sales invoice, which will be sent to the billing address given. ";
+      $body .= "The sale will be null and void otherwise and the account will revert back to ";
+      $body .= "the old storage limit.\n \n";
+      $body .= "If you have any questions, please contact sales@instras.com Please include your Order ID in email.";
+
+      mail($sale_info[0], $subject, $body, $headers); // send mail to the person who placed order
+      if($sale_info[0] != $sale_info[1]) {
+        mail($sale_info[1], $subject, $body, $headers); // send email to the PI
+      }
+
+      // send email to sales@mylis.net
+      mail('sales@mylis.net', $subject, $body, $headers);
+    }
+    
 }

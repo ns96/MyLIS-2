@@ -3,16 +3,17 @@
 class User_model extends CI_Model {
     
     var $lisdb = null;
+    var $table = '';
     
     public function __construct() {
 	parent::__construct();
 	$this->lisdb = $this->load->database('lisdb',TRUE);
+        $this->table = $this->session->userdata('group')."_users";
     }
     
     public function getUser($userid){
-	$table = $this->session->userdata('group')."_users";
 	$this->lisdb->where('userid',$userid);
-	$record = $this->lisdb->get($table)->result_array();
+	$record = $this->lisdb->get($this->table)->result_array();
 	
 	if (count($record)>0){	    
 	    $userdata['userid'] = $record[0]['userid'];
@@ -33,10 +34,8 @@ class User_model extends CI_Model {
     }
     
     public function getUserPassword($userid){
-	$table = $this->session->userdata('group')."_users";
-	$lisdb = $this->load->database('lisdb',TRUE);
-	$lisdb->where('userid',$userid);
-	$record = $lisdb->get($table)->result_array();
+	$this->lisdb->where('userid',$userid);
+	$record = $lisdb->get($this->table)->result_array();
 	
 	if (count($record)>0){	
 	    $password = $record[0]['password'];
@@ -46,10 +45,19 @@ class User_model extends CI_Model {
 	return $password;
     }
     
+    public function addUser($data){
+        $sql = "INSERT INTO $this->table VALUES('$data[userid]', '$data[password]','$data[role]', '$data[name]', '$data[email]', '$data[status]', '$data[info]')";
+        $this->lisdb->query($sql);
+    }
+    
+    public function deleteUser($userid){
+        $sql = "DELETE FROM $this->table WHERE userid='$userid'";
+        $this->lisdb->query($sql);
+    }
+    
     public function getGroupUsers($groupname){
-	$lisdb = $this->load->database('lisdb',TRUE);
 	$table = $groupname.'_users';
-	$userList = $lisdb->get($table)->result_array();
+	$userList = $this->lisdb->get($table)->result_array();
 	return $userList;
     }
     

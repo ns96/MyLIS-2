@@ -7,16 +7,19 @@ class Filemanager extends CI_Model {
   var $file_url = '';
   var $plugin_directory = '';
   var $plugin_url = '';
+  var $home_dir;
+  var $properties;
   
   public function initialize($params) {
     $this->user = $params['user'];
     $this->table = $params['account'].'_files';
-    $home_dir = CIPATH."/accounts/mylis_".$params['account']."/";
+    $this->properties = $params['properties'];
+    $this->home_dir = CIPATH."/accounts/mylis_".$params['account']."/";
     $home_url = base_url()."accounts/mylis_".$params['account']."/";
     
-    $this->file_directory = $home_dir.'files/';
+    $this->file_directory = $this->home_dir.'files/';
     $this->file_url = $home_url.'files/';
-    $this->plugin_directory = $home_dir.'plugins/';
+    $this->plugin_directory = $this->home_dir.'plugins/';
     $this->plugin_url = $home_url.'plugins/';
   }
   
@@ -281,14 +284,12 @@ class Filemanager extends CI_Model {
         $this->properties[$key] = $new_props[$key];
       }
     }
-    
     $this->writeInitiationFile();
   }
   
   // function to write out the initiation file
   function writeInitiationFile() {
-    $home_dir = CIPATH."/application/accounts/".$params['account']."/";
-    $init_file = $home_dir.'conf/lis.ini';
+    $init_file = $this->home_dir.'conf/lis.ini';
     
     $fp = fopen($init_file, "w") or die("Couldn't open $init_file");
     

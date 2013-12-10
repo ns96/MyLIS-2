@@ -17,7 +17,7 @@
     <!-- QUOTA AREA -->
     <div class="progress-wrapper">
 	<br>
-	<form action="<?=$upgrade_link?>" target="iframe1" method="post" style="float:right; margin-left:10px;"><input type="submit" value="Upgrade" class="btn btn-primary btn-small"></form>
+	<form action="<?=$upgrade_link?>" method="post" style="float:right; margin-left:10px;"><input type="submit" value="Upgrade" class="btn btn-primary btn-small"></form>
 	<div style="float:right; margin-left:10px">You have <?=($total-$used) ?>MB available in your quota!</div>
 	<div class="progress">
 	    <div class="bar" style="width: <?=$percentage."%" ?>"><?= $percentage."%"?></div>

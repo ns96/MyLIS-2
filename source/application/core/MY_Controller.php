@@ -26,6 +26,11 @@ class Lis_Controller extends CI_Controller {
 	    $propertiesFile = CIPATH.$conf_location;
 	    $properties = parse_ini_file($propertiesFile,false,INI_SCANNER_RAW); // INI_SCANNER_RAW is used in order not
 										// to convert 'true' and 'false' values to 1 and o
+            /**Storage Cost Per Year Information */
+            $properties['storage.cost.200MB'] = 100.0;
+            $properties['storage.cost.1000MB'] = 300.0;
+            $properties['storage.cost.5000MB'] = 500.0;
+            
 	    return $properties;		    
     }
     
