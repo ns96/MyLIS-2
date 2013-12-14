@@ -476,7 +476,7 @@ class Orderbook_model extends CI_Model {
         $status_date =  $entry_date;
         $mfmw = 'Not Entered';
         $category = 'Organic';
-        $location = '?';
+        $location = 'unassigned';
         $notes = 'None';
         $owner = $record['owner'];
         $userid = $user_id;
@@ -508,7 +508,7 @@ class Orderbook_model extends CI_Model {
         $status_date =  $entry_date;
         $sn = '000000';
         $category = 'Other';
-        $location = '?';
+        $location = 'unassigned';
         $notes = 'None';
         $owner = $record['owner'];
         $userid = $user_id;

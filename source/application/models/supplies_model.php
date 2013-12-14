@@ -15,6 +15,15 @@ class Supplies_model extends CI_Model {
 	$this->ct_table = $this->session->userdata('group').'_categories';
     }
     
+    public function resetSuppliesTable(){
+        $sql = "DELETE FROM $this->table";
+        $this->lisdb->query($sql);
+
+        // reset the auto increment to 1;
+        $sql = "ALTER TABLE $this->table AUTO_INCREMENT = 1";
+        $this->lisdb->query($sql);
+    }
+    
     public function transferFullOwnership($data){
 	$sql = "UPDATE $this->table SET owner='$data[to_user]', userid='$data[userid]' WHERE owner='$data[from_user]'";
 	$this->lisdb->query($sql);

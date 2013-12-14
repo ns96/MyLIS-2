@@ -64,10 +64,10 @@ class Proputil_model extends CI_Model {
     
     $lisdb = $this->load->database('lisdb',TRUE);
     $records = $lisdb->get($this->table)->result_array();
-    echo "<pre>"; var_dump($records); die();
+    //echo "<pre>"; var_dump($records); die();
     
     foreach($records as $record){
-	$properties[$record['key_id']]=$properties[$record['value']];
+	$properties[$record['key_id']]=$record['value'];
     }
     return $properties;
   }

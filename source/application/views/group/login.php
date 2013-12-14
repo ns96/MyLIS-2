@@ -55,7 +55,9 @@
 	<div class="span4"></div>
     </div>
 </div>
-    
+    <div>
+        <? if (isset($login_error)) echo $login_error; ?>
+    </div>
 <hr style="width: 100%; height: 1px;">
     <div align="center">Please contact your <a href="mailto:lisadmin@instras.com">site administrator</a> if you have trouble logging in.</div>
 <hr style="width: 100%; height: 1px;">

@@ -303,3 +303,9 @@ function checkURL($url) {
     echo '</tbody></table>';
     echo '</body></html>';
   }
+  
+  // function to return the category id
+  function getCategoryID($cat_id) {
+    $array = explode('_', $cat_id);
+    return $array[1];
+  }

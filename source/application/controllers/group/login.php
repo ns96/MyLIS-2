@@ -36,7 +36,7 @@ class Login extends Group_Controller {
 		// If the username or password were not empty
 		if(!empty($userid) && !empty($password)) {
 		    $user = $this->validateUser($userid, $password);
-
+                        
 		    // If the user credentials were not valid
 		    if(empty($user)) {
 			$this->load_view('errors/group_login_failed');
@@ -58,12 +58,16 @@ class Login extends Group_Controller {
 			    redirect('group/main');
 			} else {
 			    // If the account has been expired
-			    $this->load_view('errors/expired_account');
+                            $data['login_error'] = $this->load->view('errors/expired_account',null,TRUE);
+                            $data['target'] = base_url().'group/login/login_request?group='.$this->properties['lis.account'];
+			    $this->load->view('group/login',$data);
 			}
 		    }
 		} else { 
-		    $data['groupname'] = $this->properties['lis.account'];
-		    $this->load_view('errors/group_login_failed',$data);
+		    $data1['groupname'] = $this->properties['lis.account'];
+		    $data['login_error'] = $this->load->view('errors/group_login_failed',$data1,TRUE);
+                    $data['target'] = base_url().'group/login/login_request?group='.$this->properties['lis.account'];
+                    $this->load->view('group/login',$data);
 		}
 	    } else {
 		// If this is an already logged in user
@@ -100,7 +104,7 @@ class Login extends Group_Controller {
 	// function to return days remaining from todays date and the date variable
 	function getDaysRemaining($date) {
 	    $days = 0;
-	    $sa  = split('/', $date);
+	    $sa  = explode('/', $date);
 	    $date_utc = mktime(0, 0, 0, $sa[0], $sa[1], $sa[2]);
 	    $now_utc = mktime() + $this->lis_tz[$this->properties['lis.timezone']];
 	    $diff_seconds = $date_utc - $now_utc;

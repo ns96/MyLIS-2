@@ -288,12 +288,12 @@ class Filemanager extends CI_Model {
   }
   
   // function to write out the initiation file
-  function writeInitiationFile() {
+  function writeInitiationFile($newProperties) {
     $init_file = $this->home_dir.'conf/lis.ini';
     
     $fp = fopen($init_file, "w") or die("Couldn't open $init_file");
     
-    foreach ($this->properties as $key => $value) {
+    foreach ($newProperties as $key => $value) {
       if(!empty($key) && $this->saveKey($key)) {
         $text = $key.'='."$value\n";
         fwrite($fp, $text);

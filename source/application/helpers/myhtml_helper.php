@@ -35,7 +35,7 @@ function loadGroupMenu(){
 	'publication'	=>  array(
 		'controller'	=>  "publications",
 		'title'		=>  'PubTracker',
-		'icon'		=>  base_url().'images/icons/pdfs.png',
+		'icon'		=>  base_url().'images/icons/article.png',
 	),
 	'instrulog'	=>  array(
 		'controller'	=>  "instrulog",
@@ -43,14 +43,14 @@ function loadGroupMenu(){
 		'icon'		=>  base_url().'images/icons/log.png',
 	),
 	'grouptask'	=>  array(
-		'controller'	=>  "instrulog",
+		'controller'	=>  "grouptask",
 		'title'		=>  'Group Tasks',
-		'icon'		=>  '',
+		'icon'		=>  base_url().'images/icons/todo.png',
 	),
 	'folder'	=>  array(
 		'controller'	=>  "file_folder",
 		'title'		=>  'File Folder',
-		'icon'		=>  '',
+		'icon'		=>  base_url().'images/icons/pdfs.png',
 	),
 	'weblinks'	=>  array(
 		'controller'	=>  "weblinks",

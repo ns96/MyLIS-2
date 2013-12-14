@@ -198,7 +198,7 @@ foreach($users as $user) {
   '.$userid.'</td>';
 
   // remove any @ or . in userid and replace with underscore
-  $userid = $cleanUserID($userid);
+  $userid = cleanUserID($userid);
 
   echo '<td style="vertical-align: center; background-color: '.$cell_color2.';">
   <input type="text" name="password_'.$userid.'" size="15" value="'.$password.'"></td>';

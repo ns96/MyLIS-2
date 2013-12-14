@@ -4,6 +4,7 @@ class Chemicals_model extends CI_Model {
     
     var $lisdb = null;
     var $table = ''; // the chemicals table
+    var $s_table = ''; // the supplies table
     var $l_table = ''; // the locations table
     var $ct_table = ''; // the category table
     
@@ -11,8 +12,18 @@ class Chemicals_model extends CI_Model {
 	parent::__construct();
 	$this->lisdb = $this->load->database('lisdb',TRUE);
 	$this->table = $this->session->userdata('group').'_chemicals';
+        $this->s_table = $this->session->userdata('group').'_supplies';
 	$this->l_table = $this->session->userdata('group').'_locations';
 	$this->ct_table = $this->session->userdata('group').'_categories';
+    }
+    
+    public function resetChemicalsTable(){
+        $sql = "DELETE FROM $this->table";
+        $this->lisdb->query($sql);
+
+        // reset the auto increment to 1;
+        $sql = "ALTER TABLE $this->table AUTO_INCREMENT = 1";
+        $this->lisdb->query($sql);
     }
     
     public function transferFullOwnership($data){
@@ -34,6 +45,12 @@ class Chemicals_model extends CI_Model {
 		userid='$data[userid]' WHERE chem_id='$data[chem_id]'";
 	}
 	$this->lisdb->query($sql);
+    }
+    
+    public function simpleLocationList(){
+        $sql = "SELECT * FROM $this->l_table ORDER BY location_id";
+	$records = $this->lisdb->query($sql)->result_array();
+        return $records;
     }
     
     public function getLocations(){
@@ -74,9 +91,42 @@ class Chemicals_model extends CI_Model {
 	return $categories;
     }
     
+    // function to return categories for a particular section
+    function getCategoriesByType($type) {
+      $categories = array();
+      $table_name = '';
+
+      if($type == 'Chemical') {
+        $table_name = $this->table;
+      }
+      else {
+        $table_name = $this->s_table;
+      }
+
+      $sql = "SELECT * FROM $this->ct_table WHERE table_name='$table_name' ORDER BY category_id";
+      $records = $this->lisdb->query($sql)->result_array();
+
+      foreach($records as $array) {
+        $category_id = $array['category_id'];
+        $categories[$category_id] = $array['value'];
+      }
+
+      return $categories;
+    }
+    
     public function addCategory($category, $userid){
 	$sql = "INSERT INTO $this->ct_table VALUES(' ', '$this->table', 'chemical', '$category', '$userid')";
 	$this->lisdb->query($sql);
+    }
+    
+    public function updateCategory($value,$category_id){
+        $sql = "UPDATE $this->ct_table SET value = '$value' WHERE category_id = '$category_id'";
+        $this->lisdb->query($sql);
+    }
+    
+    public function deleteCategory($category_id){
+        $sql = "DELETE FROM $this->ct_table WHERE category_id = '$category_id'";
+        $this->lisdb->query($sql);
     }
     
     public function addLocation($location_info, $user){
@@ -86,14 +136,25 @@ class Chemicals_model extends CI_Model {
 
 	$userid = $user->userid;
 
-	if(isset($locations[3])) {
+	if(isset($location_info[3])) {
 	    $owner = trim($location_info[3]);
 	} else {
 	    $owner = $user->name;
 	}
-
+        
 	$sql = "INSERT INTO $this->l_table VALUES('$location_id', '$room', '$description', '$owner', '$userid')";
 	$this->lisdb->query($sql);
+    }
+    
+    public function updateLocation($data){
+        $sql = "UPDATE $this->l_table SET room = '$data[room]', description = '$data[description]', owner = '$data[owner]', userid = '$data[userid]' 
+          WHERE location_id = '$data[location_id]'";
+        $this->lisdb->query($sql);
+    }
+    
+    public function deleteLocation($location_id){
+        $sql = "DELETE FROM $this->l_table WHERE location_id = '$location_id'";
+        $this->lisdb->query($sql);
     }
     
     public function getMine($userid){
