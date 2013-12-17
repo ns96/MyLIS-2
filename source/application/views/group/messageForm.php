@@ -8,10 +8,10 @@ if(!empty($message_id)) {
 }
 ?>
 
-<table id="messageFormTopBar" style="width: 100%" cellpadding="4" cellspacing="2"><tbody>
+<table class="formTopBar" style="width: 100%" cellpadding="4" cellspacing="2"><tbody>
 <tr>
     <td style="background-color: rgb(180,200,230); width: 25%;">
-	<small><span style="font-weight: bold;"><?=$title?></span></small>
+	<?=$title?>
     </td>
     <td style="background-color: rgb(180,200,230); text-align: right;">
 	<small>

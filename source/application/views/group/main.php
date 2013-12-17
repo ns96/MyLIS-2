@@ -26,10 +26,10 @@
     </div>  
     <!-- MESSAGE LISTING AREA -->
     <div id="iFrame1Wrapper">
-	<table id="messageFormTopBar" style="width: 100%" cellpadding="4" cellspacing="2">
+	<table class="formTopBar" style="width: 100%" cellpadding="4" cellspacing="2">
 	<tr>
 	    <td style="background-color: rgb(180,200,230); width: 25%;">
-		<small><span style="font-weight: bold;">Message Listing</span></small>
+		Message Listing
 	    </td>
 	</tr>
 	</table>
@@ -37,7 +37,7 @@
 	</iframe>
     </div>
     <!-- MESSAGE FORM AREA -->
-    <div id="messageFormWrapper">
+    <div class="formWrapper">
 	<?=$messageForm ?>
     </div>
     <br> <?=$ads_html ?>

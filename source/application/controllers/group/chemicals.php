@@ -133,11 +133,10 @@ class Chemicals extends Group_Controller {
 	switch ($type) {
 	    case 'mine': 
 		$data2['items'] = $this->chemicals_model->getMine($user_id);
-		$count = count($data2['items']);
-		$data['sub_listing_HTML'] = "<small><span style=\"color: rgb(225, 0, 0);\"><b>$count</b></span> Total ...</small><br>"; 
-		$data['sub_listing_HTML'] .= $this->load->view('group/chemicals/sub_listing',$data2,TRUE); 
+		$data['sub_listing_HTML'] = $this->load->view('group/chemicals/sub_listing',$data2,TRUE); 
 		$data['title'] = 'My Chemicals';
 		$data['page_title'] = 'My Chemicals';
+                $data['count'] = count($data2['items']);
 		$this->load_view('group/chemicals/listing',$data);
 		break;
 	    case 'all':
@@ -145,6 +144,7 @@ class Chemicals extends Group_Controller {
 		$data['sub_listing_HTML'] = $this->load->view('group/chemicals/sub_listing',$data2,TRUE); 
 		$data['title'] = 'All Chemicals';
 		$data['page_title'] = 'All Chemicals';
+                $data['count'] = count($data2['items']);
 		$this->load_view('group/chemicals/listing',$data);
 		break;
 	    case 'by_category':

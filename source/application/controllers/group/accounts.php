@@ -114,7 +114,7 @@ class Accounts extends Group_Controller {
 	    $data['info'] = $this->userobj->info;
 	    $data['password'] = $password;
 	    
-	    $this->load_view('group/myprofile',$data);
+	    $this->load_view('group/account/myprofile',$data);
 	}
     }
     
@@ -158,7 +158,7 @@ class Accounts extends Group_Controller {
 	    $data['info'] = $info;
 	    $data['editor'] = $editor;
 	    
-	    $this->load_view('group/groupProfile',$data);
+	    $this->load_view('group/account/groupProfile',$data);
 
 	    
 	}

@@ -165,19 +165,78 @@ root {
     background-color: #FFFFFF;
 }
 
-#messageFormWrapper, #iFrame1Wrapper {
+.formWrapper, #iFrame1Wrapper {
     background-color: #E9EDF3;
     margin:15px; 
     border:1px solid #99AAC4;
 }
 
-#messageFormTopBar {
+.formWrapper-inline {
+    background-color: #E9EDF3;
+    margin:15px; 
+    border:1px solid #99AAC4;
+    display: inline-block;
+}
+
+.formTopBar {
     font-family: "Helvetica Neue",Helvetica,Arial,sans-serif;
-    font-size: 15px;
+    font-size: 13px;
     line-height: 20px;
     text-shadow: 0 1px 0 rgba(255, 255, 255, 0.5);
     font-weight: bold;
     border-bottom: 1px solid #99AAC4;
     text-align: left;
+    margin-bottom: 10px;
 }
 
+.formTable {
+   border-collapse: separate;
+   border-spacing: 5px;
+   width: 100%;
+}
+
+.formTable label {
+    font-weight: bold;
+}
+
+.formTable label.radio {
+    font-weight: normal;
+}
+
+.formTable input {
+    min-height: 30px;
+    display: inline-block;
+}
+
+.formTable input[type="radio"] {
+    min-height: 0px;
+}
+
+.table {
+    font-size: 14px;
+    border-color: #B1B1B1;
+}
+
+.table th {
+    background-color: #E2E2E2;
+}
+
+.table tr:hover{
+        background-color: #E2E2E2;
+}
+
+.table td, .table th {
+    border-color: #B1B1B1;
+}
+
+#chem_table td:nth-child(1), #item_table td:nth-child(1){
+    text-align: center;
+}
+
+.nav {
+    margin-bottom: 0px;
+}
+
+#add_user_form td {
+    vertical-align: top;
+}

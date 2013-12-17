@@ -14,82 +14,91 @@ $search_target = base_url()."group/chemicals/search";
 $location_link = base_url()."group/chemicals/listLocations";
 $home_link = base_url()."group/chemicals";
 
-echo "<html>";
-echo "<head>";
-echo "<title>Search Chemical Inventory</title>";
-echo "</head>";
-echo '<body>';
-echo '<table style="width: 100%; text-align: left;" border="0" cellpadding="2" cellspacing="0">';
-echo '<tbody>';
-echo '<tr>';
-echo '<td style="vertical-align: top;">';
-echo '<span style="color: #3366FF;"><b>'.$page_title.'</b></span><br>';
-echo '</td>';
-echo '<td style="vertical-align: top; text-align: right;">';
-echo "[ <a href='$home_link'>Home</a> ]<br>";
-echo '</td></tr></tbody></table>';
-
-echo printColoredLine('#3366FF', '2px').'<pre></pre>';
-
 echo '[ <a href="'.$list_mine.'">My Chemicals</a> ] ';
 echo '[ <a href="'.$list_all.'">List All</a> ] ';
 echo '[ <a href="'.$list_bycategory.'">List All By Category</a> ] ';
 echo '[ <a href="'.$list_bylocation.'">List All By Location</a> ] ';
 
 // add the search form
-echo '<form name="form1" action="'.$search_target.'" method="post">';
-echo '<input type="hidden" name="search_chemicals_form" value="posted">';
-echo '<br>';
+?>
+<div class="formWrapper-inline">
+        <table class="formTopBar" style="width: 100%" cellpadding="4" cellspacing="2">
+            <tbody>
+            <tr>
+                <td colspan="2" style="background-color: rgb(180,200,230); width: 25%;">
+                    Search the inventory
+                </td>
+            </tr>
+            </tbody>
+        </table>
+        <form action="<?=$search_target?>" method="POST" class="form-inline" style="margin-right:10px">
+            <input type="hidden" name="search_chemicals_form" value="posted">     
+            <table class="formTable">
+                    <tr>
+                        <td style="width:100px">
+                            <label for="radio" class="control-label">Search by:</label>
+                        </td>
+                        <td>
+                            <label class="radio">
+                                <input type="radio" name="searchby" id="optionsRadios1" value="id" checked>
+                                Chem ID
+                            </label>
+                            <label class="radio">
+                                <input type="radio" name="searchby" id="optionsRadios2" value="name">
+                                Name
+                            </label>
+                            <label class="radio">
+                                <input type="radio" name="searchby" id="optionsRadios3" value="cas">
+                                CAS#
+                            </label>
+                            <label class="radio">
+                                <input type="radio" name="searchby" id="optionsRadios4" value="location">
+                                Location
+                            </label>
+                            <br>
+                            <div id="location_list_option" style="margin-top:5px; display:none">
+                                <select name="location" size="1">';
+                                    <?
+                                    foreach($locations as $location) {
+                                        echo '<option value="'.$location.'">'.$location.'</option>';
+                                    }
+                                    ?>
+                                </select>
+                                <input type="button" value="Location List" onClick="window.open(\''.$location_link.'\',\'locations\',\'width=500,height=600,location=no,resizable=yes,scrollbars=yes\')">
+                            </div>
+                        </td>
+                        <td rowspan="2">
+                            <button type="submit" class="btn btn-large" style="margin-left:15px; margin-right: 15px;">Inventory Search</button>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <label for="radio" class="control-label">Search for:</label>
+                        </td>
+                        <td>
+                            <input type="text" name="searchterm" id="searchterm" value="" class="input-block-level">
+                        </td>
+                    </tr>
+            </table>
+        </form>
+</div>
 
-// add the table
-echo '<table style="background-color: rgb(225, 255, 255); text-align: left; width: 100%;" border="1" cellpadding="2"
-cellspacing="0"><tbody>';
-
-echo '<tr>';
-echo '<td style="vertical-align: top;">';
-echo '<small><span style="font-weight: bold; color: rgb(0, 0, 102);">Search By</span></small></td>';
-echo '<td style="vertical-align: top;"><small>';
-
-echo '<input type="radio" value="id" name="searchby">
-<span style="font-weight: bold; color: rgb(255, 153, 0);">Chem ID</span> ';
-
-echo '<input type="radio" value="name" name="searchby" checked="checked">
-<span style="font-weight: bold; color: rgb(255, 153, 0);">Name</span> ';
-
-echo '<input type="radio" value="cas" name="searchby">
-<span style="font-weight: bold; color: rgb(255, 153, 0);">CAS #</span> ';
-
-echo '<input type="radio" value="location" name="searchby">
-<span style="font-weight: bold; color: rgb(255, 153, 0);">Location :</span> ';
-echo '<select name="location" size="1">';
-foreach($locations as $location) {
-    echo '<option value="'.$location.'">'.$location.'</option>';
-}
-echo '</select> '; 
-echo '<INPUT type="button" value="Location List" 
-onClick="window.open(\''.$location_link.'\',\'locations\',\'width=500,height=600,location=no,resizable=yes,scrollbars=yes\')">
-</small></td></tr>';
-
-echo '<tr>';
-echo '<td style="vertical-align: top;">';
-echo '<small><span style="font-weight: bold; color: rgb(0, 0, 102);">Search For</span></small></td>';
-echo '<td style="vertical-align: top;">';
-echo '<input type="text" name="searchterm" size="65"> ';
-echo '<input type="submit" value="Search" 
-style="background: rgb(238, 238, 238); color: #3366FF"> ';
-echo '</small></td></tr>';
-echo '</tbody></table>';
-echo '</form>';
+<script type='text/javascript'>
+    $( "input[name='searchby']").change(function() {
+      if ($('#optionsRadios4').is(':checked')) { 
+          $("#location_list_option").show();
+      } 
+      else {
+          $("#location_list_option").hide();
+      }
+    });
+</script>
+<?
 
 // add the add chemical form if useris != guest
 if($user->role == 'guest') {
-    echo '</body></html>';
     return;
 }
-
-printColoredLine('#3366FF', '1px');
-
-echo '<br><b><span style="color: #3366FF;">Add New Entry</span></b>';
 
 if(!empty($chem_id)) {
     echo '<small>';
@@ -107,114 +116,148 @@ if(!empty($chem_id)) {
 
 $add_chemical_link = base_url().'group/chemicals/add';
 // add the form that allows input of new chemical
-echo '<form name="form2" action="'.$add_chemical_link.'" method="post">';
-echo '<input type="hidden" name="add_chemical_form" value="posted" >';
+?>
 
-echo '<table style="background-color: rgb(225, 255, 255); text-align: left; width: 100%;" border="1" cellpadding="2"
-cellspacing="0"><tbody>';
-
-echo '<tr>';
-echo '<td style="vertical-align: top;"><small><b>CAS #</b></small><br>
-<input type="text" name="cas" size="20"></td> ';
-echo '<td colspan="3" rowspan="1" style="vertical-align: top;"><small><b>Name</b></small><br>
-<input type="text" name="name" size="65"></td> ';
-echo '</tr>';
-
-echo '<tr>';
-echo '<td style="vertical-align: top;"><small><b>Company</b></small><br>
-<input type="text" name="company" size="20"></td> ';
-echo '<td style="vertical-align: top;"><small><b>Product ID</b></small><br>
-<input type="text" name="productid" size="20"></td> ';
-echo '<td style="vertical-align: top;"><small><b>Amount</b></small><br>
-<select name="amount" size="1">
-<option value="1">1x</option>
-<option value="2">2x</option>
-<option value="3">3x</option>
-<option value="4">4x</option>
-<option value="5">5x</option>
-<option value="6">6x</option>
-<option value="7">7x</option>
-<option value="8">8x</option>
-<option value="9">9x</option>
-<option value="10">10x</option>
-</select><input type="text" name="units" size="8"></td>';
-echo '<td style="vertical-align: top;"><small><b>Status</b></small><br>
-<select name="status" size="1">
-<option value="In Stock">In Stock</option>
-<option value="Out of Stock">Out of Stock</option>
-<option value="Ordered">Ordered</option>
-<option value="Checked Out">Checked Out</option>
-</select></td>';
-echo '</tr>';
-
-echo '<tr>';
-echo '<td style="vertical-align: top;"><small><b>Category</b></small><br>';
-echo '<select name="categories[]" size="1">';
-foreach($categories as $category) {
-    if($category != 'My Chemicals') {
-    echo '<option value="'.$category.'">'.$category.'</option>';
-    }
-}
-echo '</select> 
-<small>Other : </small><input type="text" name="other_category" size="15"></td>';
-
-echo '<td colspan="3" rowspan="1" style="vertical-align: top;"><small><b>Location</b></small><br>';
-echo '<select name="location" size="1">';
-foreach($locations as $location) {
-    echo '<option value="'.$location.'">'.$location.'</option>';
-}
-echo '</select> <small>Other : </small>';
-
-echo '<input type="text" name="other_location" size="35" 
-value="Location ID, Room #, Description">';
-echo '</td></tr>';
-
-echo '<tr>';
-echo '<td colspan="2" rowspan="1" style="vertical-align: top;">
-<span style="color: rgb(255, 0, 0);"><small><b>Notes : </b></small></span>
-<input type="text" name="notes" size="55"></td> ';
-echo '<td style="vertical-align: top;">
-<input type="checkbox" name="personal" value="personal" checked="checked"><small>Personal Item </small></td>';
-echo '<td colspan="1" rowspan="1" style="vertical-align: top; text-align: center;">
-<input type="submit" value="Add Chemical" 
-style="background: rgb(238, 238, 238); color: #3366FF"> ';
-echo '</td></tr>';
-
-echo '</tbody></table>';
-echo '</form>';
+<div class="formWrapper">
+        <table class="formTopBar" style="width: 100%" cellpadding="4" cellspacing="2">
+            <tbody>
+            <tr>
+                <td colspan="2" style="background-color: rgb(180,200,230); width: 25%;">
+                    Add New entry
+                </td>
+            </tr>
+            </tbody>
+        </table>
+        <form action="<?=$add_chemical_link?>" method="POST" class="form-inline" style="margin-right:10px">
+            <input type="hidden" name="add_chemical_form" value="posted" >      
+            <table class="formTable">
+                <tr>
+                    <td style="width: 25%">
+                        <label for="cas" class="control-label">CAS# :</label><br>
+                        <input type="text" id="cas" name="cas" class="input-block-level">
+                    </td>
+                    <td style="width: 25%">
+                        <label for="name" class="control-label">Name :</label><br>
+                        <input type="text" id="name" name="name" class="input-block-level">
+                    </td>
+                    <td style="width: 25%"></td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td>
+                        <label for="company" class="control-label">Company :</label><br>
+                        <input type="text" id="company" name="company" class="input-block-level">
+                    </td>
+                    <td>
+                        <label for="productid" class="control-label">Product ID :</label>
+                        <input type="text" id="productid" name="productid" class="input-block-level">
+                    </td>
+                    <td>
+                        <label for="amount" class="control-label">Amount :</label><br>
+                        <select name="amount" size="1" class="input-small">
+                            <option value="1">1x</option>
+                            <option value="2">2x</option>
+                            <option value="3">3x</option>
+                            <option value="4">4x</option>
+                            <option value="5">5x</option>
+                            <option value="6">6x</option>
+                            <option value="7">7x</option>
+                            <option value="8">8x</option>
+                            <option value="9">9x</option>
+                            <option value="10">10x</option>
+                        </select>
+                        <input type="text" id="units" name="units" class="input-block-level input-small">
+                    </td>
+                    <td>
+                        <label for="status" class="control-label">Status :</label><br>
+                        <select name="status" size="1" class="input-medium">
+                            <option value="In Stock">In Stock</option>
+                            <option value="Out of Stock">Out of Stock</option>
+                            <option value="Ordered">Ordered</option>
+                            <option value="Checked Out">Checked Out</option>
+                        </select>
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="2">
+                        <label for="categories" class="control-label">Category :</label><br>
+                        <select name="categories[]" size="1" class="input-medium">';
+                        <?
+                        foreach($categories as $category) {
+                            if($category != 'My Chemicals') {
+                            echo '<option value="'.$category.'">'.$category.'</option>';
+                            }
+                        }
+                        ?>
+                        </select>
+                        other: 
+                        <input type="text" id="other_category" name="other_category">
+                    </td>
+                    <td colspan="2">
+                        <label for="location" class="control-label">Location: :</label><br>
+                        <select name="location" size="1" class="input-medium">';
+                        <?
+                        foreach($locations as $location) {
+                            echo '<option value="'.$location.'">'.$location.'</option>';
+                        }
+                        ?>
+                        </select>
+                        other:
+                        <input type="text" id="other_category" name="other_location" placeholder="Location ID, Room #, Description" >
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="3">
+                        <label for="notes" class="control-label">Notes: :</label><br>
+                        <textarea id="notes" name="notes" class="input-block-level"></textarea>
+                    </td>
+                    <td align="center" style="vertical-align: middle">
+                        <input type="checkbox" name="personal" value="personal" checked="checked">Personal Item
+                    </td>
+                </tr>
+            </table>
+            <br>
+            <button type="submit" class="btn btn-primary btn-small">Add Chemical</button>
+        </form>
+    </div>
+<?
 
 // add the form that allows transfering of chemicals
-if($role == 'admin') {
-    echo '<br>'.printColoredLine('#3366FF', '1px');
-    echo '<b><span style="color: rgb(51, 102, 255);">Transfer Chemical Ownership</span></b>';
-
-    $transfer_chemical_link = base_url().'group/chemicals/transfer';
-    // add the form that allows input of new chemical
-    echo '<form name="form3" action="'.$transfer_chemical_link.'" method="post">';
-    echo '<input type="hidden" name="transfer_chemical_form" value="posted" >';
-    echo '<input type="hidden" name="chem_id" value="-1">';
-
-    echo '<table style="background-color: rgb(225, 255, 255); text-align: left; width: 80%;" border="1" cellpadding="2"
-    cellspacing="0"><tbody>';
-    echo '<tr>';
-    echo '<td style="vertical-align: top;"><small><b>Transfer From : ';
-    echo '<select name="from_user" size="1">';
-    foreach($users as $user) {
-	echo '<option value="'.$user->userid.'">'.$user->name.'</option>';
-    }
-    echo '</select>';
-    echo ' To : <select name="to_user" size="1">';
-    echo '<option value="admin">Group Chemical</option>';
-    foreach($users as $user) {
-	echo '<option value="'.$user->userid.'">'.$user->name.'</option>';
-    }
-    echo '</b></small></td>';
-
-    echo '<td style="vertical-align: top; text-align: center;">
-    <input type="submit" value="Transfer Chemical" 
-    style="background: rgb(238, 238, 238); color: #3366FF"></td>';
-    echo '</tr>';
-    echo '</tbody></table>';
+$transfer_chemical_link = base_url().'group/chemicals/transfer';
+if($role == 'admin') { ?>
+    
+    <div class="formWrapper">
+        <table class="formTopBar" style="width: 100%" cellpadding="4" cellspacing="2">
+            <tbody>
+            <tr>
+                <td colspan="2" style="background-color: rgb(180,200,230); width: 25%;">
+                    Transfer Chemical Ownership
+                </td>
+            </tr>
+            </tbody>
+        </table>
+        <form action="<?=$transfer_chemical_link?>" method="POST" class="form-inline" style="margin-right:10px">
+            <input type="hidden" name="transfer_chemical_form" value="posted" >
+            <input type="hidden" name="chem_id" value="-1">       
+            <label for="from_user" class="control-label">Transfer From :</label>
+            <select name="from_user" class="input-medium">
+                <?
+                    foreach($users as $user) {
+                        echo '<option value="'.$user->userid.'">'.$user->name.'</option>';
+                    }
+                ?>
+            </select>     
+            <label for="to_user" class="control-label">Group Chemical :</label>
+            <select name="to_user" class="input-medium">
+                <?
+                    foreach($users as $user) {
+                        echo '<option value="'.$user->userid.'">'.$user->name.'</option>';
+                    }
+                ?>
+            </select>
+            <button type="submit" class="btn btn-primary btn-small">Transfer</button>
+        </form>
+    </div>
+    
+    <?
 }
-
-echo '</body></html>';

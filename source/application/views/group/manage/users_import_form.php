@@ -11,31 +11,33 @@ $cell_color2 = 'rgb(240,240,240)'; // a light gray
 echo '<small><i>'.$im_message.'</i></small>';
 
 // add table for importing a user list
-echo '<form enctype="multipart/form-data" action="'.$target_link.'" method="POST">';
-echo '<input type="hidden" name="users_import_form" value="posted">';
 
-echo '<table style="background-color: rgb(255, 255, 255); width: 100%; text-align: left;"
-border="0" cellpadding="1" cellspacing="2"><tbody>';
+?>
+<div class="formWrapper">
+    <table class="formTopBar" style="width: 100%" cellpadding="4" cellspacing="2">
+        <tbody>
+        <tr>
+            <td colspan="2" style="background-color: rgb(180,200,230); width: 25%;">
+                Import User List 
+                <span style="font-size:14px; font-weight: normal; margin-left: 15px; text-shadow: none">
+                    <a href="<?=$file_link?>" target="_blank">Download Excel Template</a>
+                </span>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+    <form action="<?=$target_link?>" enctype="multipart/form-data" method="POST" class="form-inline" style="margin-right:10px">
+        <input type="hidden" name="users_import_form" value="posted">   
+        <table class="formTable">
+            <tr>
+                <td>
+                    <label for="fileupload" class="control-label">Tab Delimited Text File :</label>
+                    <input type="file" id="fileupload" name="fileupload" class="input-block-level">
+                    <button type="submit" class="btn btn-primary btn-small">Import</button>
+                </td>
+            </tr>
+        </table>
+    </form>
+</div>
 
-echo '<tr>';
-echo '<td colspan="1" rowspan="1" style="vertical-align: top; text-align: left; background-color: '.$cell_color1.';">
-<small><b>Import User List</b> (tab delimited file) 
-[ <a href="'.$file_link.'" target="_blank">Download Excel Template</a> ]</small></td>';
-echo '</tr>';
-
-/*echo '<tr>';
-echo '<td colspan="1" rowspan="1" style="vertical-align: top; text-align: left; background-color: '.$cell_color2.';">';
-echo '<small><span style="color: '.$this->dark_red.';"><b>'; 
-echo '<input type="radio" name="action" value="overwrite"> Overwrite Existing Database Entries 
-<input type="radio" name="action" value="append" checked> Add to Existing Database Entries
-</b></span></small>'; 
-echo '</td></tr>';*/
-
-echo '<tr>';
-echo '<td colspan="1" rowspan="1" style="vertical-align: top; background-color: '.$cell_color2.';">';
-echo '<small><b>Tab Delimited Text File</b> : <input name="fileupload" type="file" size="40" > '; 
-echo '<input type="submit" value="Import" 
-style="background: rgb(238, 238, 238); color: #3366FF"></td>';
-echo '</td></tr>';
-echo '</tbody></table></form>';
 

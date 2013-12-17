@@ -83,80 +83,84 @@ echo $importForm;
 
 $add_user_link = base_url().'group/manage/users_add';
 // add form to add a user
-echo '<form name="form2" enctype="multipart/form-data" action="'.$add_user_link.'" method="POST">';
-echo '<input type="hidden" name="user_add_form" value="posted">';
-
-echo '<table style="background-color: rgb(255, 255, 255); width: 100%; text-align: left;"
-border="0" cellpadding="1" cellspacing="2"><tbody>';
-
-echo '<tr>';
-echo '<td colspan="5" rowspan="1" style="vertical-align: top; text-align: left; background-color: '.$cell_color1.';">
-<small><b>Add New User</b> (<i>all fields required</i>)</small></td>';
-echo '</tr>';
-
-echo '<td style="vertical-align: top; background-color: '.$cell_color2.';"><small>
-User ID (3 char. min)<br><input type="text" name="userid" size="15">
-</small></td>';
-
-echo '<td style="vertical-align: top; background-color: '.$cell_color2.';"><small>
-Password (4 char. min)<br><input type="text" name="password" size="15">
-</small></td>';
-
-echo '<td style="vertical-align: top; background-color: '.$cell_color2.';"><small>
-Role</small><br>';
-echo '<select name="role" size="1">';
-echo '<option value="user">Regular User</option>';
-echo '<option value="buyer">Purchaser</option>';
-echo '<option value="guest">Guest User</option>';
-echo '<option value="guestbuyer">Guest Buyer</option>';
-echo '<option value="admin">Administrator</option>';
-echo '</select></td>';
-
-echo '<td style="vertical-align: top; background-color: '.$cell_color2.';"><small>
-Full Name<br><input type="text" name="name" size="25">
-</small></td>';
-
-echo '<td colspan="2" rowspan="1" style="vertical-align: top; background-color: '.$cell_color2.';"><small>
-E-mail Address<br><input type="text" name="email" size="25">
-</small></td>';
-echo '</tr>';
-
-echo '<tr>';
-echo '<td style="vertical-align: center; background-color: '.$cell_color2.';"><small>Additional Info : </small></td>';
-echo '<td colspan="3" rowspan="1" style="vertical-align: top; background-color: '.$cell_color2.';"><small>
-<input type="text" name="info" size="65" value="Group Member">
-</td>';
-echo '<td style="vertical-align: top; text-align: center; background-color: '.$cell_color2.';">';
-echo '<input type="button" value="Add User" 
-style="background: rgb(238, 238, 238); color: #3366FF" onclick="addUser()"></td>';
-echo '</tr>';
-echo '</form></tbody></table><br>';
+?>
+<div class="formWrapper">
+    <table class="formTopBar" style="width: 100%" cellpadding="4" cellspacing="2">
+        <tbody>
+        <tr>
+            <td colspan="2" style="background-color: rgb(180,200,230); width: 25%;">
+                Add New User 
+                <span style="font-size:14px; font-weight: normal; margin-left: 15px; text-shadow: none">
+                    <i>(all fields required)</i>
+                </span>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+    <form action="<?=$add_user_link?>" enctype="multipart/form-data" method="POST" class="form-inline" style="margin-right:10px">
+        <input type="hidden" name="user_add_form" value="posted">  
+        <table class="formTable">
+            <tr>
+                <td>
+                    <label for="userid" class="control-label">User ID (3 char. min)</label>
+                    <input type="text" id="userid" name="userid" class="input-block-level">
+                </td>
+                <td>
+                    <label for="password" class="control-label">Password (4 char. min)</label>
+                    <input type="text" id="password" name="password" class="input-block-level">
+                </td>
+                <td>
+                    <label for="role" class="control-label">Role :</label>
+                    <select name="role" size="1">
+                        <option value="user">Regular User</option>
+                        <option value="buyer">Purchaser</option>
+                        <option value="guest">Guest User</option>
+                        <option value="guestbuyer">Guest Buyer</option>
+                        <option value="admin">Administrator</option>
+                    </select>
+                </td>
+                <td>
+                    <label for="name" class="control-label">Full Name :</label>
+                    <input type="text" id="name" name="name" class="input-block-level">
+                </td>
+            </tr>
+            <tr>
+                <td style="vertical-align: top">
+                    <label for="email" class="control-label">E-mail Address :</label>
+                    <input type="text" id="email" name="email" class="input-block-level">
+                </td>
+                <td colspan="3">
+                    <label for="info" class="control-label">Additional Info :</label>
+                    <textarea id="info" name="info" class="input-block-level">Group Member</textarea>
+                </td>
+            </tr>
+        </table>
+        <button type="submit" class="btn btn-primary btn-small" onclick="addUser()">Add User</button>
+    </form>
+</div>
+<?
 
 // print any errors if any
 echo '<small><b>'.$um_error.'</b></small>';
 
 $update_userlist_link = base_url().'group/manage/userlist_modify';
 // display the table that show the current list of users
-echo '<form enctype="multipart/form-data" action="'.$update_userlist_link.'" method="POST">';
-echo '<input type="hidden" name="userlist_modify" value="posted">';
-
-echo '<table style="background-color: rgb(255, 255, 255); width: 100%; text-align: left;"
-border="0" cellpadding="1" cellspacing="2"><tbody>';
-
-echo '<tr>';
-echo '<td style="vertical-align: center; background-color: '.$cell_color1.';">
-<br></td>';
-echo '<td style="vertical-align: center; background-color: '.$cell_color1.';">
-<small><b>User ID</b></small></td>';
-echo '<td style="vertical-align: center; background-color: '.$cell_color1.';">
-<small><b>Password</b></small></td>';
-echo '<td style="vertical-align: center; background-color: '.$cell_color1.';">
-<small><b>Role</b></small></td>';
-echo '<td style="vertical-align: center; background-color: '.$cell_color1.';">
-<small><b>Full Name</b></small></td>';
-echo '<td style="vertical-align: center; background-color: '.$cell_color1.';">
-<small><b>E-mail</b></small></td>';
-echo '</tr>';
+?>
+<div class="formWrapper">
+    <form action="<?=$update_userlist_link?>" method="POST" class="form-inline" style="margin-right:10px">
+        <input type="hidden" name="userlist_modify" value="posted">     
+        <table class="formTable" id="add_user_form">
+            <thead style="font-size:14px;">
+                <th></th>
+                <th>User ID</th>
+                <th>Password</th>
+                <th>Role</th>
+                <th>Full Name</th>
+                <th>E-mail</th>
+                <th>Additional Info</th>
+            </thead>
+            <tbody>
+<?
 
 // list the users
 foreach($users as $user) {
@@ -189,59 +193,62 @@ foreach($users as $user) {
   else if($role == 'admin') {
     $role_name = 'Administrator';
   }
-
-  echo '<tr>';
-  echo '<td colspan="1" rowspan="2" style="vertical-align: top; background-color: '.$cell_color2.';">
-  <input type="checkbox" name="userids[]" value="'.htmlentities($userid).'"></td>';
-
-  echo '<td colspan="1" rowspan="2" style="vertical-align: top; background-color: '.$cell_color2.';">
-  '.$userid.'</td>';
-
-  // remove any @ or . in userid and replace with underscore
-  $userid = cleanUserID($userid);
-
-  echo '<td style="vertical-align: center; background-color: '.$cell_color2.';">
-  <input type="text" name="password_'.$userid.'" size="15" value="'.$password.'"></td>';
-
-  echo '<td style="vertical-align: center; background-color: '.$cell_color2.';">';
-  echo '<select name="role_'.$userid.'" size="1">';
-  echo '<option value="'.$role.'">'.$role_name.'</option>';
-  echo '<option value="user">Regular User</option>';
-  echo '<option value="buyer">Purchaser</option>';
-  echo '<option value="guest">Guest User</option>';
-  echo '<option value="guestbuyer">Guest Buyer</option>';
-  echo '<option value="admin">Administrator</option>';
-  echo '</select></td>';
-
-  echo '<td style="vertical-align: center; background-color: '.$cell_color2.';">
-  <input type="text" name="name_'.$userid.'" size="25" value="'.htmlentities($name).'"></td>';
-
-  echo '<td style="vertical-align: center; background-color: '.$cell_color2.';">
-  <input type="text" name="email_'.$userid.'" size="25" value="'.$email.'"></td>';
-
-  echo '</tr>';
-
-  echo '<tr>';
-  echo '<td style="vertical-align: center; background-color: '.$cell_color2.';"><small>
-  Additional Info :</small></td>';
-
-  echo '<td colspan="3" rowspan="1" style="vertical-align: top; background-color: '.$cell_color2.';"><small>
-  </small><input type="text" name="info_'.$userid.'" size="65" value="'.$info.'"></td>';
-
-  echo '</tr>';
+?>
+  <tr>
+    <td>
+          <input type="checkbox" name="userids[]" value="'.htmlentities($userid).'">
+    </td>
+    <td>
+          <?=$userid?>
+    </td>
+<?
+  $userid = cleanUserID($userid);  // remove any @ or . in userid and replace with underscore
+?>
+    <td>
+        <input type="text" id="password_<?=$userid?>" name="password_<?=$userid?>" class="input-block-level" value="<?=$password?>">
+    </td>
+    <td style="vertical-align: center; background-color: '.$cell_color2.';">
+        <select name="role_<?=$userid?>" class="input-medium">
+            <option value="<?=$role?>"><?=$role_name?></option>
+            <option value="user">Regular User</option>
+            <option value="buyer">Purchaser</option>
+            <option value="guest">Guest User</option>
+            <option value="guestbuyer">Guest Buyer</option>
+            <option value="admin">Administrator</option>
+        </select>
+    </td>
+    <td>
+        <input type="text" name="name_<?=$userid?>" class="input-block-level" value="<?=htmlentities($name)?>">
+    </td>
+    <td>
+        <input type="text" name="email_<?=$userid?>" class="input-block-level" value="<?=$email?>">
+    </td>
+    <td>
+        <textarea name="info_<?=$userid?>" class="input-block-level"><?=$info?></textarea>
+    </td>
+  </tr>
+  <?
 }
+?>
+    <tr>
+        <td colspan="6">
+            <label class="radio">
+                <input type="radio" name="modify_task" id="optionsRadios1" value="remove" checked>
+                Remove Selected
+            </label>
+            <label class="radio">
+                <input type="radio" name="modify_task" id="optionsRadios2" value="update">
+                Update Selected
+            </label>
+        </td>
+        <td>
+            <div align="center">
+                <button type="submit" class="btn btn-primary btn-small">Do Selected Task</button>
+            </div>
+        </td>
+    </tr>
 
-echo '<tr>';
-echo '<td colspan="5" rowspan="1" style="vertical-align: top; background-color: '.$cell_color2.';">
-<input type="radio" value="remove" name="modify_task"><small>
-<span style="font-weight: bold; color: #cc0000;">Remove Selected</span> 
-<input type="radio" value="update" name="modify_task" checked="checked">
-<span style="font-weight: bold; color: #cc0000;">Update Selected</span> 
-</small></td>';
-echo '<td style="vertical-align: center; text-align: center; background-color: '.$cell_color2.';">
-<input type="submit" value="Do Selected Task" 
-style="background: rgb(238, 238, 238); color: #3366FF"></td>';
-echo '</tr>';
-
-echo '</tbody></table>';
-echo '</form>';
+            </tbody>
+        </table>
+    </form>
+</div>

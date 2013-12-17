@@ -37,7 +37,7 @@ class User_model extends CI_Model {
     
     public function getUserPassword($userid){
 	$this->lisdb->where('userid',$userid);
-	$record = $lisdb->get($this->table)->result_array();
+	$record = $this->lisdb->get($this->table)->result_array();
 	
 	if (count($record)>0){	
 	    $password = $record[0]['password'];

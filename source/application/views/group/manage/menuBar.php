@@ -4,78 +4,51 @@ $user_link = base_url()."group/manage/users_main";
 $location_link = base_url()."group/manage/locations_main";
 $inventory_link = base_url()."group/manage/inventory_main";
 $module_link = base_url()."group/manage/modules_main";
-$filemanager_link = base_url()."group/manage/filemanager_main";
 $groupinfo_link = base_url()."group/manage/groupinfo_main";
 $home_link = base_url()."group/main";;
+?>
 
-echo '<table style="text-align: left; width: 100%;" border="0"
-cellpadding="2" cellspacing="0"><tbody><tr>';
+<ul class="nav nav-tabs">
+    <li id="user-tab">
+        <a href="<?=$user_link?>">Users</a>
+    </li>
+    <li id="location-tab">
+        <a href="<?=$location_link?>">Locations</a>
+    </li>
+    <li id="inventory-tab">
+        <a href="<?=$inventory_link?>">Inventory</a>
+    </li>
+    <li id="modules-tab">
+        <a href="<?=$module_link?>">Modules</a>
+    </li>
+    <li id="group-tab">
+        <a href="<?=$groupinfo_link?>">Group Information</a>
+    </li>
+    <li id="home-tab">
+        <a href="<?=$home_link?>">Home</a>
+    </li>
+</ul>
+<div style="background-color:white; height: 10px; margin-bottom: 20px; border-bottom: 1px solid #DDDDDD; border-left: 1px solid #DDDDDD; border-right: 1px solid #DDDDDD"></div>
 
-if($page == 'user') {
-  echo '<td style="text-align: center; background-color: rgb(109, 132, 180);">
-  <span style="color: rgb(255, 255, 255); font-weight: bold;">Users</span></td>';
-}
-else {
-  echo '<td style="text-align: center;"><a
-  style="color: rgb(0, 0, 0);" href="'.$user_link.'">
-  <span style="font-weight: bold;">Users</span></a></td>';
-}
+<script type='text/javascript'>
+    var page = '<?=$page?>';
+    switch (page){
+        case 'user':
+            $("#user-tab").addClass('active');
+            break;
+        case 'location':
+            $("#location-tab").addClass('active');
+            break;
+        case 'inventory':
+            $("#inventory-tab").addClass('active');
+            break;
+        case 'module':
+            $("#modules-tab").addClass('active');
+            break;
+        case 'group':
+            $("#group-tab").addClass('active');
+            break;
+    }
+</script>
 
-if($page == 'location') {
-  echo '<td style="text-align: center; background-color: rgb(109, 132, 180);">
-  <span style="color: rgb(255, 255, 255); font-weight: bold;">Locations</span></td>';
-}
-else {
-  echo '<td style="text-align: center;"><a
-  style="color: rgb(0, 0, 0);" href="'.$location_link.'">
-  <span style="font-weight: bold;">Locations</span></a></td>';
-}
-
-if($page == 'inventory') {
-  echo '<td style="text-align: center; background-color: rgb(109, 132, 180);">
-  <span style="color: rgb(255, 255, 255); font-weight: bold;">Inventory</span></td>';
-}
-else {
-  echo '<td style="text-align: center;"><a
-  style="color: rgb(0, 0, 0);" href="'.$inventory_link.'">
-  <span style="font-weight: bold;">Inventory</span></a></td>';
-}
-
-if($page == 'module') {
-  echo '<td style="text-align: center; background-color: rgb(109, 132, 180);">
-  <span style="color: rgb(255, 255, 255); font-weight: bold;">Modules</span></td>';
-}
-else {
-  echo '<td style="text-align: center;"><a
-  style="color: rgb(0, 0, 0);" href="'.$module_link.'">
-  <span style="font-weight: bold;">Modules</span></a></td>';
-}
-
-/*if($page == 'filemanager') {
-  echo '<td style="text-align: center; background-color: rgb(109, 132, 180);">
-  <span style="color: rgb(255, 255, 255); font-weight: bold;">File Manager</span></td>';
-}
-else {
-  echo '<td style="text-align: center;"><a
-  style="color: rgb(0, 0, 0);" href="'.$filemanager_link.'">
-  <span style="font-weight: bold;">File Manager</span></a></td>';
-}*/
-
-if($page == 'group') {
-  echo '<td style="text-align: center; background-color: rgb(109, 132, 180);">
-  <span style="color: rgb(255, 255, 255); font-weight: bold;">Group Information</span></td>';
-}
-else {
-  echo '<td style="text-align: center;"><a
-  style="color: rgb(0, 0, 0);" href="'.$groupinfo_link.'">
-  <span style="font-weight: bold;">Group Information</span></a></td>';
-}
-
-echo '<td style="text-align: center;"><a
-style="color: rgb(0, 0, 0);" href="'.$home_link.'">
-<span style="font-weight: bold;">Home</span></a></td>';
-
-echo '</tr></tbody></table>';
-printColoredLine('rgb(109, 132, 180)', '2px');
-echo '<pre></pre>'; // add some spacing
 

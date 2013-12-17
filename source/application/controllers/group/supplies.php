@@ -134,10 +134,10 @@ class Supplies extends Group_Controller {
 	    case 'mine': 
 		$data2['items'] = $this->supplies_model->getMine($user_id);
 		$count = count($data2['items']);
-		$data['sub_listing_HTML'] = "<small><span style=\"color: rgb(225, 0, 0);\"><b>$count</b></span> Total ...</small><br>"; 
-		$data['sub_listing_HTML'] .= $this->load->view('group/supplies/sub_listing',$data2,TRUE); 
+		$data['sub_listing_HTML'] = $this->load->view('group/supplies/sub_listing',$data2,TRUE); 
 		$data['title'] = 'My Supplies';
 		$data['page_title'] = 'My Supplies';
+                $data['count'] = count($data2['items']);
 		$this->load_view('group/supplies/listing',$data);
 		break;
 	    case 'all':
@@ -145,6 +145,7 @@ class Supplies extends Group_Controller {
 		$data['sub_listing_HTML'] = $this->load->view('group/supplies/sub_listing',$data2,TRUE); 
 		$data['title'] = 'All supplies';
 		$data['page_title'] = 'All supplies';
+                $data['count'] = count($data2['items']);
 		$this->load_view('group/supplies/listing',$data);
 		break;
 	    case 'by_category':
