@@ -39,7 +39,6 @@ class Login extends Admin_Controller {
 	public function login_request()
 	{
 	    //echo "<pre>"; var_dump($this->session->userdata, $_POST); die();
-	    
 	    // if the user is not logged in
 	    if (!$this->session->userdata('user')) {
 		
@@ -56,9 +55,8 @@ class Login extends Admin_Controller {
 		    } else {
 			// If credentials are valid set the session variables
 			// and redirect to main admin page
-			$this->session->set_userdata('user',$user); 
+                        $this->session->set_userdata('user',$user); 
 			$this->session->set_userdata('group',$user->role);
-
 			// Add a log entry
 			$params['user'] = $user;
 			$this->load->library('logger',$params);

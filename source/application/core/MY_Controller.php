@@ -123,6 +123,7 @@ class Admin_Controller extends Lis_Controller {
 	// This function should be called by every admin page or before
 	// any admin action to prevent unauathorized access
 	public function restrict_access(){
+            
 	    if ($this->session->userdata('user')) {
 		if (!($this->session->userdata('group') == 'admin')){
 		    // The user is logged in but is not an admin

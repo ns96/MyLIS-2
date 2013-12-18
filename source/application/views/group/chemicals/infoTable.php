@@ -51,138 +51,109 @@ else {
     $owner = 'Group Chemical';
 }
 
+// construct url for the msds sites, pubchem, and nist
+$msdsxchange_url = 'http://www.msdsxchange.com/english/index.cfm';
+$sirimsds_url = 'http://www.hazard.com/msds/gn.cgi?query='.$name.'&start=0';
+$msds_url = 'http://www.msdshazcom.com/search.cgi?zoom_query='.$name;
+$pubchem_url = 'http://www.ncbi.nlm.nih.gov/sites/entrez?db=pccompound&term='.$name;
+$nist_url = 'http://webbook.nist.gov/cgi/cbook.cgi?Name='.$name.'&Units=SI';
+
+// put some links for modify the status of this item
+$cs_link0 = base_url()."group/chemicals/changeStatus/in-stock?chem_id=".$chem_id; // change status to in stock
+$cs_link1 = base_url()."group/chemicals/changeStatus/out-of-stock?chem_id=".$chem_id; // change status to out of stock
+$cs_link2 = base_url()."group/chemicals/changeStatus/checked-out?chem_id=".$chem_id; // change status to checked out
+$cs_link3 = base_url()."group/chemicals/changeStatus/returned?chem_id=".$chem_id; // change status to returned
+$cs_link4 = base_url()."group/chemicals/changeStatus/ordered?chem_id=".$chem_id; // change status to ordered
+$mine_link = base_url()."group/chemicals/transfer?chem_id=".$chem_id; // used to transfer this make to current user
+$edit_link = base_url()."group/chemicals/edit?chem_id=".$chem_id; // used to edit the information about this chemical
+$delete_link = base_url()."group/chemicals/delete?chem_id=".$chem_id; // used to remove this chemical
+
+ // display the external links
+echo "<a href=\"$msdsxchange_url\" target=\"_blank\">MSDS XChange</a> | ";
+echo "<a href=\"$sirimsds_url\" target=\"_blank\">SIRI MSDS</a> | ";
+echo "<a href=\"$msds_url\" target=\"_blank\">Seton MSDS</a> | ";
+echo "<a href=\"$pubchem_url\" target=\"_blank\">PubChem</a> | ";
+echo "<a href=\"$nist_url\" target=\"_blank\">NIST Chemistry WebBook</a>";
+
 // creat the table now
-$cell_color1 = 'rgb(150,200,255)';
-$cell_color2 = 'rgb(230,230,230)';
+?>    
+    <table class="info_table">
+        <tr>
+                <td>Chem ID</td>
+                <td><?=$chem_id?></td>
+                <td rowspan="11">
+                    <img src="<?=base_url().'images/icons/info.png'?>" />
+                </td>
+        </tr>
+        <tr>
+                <td>CAS #</td>
+                <td><?=$cas?></td>
+        </tr>
+        <tr>
+                <td>Name</td>
+                <td><?=$name?></td>
+        </tr>
+        <tr>
+                <td>Category</td>
+                <td><?=$category?></td>
+        </tr>
+        <tr>
+                <td>Company</td>
+                <td><?=$company?></td>
+        </tr>
+        <tr>
+                <td>Product ID</td>
+                <td><?=$product_id?></td>
+        </tr>
+        <tr>
+                <td>Amount</td>
+                <td><?=$amount?></td>
+        </tr>
+        <tr>
+                <td>Status</td>
+                <td>
+                    <?=$status?>
+                    <? if($role != 'guest') { ?>
+                            <div class="btn-group" style="margin-left: 20px">
+                                <a class="btn dropdown-toggle btn-small" data-toggle="dropdown" href="#">
+                                  Change status
+                                  <span class="caret"></span>
+                                </a>
+                                <ul class="dropdown-menu">
+                                  <!-- dropdown menu links -->
+                                  <li><a href="<?=$cs_link0?>">In Stock</a></li>
+                                  <li><a href="<?=$cs_link1?>">Out of Stock</a></li>
+                                  <li><a href="<?=$cs_link2?>">Checked Out</a></li>
+                                  <li><a href="<?=$cs_link3?>">Returned</a></li>
+                                  <li><a href="<?=$cs_link4?>">Ordered</a></li>
+                                </ul>
+                            </div>
+                <? } ?>
+                </td>
+        </tr>
+        <tr>
+                <td>Location</td>
+                <td><?=$location_id?></td>
+        </tr>
+        <tr>
+                <td>Owner</td>
+                <td>
+                        <?=$owner?>
+                        <? if($role != 'guest') { ?>
+                            <a href="<?=$mine_link?>" style="margin-left: 20px"><button class="btn btn-small">Make mine</button></a>
+                        <? } ?>
+                </td>
+        </tr>
+        <tr>
+                <td>Notes</td>
+                <td><?=$notes?></td>
+        </tr>
+    </table>
+        <? if($role != 'guest') { ?>
+                <td rowspan="12">
+                   <a href="<?=$edit_link?>"><button class="btn btn-success">Edit</button></a>
+                   <a href="<?=$delete_link?>" style="margin-left: 20px"><button class="btn btn-danger">Delete</button></a>
+                </td>
+        <? } ?>
 
-echo '<table style="background-color: rgb(255, 255, 255); width: 100%; text-align: left;"
-border="0" cellpadding="2" cellspacing="2"><tbody>';
 
-echo '<tr>';
-echo '<td style="vertical-align: top; background-color: '.$cell_color1.';">
-<small><b>Chem ID</b></small></td>';
-echo '<td style="vertical-align: top; background-color: '.$cell_color2.';"><small>';
-
-    // construct url for the msds sites, pubchem, and nist
-    //$msdsxchange_url = 'http://www.actiocms.com/msdsxchange/english/xchange_productname.cfm?alpha='.$name;
-    $msdsxchange_url = 'http://www.msdsxchange.com/english/index.cfm';
-    //$msdsxchange_url = "$script?task=chemicals_msdsx&name=$name";
-    $sirimsds_url = 'http://www.hazard.com/msds/gn.cgi?query='.$name.'&start=0';
-    $msds_url = 'http://www.msdshazcom.com/search.cgi?zoom_query='.$name;
-    $pubchem_url = 'http://www.ncbi.nlm.nih.gov/sites/entrez?db=pccompound&term='.$name;
-    $nist_url = 'http://webbook.nist.gov/cgi/cbook.cgi?Name='.$name.'&Units=SI';
-    
-    // display the chemical ID
-    echo '<b><span style="color: rgb(235, 0, 0);">'.$chem_id.'</span></b>';
-    echo '&nbsp;&nbsp;&nbsp;&nbsp;';
-    
-    // display the external links
-    echo "<a href=\"$msdsxchange_url\" target=\"_blank\">MSDS XChange</a> | ";
-    echo "<a href=\"$sirimsds_url\" target=\"_blank\">SIRI MSDS</a> | ";
-    echo "<a href=\"$msds_url\" target=\"_blank\">Seton MSDS</a> | ";
-    echo "<a href=\"$pubchem_url\" target=\"_blank\">PubChem</a> | ";
-    echo "<a href=\"$nist_url\" target=\"_blank\">NIST Chemistry WebBook</a>";
-
-echo '</small></td>';
-echo '</tr>';
-
-echo '<tr>';
-echo '<td style="vertical-align: top; background-color: '.$cell_color1.';">
-<small><b>CAS #</b></small></td>';
-echo '<td style="vertical-align: top; background-color: '.$cell_color2.';">
-<small>'.$cas.'</small></td>';
-echo '</tr>';
-
-echo '<tr>';
-echo '<td style="vertical-align: top; background-color: '.$cell_color1.';">
-<small><b>Name</b></small></td>';
-echo '<td style="vertical-align: top; background-color: '.$cell_color2.';">
-<small>'.$name.'</small></td>';
-echo '</tr>';
-
-echo '<tr>';
-echo '<td style="vertical-align: top; background-color: '.$cell_color1.';">
-<small><b>Category</b></small></td>';
-echo '<td style="vertical-align: top; background-color: '.$cell_color2.';">
-<small>'.$category.'</small></td>';
-echo '</tr>';
-
-echo '<tr>';
-echo '<td style="vertical-align: top; background-color: '.$cell_color1.';">
-<small><b>Company</b></small></td>';
-echo '<td style="vertical-align: top; background-color: '.$cell_color2.';">
-<small>'.$company.'</small></td>';
-echo '</tr>';
-
-echo '<tr>';
-echo '<td style="vertical-align: top; background-color: '.$cell_color1.';">
-<small><b>Product ID</b></small></td>';
-echo '<td style="vertical-align: top; background-color: '.$cell_color2.';">
-<small>'.$product_id.'</small></td>';
-echo '</tr>';
-
-echo '<tr>';
-echo '<td style="vertical-align: top; background-color: '.$cell_color1.';">
-<small><b>Amount</b></small></td>';
-echo '<td style="vertical-align: top; background-color: '.$cell_color2.';">
-<small>'.$amount.'</small></td>';
-echo '</tr>';
-
-echo '<tr>';
-echo '<td style="vertical-align: top; background-color: '.$cell_color1.';">
-<small><b>Status</b></small></td>';
-echo '<td style="vertical-align: top; background-color: '.$cell_color2.';">
-<small>'.$status.'</small></td>';
-echo '</tr>';
-
-echo '<tr>';
-echo '<td style="vertical-align: top; background-color: '.$cell_color1.';">
-<small><b>Location</b></small></td>';
-echo '<td style="vertical-align: top; background-color: '.$cell_color2.';">
-<small>'.$location_id.'</small></td>';
-echo '</tr>';
-
-echo '<tr>';
-echo '<td style="vertical-align: top; background-color: '.$cell_color1.';">
-<small><b>Owner</b></small></td>';
-echo '<td style="vertical-align: top; background-color: '.$cell_color2.';">
-<small>'.$owner.'</small></td>';
-echo '</tr>';
-
-echo '<tr>';
-echo '<td style="vertical-align: top; background-color: '.$cell_color1.';">
-<small><b>Notes</b></small></td>';
-echo '<td style="vertical-align: top; background-color: '.$cell_color2.';">
-<small>'.$notes.'</small></td>';
-echo '</tr>';
-
-if($role != 'guest') {
-    // put some links for modify the status of this item
-    $cs_link0 = base_url()."group/chemicals/changeStatus/in-stock?chem_id=".$chem_id; // change status to in stock
-    $cs_link1 = base_url()."group/chemicals/changeStatus/out-of-stock?chem_id=".$chem_id; // change status to out of stock
-    $cs_link2 = base_url()."group/chemicals/changeStatus/checked-out?chem_id=".$chem_id; // change status to checked out
-    $cs_link3 = base_url()."group/chemicals/changeStatus/returned?chem_id=".$chem_id; // change status to returned
-    $cs_link4 = base_url()."group/chemicals/changeStatus/ordered?chem_id=".$chem_id; // change status to ordered
-    $mine_link = base_url()."group/chemicals/transfer?chem_id=".$chem_id; // used to transfer this make to current user
-    $edit_link = base_url()."group/chemicals/edit?chem_id=".$chem_id; // used to edit the information about this chemical
-    $delete_link = base_url()."group/chemicals/delete?chem_id=".$chem_id; // used to remove this chemical
-
-    echo '<tr>';
-    echo '<td style="vertical-align: top; background-color: '.$cell_color1.';"><small>
-    <b>Change Status</b></small></td>';
-    echo '<td style="vertical-align: top; background-color: '.$cell_color2.';"><small>
-    [ <a href="'.$cs_link0.'">In Stock</a> ] 
-    [ <a href="'.$cs_link1.'">Out of Stock</a> ] 
-    [ <a href="'.$cs_link2.'">Checked Out</a> ] 
-    [ <a href="'.$cs_link3.'">Returned</a> ] 
-    [ <a href="'.$cs_link4.'">Ordered</a> ] 
-    [ <a href="'.$mine_link.'">Make Mine</a> ] 
-    [ <a href="'.$edit_link.'">Edit</a> ] ';
-    /*if($role == 'admin') { // should really only let admin delete, but ...
-    echo '[ <a href="'.$delete_link.'">Delete</a> ]';
-    }*/
-    echo '[ <a href="'.$delete_link.'">Delete</a> ]';
-    echo '</small></td></tr>';
-}
-
-echo '</tbody></table>';

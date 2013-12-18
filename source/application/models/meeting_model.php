@@ -29,6 +29,12 @@ class Meeting_model extends CI_Model {
 	return $gmdates;
     }
     
+    public function getGMDate($gmdate_id){
+        $sql = "SELECT * FROM $this->table WHERE gmdate_id = '$gmdate_id'";
+        $records = $this->lisdb->query($sql)->result_array();
+        return $records[0];
+    }
+    
     public function getDateSlots($gmdate_id){
 	$sql = "SELECT * FROM $this->s_table WHERE gmdate_id ='$gmdate_id'";
 	$records = $this->lisdb->query($sql)->result_array();

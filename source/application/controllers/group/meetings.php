@@ -103,8 +103,8 @@ class Meetings extends Group_Controller {
 	// instead of an 'Add Date' form
 	$gmdate_id = $this->input->get('gmdate_id');
 	if(!empty($gmdate_id)) {
-	    $gmdate_info = $this->getGMDate($gmdate_id);
-	    $title = 'Edit';
+	    $gmdate_info = $this->meeting_model->getGMDate($gmdate_id);
+	    $title = 'Update';
 	    $date = dateToLIS($gmdate_info['gmdate']);
 	    $time = $gmdate_info['gmtime'];
 	    $target_link = base_url()."group/meetings/updateDate";
@@ -132,6 +132,7 @@ class Meetings extends Group_Controller {
 	$data['semesterHTML'] = $semesterHTML;
 	$data['addSlotHTML'] = $addSlotHTML;
 	$data['addDateHTML'] = $addDateHTML;
+        $data['default_semester'] = $default_semester;
 	
 	$this->load_view('group/meetings/main',$data);
     }

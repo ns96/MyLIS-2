@@ -116,7 +116,7 @@ class Login extends Group_Controller {
 	public function logout(){
 	    $groupname = $this->session->userdata('group');
 	    session_destroy();
-	    $this->session->unset_userdata('userid');
+	    $this->session->unset_userdata('user');
 	    $this->session->unset_userdata('role');
 	    $this->session->unset_userdata('group');
 	    redirect('group/login?group='.$groupname);

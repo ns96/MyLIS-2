@@ -122,12 +122,12 @@ function loadAdminMenu(){
 	'managefiles'	=>  array(
 		'controller'	=>  "managefiles",
 		'title'		=>  'File Manager',
-		'icon'		=>  '',
+		'icon'		=>  base_url().'images/icons/pdfs.png',
 	),
 	'update'	=>  array(
 		'controller'	=>  "accounts",
 		'title'		=>  'Update Accounts',
-		'icon'		=>  '',
+		'icon'		=>  base_url().'images/icons/update.png',
 	),
 	'manage'	=>  array(
 		'controller'	=>  "manage",

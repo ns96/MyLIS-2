@@ -1,46 +1,70 @@
 <?php
-
 if (!empty($file_id)){
     $target_link = base_url().'group/file_folder/editfile';
 } else {
     $target_link = base_url().'group/file_folder/addfile';
 }
-echo '<a name="add"></a>'; // target for link from top
-echo "<form action=\"$target_link\" method=\"POST\" enctype=\"multipart/form-data\">";
-echo '<input type="hidden" name="task" value="'.$task.'">';
-echo '<input type="hidden" name="file_id" value="'.$file_id.'">';
 
-echo '<table style="text-align: left; width: 70%; 
-background-color: rgb(240, 240, 240);" border="1" cellpadding="1" cellspacing="0"><tbody>';
-
-echo '<tr><td style="background-color: rgb(180,200,230); width: 25%;">File Title : </td>
-<td style="background-color: rgb(180,200,230)"><input size="45" name="title" value="';
 if(isset($fileInfo['title'])) {
-    echo $fileInfo['title'];
-}
-echo '"></td></tr>';
-
-echo '<tr><td>Category : </td><td><select name="category">';
-
-if(isset($fileInfo['category_id'])) {
-  $cat_id = 'cat_'.$fileInfo['category_id'];
-  $category = $categories[$cat_id];
-  echo '<option value="'.$cat_id.'">'.$category.'</option>';
+    $file_title = $fileInfo['title'];
+} else {
+    $file_title = '';
 }
 
-foreach($categories as $key => $category) {
-  echo '<option value="'.$key.'">'.$category.'</option>';
-}
+?>
 
-echo '</select> or New Category 
-<input size="20" name="other_category"></td></tr>';
-
-echo '<tr><td colspan="1" rowspan="2" style="vertical-align: top;"><br></td>
-<td>'.$urlUploadField.'</td></tr>';
-
-echo '<tr>
-<td style="text-align: left;">
-<input value="'.$title.'" type="submit" style="background: rgb(238, 238, 238); color: rgb(51, 102, 255)"> 
-<small>(2MB Max)</small></td></tr>';
-
-echo '</tbody></table></form>';
+<div class="formWrapper">
+    <table class="formTopBar" style="width: 100%" cellpadding="4" cellspacing="2">
+        <tbody>
+        <tr>
+            <td colspan="2" style="background-color: rgb(180,200,230); width: 25%;">
+                Add New File
+            </td>
+        </tr>
+        </tbody>
+    </table>
+    <form action="<?=$target_link?>" method="POST" enctype="multipart/form-data" class="form-inline" style="margin-right:10px">
+        <input type="hidden" name="task" value="'.$task.'">
+        <input type="hidden" name="file_id" value="'.$file_id.'">     
+        <table class="formTable">
+            <tr>
+                <td>
+                    <label for="title" class="control-label">File title :</label>
+                </td>
+                <td>
+                    <input type="text" name="title" class="input-block-level" value="<?=$file_title?>">
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <label for="category" class="control-label">Category :</label>
+                </td>
+                <td>
+                    <select name="category" class="input-medium">
+                        <?
+                        if(isset($fileInfo['category_id'])) {
+                            $cat_id = 'cat_'.$fileInfo['category_id'];
+                            $category = $categories[$cat_id];
+                            echo '<option value="'.$cat_id.'">'.$category.'</option>';
+                          }
+                          foreach($categories as $key => $category) {
+                            echo '<option value="'.$key.'">'.$category.'</option>';
+                          }
+                        ?>
+                    </select>
+                    or New Category
+                    <input type="text" name="other_category" class="input-medium">
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <label for="cas" class="control-label">Upload file (2MB Max):</label>
+                </td>
+                <td>
+                    <?=$urlUploadField?>
+                </td>
+            </tr>
+        </table>
+        <button type="submit" class="btn btn-primary btn-small"><?=$title?></button>
+    </form>
+</div>
