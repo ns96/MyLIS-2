@@ -48,7 +48,7 @@ class Filemanager extends CI_Model {
   // number is used if multiple file browse are used
   function getURLFileUploadField($field_id) {
     $html = 'Select Type :
-    <select name="filetype_'.$field_id.'" class="input-medium">
+    <select name="filetype_'.$field_id.'" class="input-smallmedium">
     <option value="none">No File</option>
     <option value="url">Website URL</option>
     <option value="pdf">PDF</option>
@@ -62,8 +62,10 @@ class Filemanager extends CI_Model {
     <option value="zip">Zip</option>
     <option value="other">Other</option>
     </select>
-    <input type="file" name="fileupload_'.$field_id.'">
-    <input size="52" name="url_'.$field_id.'" value="enter website url here">';
+    <label for="fileupload'.$field_id.'" class="control-label">:</label>
+	<input id="fileupload'.$field_id.'" name="fileupload'.$field_id.'" class="filestyle" type="file" data-icon="false" style="position: fixed; left: -500px;">  
+    </label><br>
+    <input type="text" name="url_'.$field_id.'" placeholder="enter website url here" class="input-block-level" style="margin-top:6px">';
     
     return $html;
   }

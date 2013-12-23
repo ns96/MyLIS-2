@@ -136,12 +136,12 @@ class Grouptask extends Group_Controller {
         $data4['task_name'] = $task_name;
         $addTaskForm = $this->load->view('group/grouptask/addGroupTaskForm',$data4,TRUE);
         
-        $data['page_title'] = 'Group task management';
-        $data['groupTaskName'] = $this->getGroupTaskName();
+        $data['page_title'] = 'Group task management <span style="font-weight:normal; margin-left:15px">('.$this->getGroupTaskName().')</span>';
         $data['taskTable'] = $taskTable;
         $data['selectedYear'] = $this->getSelectedYear();
         $data['yearSelector'] = $this->displayYearSelector();
         $data['addTaskForm'] = $addTaskForm;
+	$data['taskPage'] = $this->loadTaskPage();
         $this->load_view('group/grouptask/main',$data);
     }
     
@@ -340,7 +340,7 @@ class Grouptask extends Group_Controller {
     }
     
     // This is the source of the iframe area of main grouptask page
-    public function taskpage(){
+    public function loadTaskPage(){
         $y = $this->getSelectedYear();
         $y_min = $y - 1;
         $y_max = $y + 1;
@@ -349,7 +349,8 @@ class Grouptask extends Group_Controller {
         $data['yearTasks'] = $yearTasks;
         $data['session_userid'] = $this->userobj->userid;
         $data['session_role'] = $this->userobj->role;
-        $this->load->view('group/grouptask/groupTaskList',$data);
+        $html = $this->load->view('group/grouptask/groupTaskList',$data,TRUE);
+	return $html;
     }
     
     // function to return the name of the selected group task
@@ -368,20 +369,10 @@ class Grouptask extends Group_Controller {
     *chy = change year number
     */
     function displayYearSelector() {
-      $main_link = base_url().'group/grouptask';
-      $y = $this->getSelectedYear();
+      $data['main_link'] = base_url().'group/grouptask';
+      $data['y'] = $this->getSelectedYear();
 
-      $output =  '<table style="text-align: left; width: 100%;" border="0" 
-      cellpadding="2" cellspacing="0"><tbody>';
-
-      $output .= "<tr  bgcolor='#ffff00'>";
-      $output .= "<td style=\"text-align: left;\"><small><b>
-      <a href='$main_link&pry=$y&chy=-1'>".($y - 1).'</a></b></small></td>';
-      $output .= '<td style="text-align: center;"><b>Selected Year ( '.$y.' )</b></td>';
-      $output .= "<td style=\"text-align: right;\"><b><small>
-      <a href='$main_link&pry=$y&chy=1'>".($y+1).'</b></small></td>';
-      $output .= '</tr>';
-      $output .= '</tbody></table>';
+      $output = $this->load->view('group/grouptask/yearSelector',$data,TRUE);
       return $output;
     }
     

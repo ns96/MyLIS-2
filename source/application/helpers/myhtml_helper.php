@@ -60,6 +60,9 @@ function loadGroupMenu(){
     );
 
     $menuHTML = '';
+    // Add a 'Home' item 
+    $menuHTML .= "<li><a href='".$base."main'>Home Page<img src='".base_url()."images/icons/home.png' class='menu_image' /></a></li>";
+    // Add menu items that are configured as visible 
     foreach($menu as $key => $menuItem){
 	if($CI->properties['show.'.$key] == 'yes' && viewLink($key,$role)) {
 	    if ($CI->uri->segment(2) == $menuItem['controller']) $classHTML = "class='active'";
@@ -67,11 +70,11 @@ function loadGroupMenu(){
 	    $menuHTML .= "<li $classHTML><a href='".$base.$menuItem['controller']."'>".$menuItem['title']."<img src='".$menuItem['icon']."' class='menu_image' /></a></li>";
 	}
     }
-
+    // Add menu items visible only to admin
     if ($role == 'admin'){
 	$menuHTML .= "<li><a href='".$base."manage'>Manage<img src='".base_url()."images/icons/manage.png' class='menu_image' /></a></li>";
     } 
-
+    // Add a help item
     $menuHTML .= "<li><a href='http://docs.google.com/Doc?id=dg5bsrjs_28dqsgkk5m'>Help<img src='".base_url()."images/icons/help.png' class='menu_image' /></a></li>";
 
     echo $menuHTML;

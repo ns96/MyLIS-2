@@ -53,7 +53,7 @@ if(isset($fileInfo['title'])) {
                         ?>
                     </select>
                     or New Category
-                    <input type="text" name="other_category" class="input-medium">
+                    <input type="text" name="other_category">
                 </td>
             </tr>
             <tr>

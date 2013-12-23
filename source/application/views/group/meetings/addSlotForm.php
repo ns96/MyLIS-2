@@ -25,9 +25,9 @@ echo '<a name="add_slot"></a>'; // target for link from top
         <tr>
             <td colspan="2" style="background-color: rgb(180,200,230); width: 25%;">
                 <? if(!empty($slot_id)) {
-                    echo "Update slot";
+                    echo "Update Group Meeting Slot";
                 } else {
-                    echo "Add slot";
+                    echo "Add Group Meeting Slot";
                 }
                 ?>
             </td>
@@ -79,23 +79,26 @@ echo '<a name="add_slot"></a>'; // target for link from top
                         <input type="text" id="title" name="title" class="input-block-level input-xlarge" value="<?=htmlentities($ptitle)?>">
                     </td>
                 </tr>
-        </table>
-        <br>
-        <button type="submit" class="btn btn-primary btn-small"><?=$title?></button>
-        <?
-        // link to delete slot
-        if(!empty($slot_id)) {
-            $delete_link = base_url()."group/meetings/deleteSlot?slot_id=".$slot_id;
-            echo '[ <a href="'.$delete_link.'">delete slot</a> ] ';
-        }
+		<tr>
+		    <td style="padding-top:6px; text-align: center" colspan="4">
+			<button type="submit" class="btn btn-primary btn-small"><?=$title?></button>
+			<?
+			// link to delete slot
+			if(!empty($slot_id)) {
+			    $delete_link = base_url()."group/meetings/deleteSlot?slot_id=".$slot_id;
+			    echo '<a href="'.$delete_link.'" class="btn btn-danger btn-small">delete slot</a>';
+			}
 
-        // see if to print the links to edit or remove any attach files
-        if(!empty($slot_info['file_id'])) {
-            $file_id = $slot_info['file_id'];
-            $delete_file_link = base_url()."group/meetings/deleteFile?slot_id=$slot_id&file_id=$file_id";
-            echo '[ <a href="'.$delete_file_link.'">delete file</a> ] ';
-        }
-        ?>
+			// see if to print the links to edit or remove any attach files
+			if(!empty($slot_info['file_id'])) {
+			    $file_id = $slot_info['file_id'];
+			    $delete_file_link = base_url()."group/meetings/deleteFile?slot_id=$slot_id&file_id=$file_id";
+			    echo '[ <a href="'.$delete_file_link.'">delete file</a> ] ';
+			}
+			?>
+		    </td>
+		</tr>
+        </table>
     </form>
 </div>
 <?

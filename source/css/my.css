@@ -165,9 +165,29 @@ root {
     background-color: #FFFFFF;
 }
 
+.input-smallmedium {
+  width: 120px;
+}
+
+.input-xmini {
+    width: 40px;
+}
+
+form {
+    margin: 10px;
+}
+
+label {
+    line-height: 14px;
+}
+
+input[type="checkbox"] {
+    margin-top: 0px;
+}
+
 .formWrapper, #iFrame1Wrapper {
     background-color: #E9EDF3;
-    margin:15px; 
+    margin:5px 15px 15px 15px; 
     border:1px solid #99AAC4;
 }
 
@@ -189,14 +209,38 @@ root {
     margin-bottom: 10px;
 }
 
+.formUpperBar {
+    font-family: "Helvetica Neue",Helvetica,Arial,sans-serif;
+    font-size: 13px;
+    line-height: 20px;
+    text-shadow: 0 1px 0 rgba(255, 255, 255, 0.5);
+    font-weight: bold;
+    border-bottom: 1px solid #99AAC4;
+    text-align: left;
+}
+
+.formSubBar {
+    font-family: "Helvetica Neue",Helvetica,Arial,sans-serif;
+    font-size: 13px;
+    text-shadow: 0 1px 0 rgba(255, 255, 255, 0.5);
+    font-weight: bold;
+    margin-bottom: 10px;
+    text-align: left;
+    background-color: #D9E2F0;
+    padding: 3px;
+    color: #808080;
+}
+
 .formTable {
    border-collapse: separate;
    border-spacing: 5px;
    width: 100%;
+   font-size: 14px;
 }
 
 .formTable label {
     font-weight: bold;
+    font-size: 14px;
 }
 
 .formTable label.radio {
@@ -204,12 +248,106 @@ root {
 }
 
 .formTable input {
-    min-height: 30px;
     display: inline-block;
+}
+
+.formTable input[type="text"] {
+    min-height: 30px;
 }
 
 .formTable input[type="radio"] {
     min-height: 0px;
+    margin-top: 0px;
+}
+
+.formTable input[type="checkbox"] {
+    margin-left: 5px;
+}
+
+.formTable th {
+    text-align: left;
+    padding: 2px 4px;
+    background-color: #D7DBE0;
+}
+
+.formTable2 {
+   border-collapse: separate;
+   border-spacing: 5px;
+   width: 100%;
+   font-size: 14px;
+}
+
+.formTable2 td {
+    border: 1px solid #D7DBE0;
+    padding: 5px;
+    background-color: #EDF1F3;
+}
+
+.formTable2 td:nth-child(1) {
+    text-align: center;
+}
+
+.formTable2 label {
+    font-weight: bold;
+    font-size: 14px;
+}
+
+.formTable2 label.radio {
+    font-weight: normal;
+}
+
+.formTable2 input[type="text"] {
+    min-height: 25px;
+    display: inline-block;
+}
+
+.formTable2 input[type="radio"] {
+    min-height: 0px;
+    margin-top: 0px;
+}
+
+.formTable2 input[type="checkbox"] {
+    margin-left: 5px;
+}
+
+.formTable2 th {
+    text-align: left;
+    padding: 4px 4px;
+    background-color: #D7DBE0;
+}
+
+.normal-text {
+    font-weight: normal;
+}
+
+.formTable-compact {
+   border-collapse: separate;
+   border-spacing: 3px;
+   width: 100%;
+   font-size: 12px;
+}
+
+.formTable-compact th {
+    font-size: 12px;
+}
+
+.formTable-compact label {
+    font-weight: bold;
+    font-size: 12px;
+}
+
+.formTable-compact label.radio {
+    font-weight: normal;
+}
+
+.formTable-compact input {
+    min-height: 30px;
+    display: inline-block;
+}
+
+.formTable-compact input[type="radio"] {
+    min-height: 0px;
+    margin-top: 0px;
 }
 
 .table {
@@ -229,7 +367,7 @@ root {
     border-color: #B1B1B1;
 }
 
-#chem_table td:nth-child(1), #item_table td:nth-child(1){
+#chem_table td:nth-child(1), #item_table td:nth-child(1) {
     text-align: center;
 }
 
@@ -286,3 +424,201 @@ root {
     background-color: #f5f6f7;
 }
 
+.publication_table {
+    width: 100%;
+}
+
+.table_header_line {
+    font-size: 13px;
+    line-height: 20px;
+    text-shadow: 0 1px 0 rgba(255, 255, 255, 0.5);
+    font-weight: bold;
+    text-align: center; 
+    background-color: rgb(180,200,230);
+    border: 1px solid #99AAC4;
+    width: 100%;
+}
+
+.table_header_line td {
+    border: 1px solid #99AAC4;
+}
+
+.publication_table {
+    border: 1px solid #99AAC4;
+    width: 100%;
+    font-size: 14px;
+    line-height: 20px;
+    text-shadow: 0 1px 0 rgba(255, 255, 255, 0.5);
+    background-color: #F5F6F7;
+}
+
+.publication_table td {
+    padding-left: 4px;
+}
+
+#grouptask_wrapper_table {
+    border-collapse: separate;
+    border-spacing: 2px;
+    font-size: 14px;
+}
+
+#group_task_list {
+    width: 100%;
+    padding: 7px;
+    text-align: center;
+}
+
+#group_task_list table {
+    border-collapse: separate;
+    border-spacing: 4px;
+    font-size: 14px;
+}
+
+.grouptask_box {
+    border: 1px solid grey; 
+    margin: 6px; 
+    padding: 6px;
+}
+
+.grouptask_box input[type="text"] {
+    margin-top: 3px;
+}
+
+#instrulog_wrapper_table {
+    border-collapse: separate;
+    border-spacing: 2px;
+    font-size: 14px;
+    width: 100%;
+}
+
+#calendar_table {
+    font-size: 13px;
+    text-align: center;
+    background-color: white;
+}
+
+#calendar_table td {
+    padding:2px 4px;
+    
+}
+
+#calendar_table td:hover {
+    background-color:#E2E2E2;
+    cursor: pointer;
+}
+
+#calendar_table tr:nth-child(1) {
+    background-color:#B4C8E6;
+}
+
+#calendar_table tr:nth-child(2) {
+    background-color:#E2E2E2;
+}
+
+.instrulog_box {
+    border: 1px solid grey; 
+    margin: 6px; 
+    padding: 6px;
+    background-color: #FFFFC9;
+}
+
+.instrulog_box input[type="text"] {
+    margin-top: 3px;
+}
+
+#file_folder_table caption {
+    font-weight: bold;
+    text-align: left;
+    padding-bottom:5px;
+}
+
+#file_folder_table caption img {
+    margin-left: 10px;
+}
+
+#file_folder_table th {
+    font-size: 13px;
+    color:grey;
+}
+
+
+#file_folder_table td:nth-child(1){
+    text-align: center;
+}
+
+#file_folder_table td:nth-child(3){
+    text-align: center;
+}
+
+.status_table {
+    width: 100%;
+    text-align: center;
+    font-size: 13px;
+    border: 1px solid grey;
+}
+
+.status_table th {
+    font-weight: bold;
+    background-color:#cccccc;
+    border-left: 1px solid grey;
+}
+
+.status_table td {
+    background-color:#E2E2E2;
+    border-left: 1px solid grey;
+    padding:2px;
+}
+
+.status_table td:hover {
+    color:blue;
+}
+
+#pending_table th {
+    text-align: center;
+}
+
+#pending_table td:nth-child(1), #pending_table td:nth-child(7), #pending_table td:nth-child(n+9) {
+    text-align: center;
+}
+
+#info_navtab li a {
+    background-color: rgb(180,200,230);
+}
+
+#info_navtab li a {
+    border-color: #99AAC4;
+    font-weight: bold;
+    font-size: 14px;
+}
+
+.order_table {
+    width: 100%;
+    background-color: #F5F5F5;
+    margin-bottom: 10px;
+}
+
+.order_table th {
+    border: 1px solid #99AAC4;
+    font-size: 14px;
+    text-align: center;
+    background-color: #B4C8E6;
+}
+
+.order_table td {
+    padding:4px;
+    border: 1px solid #99AAC4;
+    font-size: 14px;
+}
+
+.order_label {
+    background-color: #B4C8E6;
+    font-weight: bold;
+}
+
+#orderlist_table th {
+    text-align: center;
+}
+
+#orderlist_table td:nth-child(1) {
+    padding-left: 10px;
+}

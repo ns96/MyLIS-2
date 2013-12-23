@@ -41,36 +41,39 @@ class File_folder extends Group_Controller {
             $categoryLinks = $this->file_folder_model->getLinks($cat_id,$this->myfiles,$userid);
 
             if(count($categoryLinks) >= 1) {
-              $linksHTML .= '<span style="font-weight: bold; color: rgb(245, 140, 0);">'.$category.' ::</span><br>
-              <div style="margin-left: 40px;">';
+              $linksHTML .= '<div style="margin:0px 15px;"><table id="file_folder_table" class="table table-bordered table-condensed">';
+	      $linksHTML .= "<caption>".$category."<img src='".base_url()."images/icons/pdfs.png' class='icon' title='back'/></caption>";
+              $linksHTML .= '<thead><tr><th width="5%" style="text-align:center">#</th><th width="80%">File Title</th><th style="text-align:center">Actions</th></tr></thead><tbody>';
 
               $i = 1;
               foreach($categoryLinks as $array) {
+		$linksHTML .= "<tr>";
                 $file_id = $array['file_id'];
                 $file_info = $this->filemanager->getFileInfo($file_id);
 
-                 $linksHTML .= '<small>'.$i.'. <b>'.$array['title'].'</b>';
+                 $linksHTML .= '<td>'.$i.'</td><td>'.$array['title'].'</td><td>';
 
                 $download_link = $this->filemanager->getFileURL($array['file_id']);
                 if($file_info['type'] != 'url') {
-                   $linksHTML .= " [ <a href=\"$download_link\">download</a> ] ";
+                   $linksHTML .= "<a href='$download_link'><img src='".base_url()."images/icons/download2.png' class='icon' title='download'/></a>";
                 }
                 else {
-                   $linksHTML .= " [ <a href=\"$download_link\">website  link</a> ] ";
+                   $linksHTML .= "<a href='$download_link'><img src='".base_url()."images/icons/download2.png' class='icon' title='download'/></a>";
                 }
 
                 if($userid == $array['userid'] || $role == 'admin') {
                   $edit_link = base_url()."group/file_folder?file_id=$file_id";
-                   $linksHTML .= "[ <a href=\"$edit_link\">edit</a> ] ";
+                   $linksHTML .= "<a href='$edit_link'><img src='".base_url()."images/icons/edit.png' class='icon' title='edit'/></a>";
                 }
 
                 if($userid == $array['userid'] || $role == 'admin') {
                   $delete_link = base_url()."group/file_folder/deleteFile?file_id=$file_id";
-                   $linksHTML .= "[ <a href=\"$delete_link\">delete</a> ]</small><br>";
+                   $linksHTML .= "<a href='$delete_link'><img src='".base_url()."images/icons/delete.png' class='icon' title='delete'/></a>";
                 }
                 $i++;
+		$linksHTML .= "</td></tr>";
               }
-               $linksHTML .= '</div>';
+               $linksHTML .= '</tbody></table></div>';
             }
         }
         

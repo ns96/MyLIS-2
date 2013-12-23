@@ -1,10 +1,9 @@
 <?php
-
 echo $menuHTML;
 
 // --------- CHEMICALS SECTION ----------
-echo '<fieldset style="font-weight: bold; color: #3366FF;">';
-echo '<legend>Chemicals</legend>';
+
+echo "<div style='font-size:20px; font-weight:bold'>Chemicals <img src='".base_url()."images/icons/tubes.png' title='back'/></div>";
 
 // add form for importing a tab delimited database file
 echo $chemicalsImportForm;
@@ -13,12 +12,11 @@ echo $addChemicalCategories;
 // add table for editing categories
  echo $editChemicalCategories;
 
-echo '</fieldset>';
 
 // --------- SYPPLIES SECTION -----------
 echo '<a name="Supply"></a>'; // used to find it
-echo '<fieldset style="font-weight: bold; color: #3366FF;">';
-echo '<legend>Supplies</legend>';
+
+echo "<div style='font-size:20px; font-weight:bold'>Supplies <img src='".base_url()."images/icons/supplies.png' title='back'/></div>";
 
 // add form for importing a tab delimited database file
 echo $suppliesImportForm;
@@ -27,4 +25,3 @@ echo $addSupplyCategories;
 // add table for editing categories
 echo $editSupplyCategories;
 
-echo '</fieldset>';

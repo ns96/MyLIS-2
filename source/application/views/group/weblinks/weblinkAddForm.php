@@ -1,19 +1,26 @@
 <a name="add"></a>
-<form action='<?=$target_link?>' method="POST";
-    <table style="text-align: left; width: 70%;background-color: rgb(240, 240, 240);" border="1" cellpadding="1" cellspacing="0">
+<div class="formWrapper">
+    <table class="formTopBar" style="width: 100%" cellpadding="4" cellspacing="2">
 	<tbody>
+	<tr>
+	    <td colspan="2" style="background-color: rgb(180,200,230); width: 25%;">
+		Add a New Weblink
+	    </td>
+	</tr>
+	</tbody>
+    </table>
+    <form action="<?=$target_link?>" method="POST" class="form-inline">    
+	<table class="formTable">
 	    <tr>
-		<td style="background-color: rgb(180, 200, 230); width: 25%;">New Link Title : </td>
-		<td style="background-color: rgb(180, 200, 230)"><input size="45" name="title" value=""></td>
+		<td><label for="title" class="control-label">Link Title :</label></td>
+		<td><input type="text" name="title" value="" class="input-block-level"></td>
 	    </tr>
-
 	    <tr>
-		<td>Website URL : </td>
-		<td><input size="45" name="url" value=""></td>
+		<td><label for="url" class="control-label">Website URL :</label></td>
+		<td><input type="text" name="url" value="" class="input-block-level"></td>
 	    </tr>
-
 	    <tr>
-		<td>Category : </td>
+		<td><label for="category" class="control-label">Category :</label></td>
 		<td>
 		    <select name="category">
 			<?
@@ -22,13 +29,15 @@
 			}
 			?>
 		    </select> or New Category 
-		    <input size="20" name="other_category">
+		    <input type="text" name="other_category">
 		</td>
 	    </tr>
 	    <tr>
-		<td><br></td>
-		<td style="text-align: left;"><input value="<?=$title?>" type="submit" style="background: rgb(238, 238, 238); color: rgb(51, 102, 255)"></td>
+		<td colspan="2">
+		    <button type="submit" class="btn btn-primary btn-small">Add Web Link</button>
+		</td>
 	    </tr>
-	</tbody>
-    </table>
-</form>
+	</table>
+    </form>
+</div>
+

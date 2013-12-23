@@ -64,7 +64,7 @@ echo '[ <a href="'.$list_bylocation.'">List All By Location</a> ] ';
                                     }
                                     ?>
                                 </select>
-                                <input type="button" value="Location List" onClick="window.open(\''.$location_link.'\',\'locations\',\'width=500,height=600,location=no,resizable=yes,scrollbars=yes\')">
+                                <input type="button" value="Location List" class="btn btn-info" onClick="window.open(\''.$location_link.'\',\'locations\',\'width=500,height=600,location=no,resizable=yes,scrollbars=yes\')">
                             </div>
                         </td>
                         <td rowspan="2">
@@ -166,7 +166,7 @@ $add_chemical_link = base_url().'group/chemicals/add';
                             <option value="9">9x</option>
                             <option value="10">10x</option>
                         </select>
-                        <input type="text" id="units" name="units" class="input-block-level input-small">
+                        <input type="text" id="units" name="units" class="input-block-level input-small" placeholder="units">
                     </td>
                     <td>
                         <label for="status" class="control-label">Status :</label><br>
@@ -194,7 +194,7 @@ $add_chemical_link = base_url().'group/chemicals/add';
                         <input type="text" id="other_category" name="other_category">
                     </td>
                     <td colspan="2">
-                        <label for="location" class="control-label">Location: :</label><br>
+                        <label for="location" class="control-label">Location :</label><br>
                         <select name="location" size="1" class="input-medium">';
                         <?
                         foreach($locations as $location) {
@@ -203,16 +203,16 @@ $add_chemical_link = base_url().'group/chemicals/add';
                         ?>
                         </select>
                         other:
-                        <input type="text" id="other_category" name="other_location" placeholder="Location ID, Room #, Description" >
+                        <input type="text" id="other_location" name="other_location" placeholder="Location ID, Room #, Description" >
                     </td>
                 </tr>
                 <tr>
                     <td colspan="3">
-                        <label for="notes" class="control-label">Notes: :</label><br>
+                        <label for="notes" class="control-label">Notes :</label><br>
                         <textarea id="notes" name="notes" class="input-block-level"></textarea>
                     </td>
                     <td align="center" style="vertical-align: middle">
-                        <input type="checkbox" name="personal" value="personal" checked="checked">Personal Item
+                        <input type="checkbox" name="personal" value="personal" checked="checked"> Personal Item
                     </td>
                 </tr>
             </table>
@@ -247,7 +247,7 @@ if($role == 'admin') { ?>
                     }
                 ?>
             </select>     
-            <label for="to_user" class="control-label">Group Chemical :</label>
+            <label for="to_user" class="control-label" style="margin-left: 10px">Group Chemical :</label>
             <select name="to_user" class="input-medium">
                 <?
                     foreach($users as $user) {
@@ -255,7 +255,7 @@ if($role == 'admin') { ?>
                     }
                 ?>
             </select>
-            <button type="submit" class="btn btn-primary btn-small">Transfer</button>
+            <button type="submit" class="btn btn-primary btn-small" style="margin-left:10px">Transfer</button>
         </form>
     </div>
     

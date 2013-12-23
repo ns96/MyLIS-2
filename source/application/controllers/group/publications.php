@@ -24,7 +24,7 @@ class Publications extends Group_Controller {
 	$this->load->model('user_model');
 	
 	$status = $this->publication_model->getTableStatus();
-	$status_text = '( Total : <span style="color:#cc0000;">'.$status[0].'</span>Last Updated : <span style="color: #cc0000;">'.$status[1].'</span> )';
+	$status_text = '&nbsp;&nbsp;<span style="font-size:14px; font-weight:normal">( Total: '.$status[0].' - Last Updated: '.$status[1].' )</span>';
     
 	$pubsHTML = '';
 	$posters = $this->publication_model->getPosters();
@@ -39,8 +39,7 @@ class Publications extends Group_Controller {
 	    $pubsHTML .= $this->load_view('group/publications/userPublications',$data2,TRUE);
 	}
 	
-	$data['page_title'] = "Group Publications";
-	$data['status_text'] = $status_text;
+	$data['page_title'] = "Group Publications $status_text";
 	$data['pubsHTML'] = $pubsHTML;
 	
 	$this->load_view('group/publications/main',$data);

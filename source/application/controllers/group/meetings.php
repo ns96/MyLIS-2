@@ -85,10 +85,10 @@ class Meetings extends Group_Controller {
 	    // instead of an 'Add Slot' form
 	    if(!empty($slot_id)) {
 		$slot_info = $this->meeting_model->getSlotInfo($slot_id);
-		$title = 'Edit Group Meeting Slot';
+		$title = 'Update Slot';
 	    } else {
 		$slot_info = array();
-		$title = 'Add Group Meeting Slot';
+		$title = 'Add Slot';
 	    }
 	    $data3['slot_info'] = $slot_info;
 	    $data3['title'] = $title;

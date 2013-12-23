@@ -247,7 +247,7 @@ if($role == 'admin') { ?>
                     }
                 ?>
             </select>     
-            <label for="to_user" class="control-label">Group Supply :</label>
+            <label for="to_user" class="control-label" style="margin-left: 10px">Group Supply :</label>
             <select name="to_user" class="input-medium">
                 <?
                     foreach($users as $user) {
@@ -255,7 +255,7 @@ if($role == 'admin') { ?>
                     }
                 ?>
             </select>
-            <button type="submit" class="btn btn-primary btn-small">Transfer</button>
+            <button type="submit" class="btn btn-primary btn-small" style="margin-left: 10px">Transfer</button>
         </form>
     </div>
     

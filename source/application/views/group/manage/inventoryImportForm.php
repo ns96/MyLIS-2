@@ -3,49 +3,52 @@
 if($type == 'Chemical') {
   $file_link = $home_dir.'dbfiles/chemicals.xls';
   $target_link = base_url().'group/manage/inventory_import_chemicals';
+  $bar_color = 'rgb(180,200,230)';
 }
 else { // must be supplies
   $file_link = $home_dir.'dbfiles/supplies.xls';
   $target_link = base_url().'group/manage/inventory_import_supplies';
+  $bar_color = '#A1B2CB';
 }
+?>
 
-// add the table that allows adding of a new user
-$cell_color1 = 'rgb(180,200,230)'; // a light blue
-$cell_color2 = 'rgb(240,240,240)'; // a light gray
-
-// print any messages and reset the message
-if($type == 'Chemical') {
-  echo '<small><i>'.$im_message1.'</i></small>';
-}
-else {
-  echo '<small><i>'.$im_message2.'</i></small>';
-}
-
-// add table for importing chemical inventory
-echo '<form enctype="multipart/form-data" action="'.$target_link.'" method="POST">';
-
-echo '<table style="background-color: rgb(255, 255, 255); width: 100%; text-align: left;"
-border="0" cellpadding="1" cellspacing="2"><tbody>';
-
-echo '<tr>';
-echo '<td colspan="1" rowspan="1" style="vertical-align: top; text-align: left; background-color: '.$cell_color1.';">
-<small><b>Import '.$type.' Inventory</b> (tab delimited file) 
-[ <a href="'.$file_link.'" target="_blank">Download Excel Template</a> ]</small></td>';
-echo '</tr>';
-
-echo '<tr>';
-echo '<td colspan="1" rowspan="1" style="vertical-align: top; text-align: left; background-color: '.$cell_color2.';">';
-echo '<small><span style="color: #cc0000;"><b>'; 
-echo '<input type="radio" name="action" value="overwrite"> Overwrite Existing Database Entries 
-<input type="radio" name="action" value="append" checked> Add to Existing Database Entries
-</b></span></small>'; 
-echo '</td></tr>';
-
-echo '<tr>';
-echo '<td colspan="1" rowspan="1" style="vertical-align: top; background-color: '.$cell_color2.';">';
-echo '<small><b>Tab Delimited Text File</b> : <input name="fileupload" type="file" size="40" > '; 
-echo '<input type="submit" value="Import" 
-style="background: rgb(238, 238, 238); color: #3366FF"></td>';
-echo '</td></tr>';
-echo '</tbody></table></form>';
-
+<div class="formWrapper">
+    <table class="formTopBar" style="width: 100%" cellpadding="4" cellspacing="2">
+	<tbody>
+	<tr>
+	    <td style="background-color: <?=$bar_color?>; width: 25%;">
+		Import <?=$type?> Inventory (tab delimited file) 
+		[ <a href="<?=$file_link?>" target="_blank">Download Excel Template</a> ]
+	    </td>
+	</tr>
+	</tbody>
+    </table>
+    <?
+    if($type == 'Chemical') {
+	echo '<small><i>'.$im_message1.'</i></small>';
+    } else {
+	echo '<small><i>'.$im_message2.'</i></small>';
+    }
+    ?>
+    <form action="<?=$target_link?>" method="POST" enctype="multipart/form-data" class="form-inline">
+	<input type="hidden" name="add_chemical_form" value="posted" >      
+	<table class="formTable">
+	    <tr>
+		<td colspan="2">
+		    <input type="radio" name="action" value="overwrite"> Overwrite Existing Database Entries 
+		    <input type="radio" name="action" value="append" checked style="margin-left:10px"> Add to Existing Database Entries
+		</td>
+	    </tr>
+	    <tr>
+		<td style="padding-top:5px">
+		    <label for="fileupload" class="control-label">Tab Delimited Text File :</label>
+			    <input id="fileupload" name="fileupload" class="filestyle" type="file" data-icon="false" style="position: fixed; left: -500px;">  
+		    </label>
+		</td>
+		<td style="text-align:right">
+		    <button type="submit" class="btn btn-primary btn-small">Import Inventory</button>
+		</td>
+	    </tr>
+	</table>
+    </form>
+</div>

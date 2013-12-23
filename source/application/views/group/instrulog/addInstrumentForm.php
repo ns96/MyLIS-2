@@ -1,12 +1,32 @@
 <?php
+    $target_link = base_url()."group/instrulog/add";
+?>
 
-echo "<form action='".base_url()."group/instrulog/add' method='POST'>";
-echo '<input type="hidden" name="add_instrument_form" value="posted">';
-echo '<small><b>Add New Instrument :</small></b><br>';
-echo '<input maxlength="50" size="25" name="instrument"><br>
-<small><b>Person In Charge :</small></b><br><select name="manager">';
-foreach($users as $user) {
-    echo '<option value='.$user->userid.'>'.$user->name.'</option>';
-}
-echo '</select><input name="Add" value="Add" type="submit" style="background: rgb(238, 238, 238); color: #3366FF">';
-echo '</form>';
+<form action="<?=$target_link?>" method="POST" class="form-inline" style="margin:0px">
+    <input type="hidden" name="add_instrument_form" value="posted">      
+    <table class="formTable-compact">
+	<tr>
+	    <td>
+		<label for="instrument" class="control-label">Instrument name :</label>
+                <input type="text" name="instrument" class="input-block-level input-medium">
+	    </td>
+	</tr>
+	<tr>
+	    <td>
+		<label for="manager" class="control-label">Person In Charge :</label>
+                <select name="manager" class="input-medium">
+		    <?
+		    foreach($users as $user) {
+			echo '<option value='.$user->userid.'>'.$user->name.'</option>';
+		    }
+		    ?>
+		</select>
+	    </td>
+	</tr>
+	<tr>
+	    <td align="center">
+		<button type="submit" class="btn btn-primary btn-small">Add</button>
+	    </td>
+	</tr>
+    </table>
+</form>

@@ -57,9 +57,9 @@ class Instrulog extends Group_Controller {
 
 	if (!empty($instrument_id)){
 	    $instrument = $this->instrulog_model->getInstrument($instrument_id);
-	    $data['instrument_name'] = $instrument['instrument'];
+	    $instrument_name = $instrument['instrument'];
 	} else {
-	    $data['instrument_name'] = 'No Instrument Selected';
+	    $instrument_name = 'No Instrument Selected';
 	}
 	
 	// Loading data for 'Add new Instrument' form
@@ -85,7 +85,7 @@ class Instrulog extends Group_Controller {
 	$data['instrumentsHTML'] = $instrumentsHTML;
 	
 	// Load the main view which will load the subviews
-	$data['page_title'] = "Instruments' Log";
+	$data['page_title'] = "Instrument Log (<i>$instrument_name</i>)";
 	$this->load_view('group/instrulog/main',$data);
     }
     
@@ -135,10 +135,9 @@ class Instrulog extends Group_Controller {
 	    $name = '';
 	}
 
-	$html = '<p style="background-color: rgb(255, 255, 190);"><small>'.$checkbox.' '.$hour.' 
-	'.$name.'<br> <input size="30" name="note_'.$i.'" value="'.htmlentities($note).'" 
-	style="background-color:rgb(255, 255, 190) ; border: 1px solid red; color:blue"></small></p>';
-
+	$html = '<div class="instrulog_box">'.$checkbox.'<small><b> '.$hour.' 
+	'.$name.'</b><br> <textarea name="note_'.$i.'" rows="1" class="input-block-level" style="margin-top:5px">'.htmlentities($note).'</textarea></small></div>';
+	
 	return $html;
     }
     

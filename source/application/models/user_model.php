@@ -14,17 +14,17 @@ class User_model extends CI_Model {
     }
     
     public function getUser($userid){
-	$this->lisdb->where('userid',$userid);
-	$record = $this->lisdb->get($this->table)->result_array();
+	$sql = "SELECT * FROM $this->table WHERE userid = '$userid'";
+	$records = $this->lisdb->query($sql)->result_array();
 	
-	if (count($record)>0){	    
-	    $userdata['userid'] = $record[0]['userid'];
+	if (count($records)>0){	    
+	    $userdata['userid'] = $records[0]['userid'];
 	    $userdata['password'] = '';
-	    $userdata['role'] = $record[0]['role'];
-	    $userdata['name'] = $record[0]['name'];
-	    $userdata['email'] = $record[0]['email'];
-	    $userdata['status'] = $record[0]['status'];
-	    $userdata['info'] = $record[0]['info'];
+	    $userdata['role'] = $records[0]['role'];
+	    $userdata['name'] = $records[0]['name'];
+	    $userdata['email'] = $records[0]['email'];
+	    $userdata['status'] = $records[0]['status'];
+	    $userdata['info'] = $records[0]['info'];
 	    
 	    $this->load->library('user',$userdata);
 	    $user = $this->user;

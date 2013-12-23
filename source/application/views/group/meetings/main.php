@@ -23,14 +23,13 @@ $previous_link = base_url()."group/meetings?year=".($year - 1);
 $current_link = base_url()."group/meetings";
 $next_link = base_url()."group/meetings?year=".($year + 1);
 
-echo '<div style="margin:15px"><table style="text-align: left; width:100%; font-size:14px;" border="0"><tr><td>
-<a href="#add_date">( Add Date/Meeting Slot )</a>
+echo '<div style="margin:5px 15px"><table style="text-align: left; width:100%; font-size:14px;" border="0"><tr><td>
+<a href="'.base_url().'group/meetings#add_date">( Add Date/Meeting Slot )</a>
  </td>
 <td style="text-align: right;">
 [ <a href="'.$previous_link.'"><< Previous Year</a> ] 
 [ <a href="'.$current_link.'">Current</a> ] 
 [ <a href="'.$next_link.'">Next Year >></a> ] 
-[ <a href="'.$home_link.'">Home</a> ]
 </td></tr></table></div>';
 
 // add the meetings sorted by date

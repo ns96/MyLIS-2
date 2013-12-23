@@ -32,9 +32,12 @@ echo '<small><i>'.$im_message.'</i></small>';
             <tr>
                 <td>
                     <label for="fileupload" class="control-label">Tab Delimited Text File :</label>
-                    <input type="file" id="fileupload" name="fileupload" class="input-block-level">
-                    <button type="submit" class="btn btn-primary btn-small">Import</button>
+			<input id="fileupload" name="fileupload" class="filestyle" type="file" data-icon="false" style="position: fixed; left: -500px;">  
+		    </label>
                 </td>
+		<td style="text-align: right">
+		    <button type="submit" class="btn btn-primary btn-small">Import</button>
+		</td>
             </tr>
         </table>
     </form>

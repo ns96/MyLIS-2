@@ -2,45 +2,49 @@
     
 if($type == 'Chemical') {
   $target_link = base_url().'group/manage/inventory_add_chemical_categories';
+  $bar_color = 'rgb(180,200,230)';
 }
 else { // must be supplies
   $target_link = base_url().'group/manage/inventory_add_supply_categories';
+  $bar_color = '#A1B2CB';
 }
+?>
 
-// add the table that allows adding of a new user
-$cell_color1 = 'rgb(180,200,230)'; // a light blue
-$cell_color2 = 'rgb(240,240,240)'; // a light gray
-
-// add table for importing chemical inventory
-echo '<form enctype="multipart/form-data" action="'.$target_link.'" method="POST">';
-
-echo '<table style="background-color: rgb(255, 255, 255); width: 100%; text-align: left;"
-border="0" cellpadding="1" cellspacing="2"><tbody>';
-
-echo '<tr>';
-echo '<td colspan="4" rowspan="1" style="vertical-align: top; text-align: left; background-color: '.$cell_color1.';">
-<small><b>Add '.$type.' Categories</b></small></td>';
-echo '</tr>';
-
-echo '<tr>';
-for($j = 0; $j < 4; $j++) {
-  echo '<td style="vertical-align: center; text-align: left; background-color: '.$cell_color2.';">';
-  echo '<small><b>'.($j + 1).'<b> <input size="20" name="cat_'.$j.'"></td>';
-}
-echo '</tr>';
-
-echo '<tr>';
-for($j = 4; $j < 8; $j++) {
-  echo '<td style="vertical-align: center; text-align: left; background-color: '.$cell_color2.';">';
-  echo '<small><b>'.($j + 1).'<b> <input size="20" name="cat_'.$j.'"></td>';
-}
-echo '</tr>';
-
-echo '<tr>';
-echo '<td colspan="4" rowspan="1" style="vertical-align: center; text-align: right; background-color: '.$cell_color2.';">
-<input type="submit" value="Add Categories" 
-style="background: rgb(238, 238, 238); color: #3366FF"></td>';
-echo '</tr>';
-
-echo '</tbody></table></form>';
+<div class="formWrapper">
+<table class="formTopBar" style="width: 100%" cellpadding="4" cellspacing="2">
+    <tbody>
+    <tr>
+	<td style="background-color: <?=$bar_color?>; width: 25%;">
+	    Add <?=$type?> Categories
+	</td>
+    </tr>
+    </tbody>
+</table>
+<form action="<?=$target_link?>" method="POST" enctype="multipart/form-data" class="form-inline" style="margin-right:10px">
+    <input type="hidden" name="add_chemical_form" value="posted" >      
+    <table class="formTable">
+	<tr>
+	    <? for($j = 0; $j < 4; $j++) { ?>
+		<td>
+		    <?=($j + 1)?>
+		    <input type="text" name="cat_<?=$j?>">
+		</td>
+	    <? } ?>
+	</tr>
+	<tr>
+	    <? for($j = 4; $j < 8; $j++) { ?>
+		<td>
+		    <?=($j + 1)?>
+		    <input type="text" name="cat_<?=$j?>">
+		</td>
+	    <? } ?>
+	</tr>
+	<tr>
+	    <td colspan="4" style="text-align: right">
+		<button type="submit" class="btn btn-primary btn-small">Add Categories</button>
+	    </td>
+	</tr>
+    </table>
+</form>
+</div>
 

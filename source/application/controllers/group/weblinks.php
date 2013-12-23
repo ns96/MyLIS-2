@@ -37,18 +37,17 @@ class Weblinks extends Group_Controller {
 	
 	$data2['categories'] = $categories;
 	if(!empty($link_id)) { // If we are editing a weblink load weblinks's data
-	    $data2['title'] = 'Edit Weblink';
 	    $data2['link_id'] = $link_id;
 	    $data2['weblinkItem'] = $this->weblinks_model->getWeblink($link_id);
 	    $data2['target_link'] = base_url()."group/weblinks/update";
 	    $data['addForm'] = $this->load_view('group/weblinks/weblinkEditForm',$data2,TRUE);
 	} else { // otherzise, we are adding a new weblink
-	    $data2['title'] = 'Add Weblink';
 	    $data2['target_link'] = base_url()."group/weblinks/add";
 	    $data['addForm'] = $this->load_view('group/weblinks/weblinkAddForm',$data2,TRUE);
 	}
 	
 	//
+	$data['page_title'] = 'Web Link Repository';
 	$this->load_view('group/weblinks/displayWeblinkCategories',$data);
     }
     

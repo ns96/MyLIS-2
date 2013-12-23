@@ -4,7 +4,7 @@ $item_id = $item_info['item_id'];
 $item_num = $item_info['item_num'];
 $completed = $item_info['completed'];
 
-$bgc1 = 'rgb(255, 255, 190)';
+$bgc1 = '#FFFFC9';
 $bgc2 = 'rgb(200, 255, 200)';
 
 // set the background color
@@ -24,33 +24,31 @@ $note = 'Note: ';
 if(!empty($item_info['note'])) {
   $note = $item_info['note'];
 }
+?>
 
-echo '<p style="background-color: '.$bgc.'">';
-echo '<input name="item_ids[]" value="'.$item_id.'" type="checkbox">';
-echo '<small><b>Entry '.$item_num.'</b> ';
+<div class="grouptask_box" style="background-color: <?=$bgc?>">
+    <div style="min-height:25px">
+	<input name="item_ids[]" value="<?=$item_id?>" type="checkbox">
+	<small><b>Entry <?=$item_num?></b> 
 
-if($completed != 'YES') {
-  $link = base_url()."group/grouptask/task_completed?item_id=$item_id";
-  $delete_link = base_url()."group/grouptask/delete_task_item?item_id=$item_id";
+	<?
+	if($completed != 'YES') {
+	    $link = base_url()."group/grouptask/task_completed?item_id=$item_id";
+	    $delete_link = base_url()."group/grouptask/delete_task_item?item_id=$item_id";
+	    echo '<a href ="'.$link.'" class="btn btn-success btn-mini" style="margin-left:10px">Mark as completed</a>';
+	    if($ismanager) {
+		echo '<a href ="'.$delete_link.'" class="btn btn-danger btn-mini" style="margin-left:5px">Delete</a>';
+	    }
+	    ?>
+		</div>
+	    <input type="text" name="person_<?=$item_id?>" class="input-block-level" value="<?=htmlentities($person)?>">
+	    <input type="text" name="note_<?=$item_id?>" class="input-block-level" value="<?=htmlentities($note)?>">
+	    <?
+	} else { ?>
+	    </div>
+	    <input type="text" name="person_<?=$item_id?>" class="input-block-level" value="<?=htmlentities($person)?>" disabled="disabled">
+	    <input type="text" name="note_<?=$item_id?>" class="input-block-level" value="<?=htmlentities($note)?>" disabled="disabled">
+	<? }
 
-  echo '( <a href ="'.$link.'">task completed</a> ) ';
-  if($ismanager) {
-    echo '( <a href ="'.$delete_link.'">delete</a> )';
-  }
-
-  echo '<br>';
-  echo '<input size="30" name="person_'.$item_id.'" value="'.htmlentities($person).'"><br>';
-  echo '<input size="30" name="note_'.$item_id.'" value="'.htmlentities($note).'" 
-  style="background-color:'.$bgc.'; border: 1px solid red; color:blue" >';
-}
-else {
-  echo '<br><input size="30" name="person_'.$item_id.'" 
-  value="'.htmlentities($person).'" disabled="disabled"
-  style="background-color:white;"><br>';
-  echo '<input size="30" name="note_'.$item_id.'" 
-  value="'.htmlentities($note).'" disabled="disabled" 
-  style="background-color:'.$bgc.'; border: 1px solid red; color:blue" >';
-}
-
-echo '</small></p>'; 
+echo '</small></div>'; 
 

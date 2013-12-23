@@ -45,24 +45,22 @@ if (!empty($instrument_id)){
 }
     
 
-echo " <table border='1' bordercolor='#FFFF00' cellspacing='0' cellpadding='0' 
-align=center><tr><td>";
+echo " <table border='1' cellspacing='0' cellpadding='0' align=center><tr><td>";
 
-echo "<table cellspacing='0' cellpadding='0' align=center width='100' border='1'>
-<td align=center bgcolor='#ffff00'><font size='3' face='Tahoma'> 
+echo "<table id='calendar_table' cellspacing='0' cellpadding='0' align=center width='100' border='1'>
+<td> 
 <a href='$prev_month_link'><</a></td>
-<td colspan=5 align=center bgcolor='#ffff00'
-><font size='3' face='Tahoma'><b>$mn $yn </b></td>
-<td align=center bgcolor='#ffff00'><font size='3' face='Tahoma'>
+<td colspan=5><b>$mn $yn </b></td>
+<td>
 <a href='$next_month_link'>></a></td></tr><tr>";
 
-echo "<td><font size='3' face='Tahoma'>Sun</font></td>
-<td><font size='3' face='Tahoma'>Mon</font></td>
-<td><font size='3' face='Tahoma'>Tue</font></td>
-<td><font size='3' face='Tahoma'>Wed</font></td>
-<td><font size='3' face='Tahoma'>Thu</font></td>
-<td><font size='3' face='Tahoma'>Fri</font></td>
-<td><font size='3' face='Tahoma'>Sat</font></td></tr><tr>";
+echo "<td>Sun</td>
+<td>Mon</td>
+<td>Tue</td>
+<td>Wed</td>
+<td>Thu</td>
+<td>Fri</td>
+<td>Sat</td></tr><tr>";
 
 ////// End of the top line showing name of the days of the week//////////
 
@@ -80,9 +78,9 @@ for($i = 1;$i <= $no_of_days; $i++) {
     $bgc = getCellColor($i, $mn2, $yn);
 
     // This will display the date inside the calender cell
-    echo $adj."<td valign=top style=\"background-color: $bgc; text-align: center;\">
-    <font size='2' face='Tahoma'><a href='$day_link'>$i</a><br>";
-    echo " </font></td>";
+    echo $adj."<td valign=top style='background-color: $bgc; text-align: center;' onclick='location.href=\"$day_link\"'>
+    $i<br>";
+    echo "</td>";
     $adj='';
     $j ++;
     if($j == 7) {
@@ -91,6 +89,5 @@ for($i = 1;$i <= $no_of_days; $i++) {
     }
 }
 
-echo "<tr><td colspan=7 align=center><font face='Verdana' size='2'>
-<a href='$main_link'><b>Current Month</b></a></font></td></tr>";
+echo "<tr><td colspan=7 align=center><a href='$main_link'><b>Current Month</b></a></td></tr>";
 echo "</tr></table></td></tr></table>";

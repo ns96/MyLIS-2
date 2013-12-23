@@ -170,6 +170,7 @@ class Orderbook extends Group_Controller {
         $data['months'] = $this->getMonths();
         $orderData = $this->orderbook_model->getOrders($ordered_by, $year, $month);
         $data['orders'] = $orderData['orders'];
+	$data['order_page'] = 'mine';
         $data['tally_totals'] = $orderData['tally_totals'];
         $this->load_view('group/orderbook/listOrders',$data);
     }
@@ -216,6 +217,7 @@ class Orderbook extends Group_Controller {
         $data['months'] = $this->getMonths();
         $orderData = $this->orderbook_model->getOrders($ordered_by, $year, $month);
         $data['orders'] = $orderData['orders'];
+	$data['order_page'] = 'all';
         $data['tally_totals'] = $orderData['tally_totals'];
         //$this->load_view('group/orderbook/allOrders',$data);
         $this->load_view('group/orderbook/listOrders',$data);
