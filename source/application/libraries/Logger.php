@@ -7,11 +7,9 @@ class Logger {
   var $old_logfile;
   
   public function __construct($params) {
-    // Get an instance of the controller
-    $this->CI =& get_instance();
-    $this->CI->load->library('user',$params['user']);
     // Set the object's properties
-    $this->user = $this->CI->user;
+    $this->user = $params['user'];
+    $this->CI =& get_instance();
     $this->properties = $this->CI->properties;
     $this->logfile = $this->properties['home.directory'].'/logs/lism.txt';
     $this->old_logfile = $this->properties['home.directory'].'/logs/old_lism.txt';

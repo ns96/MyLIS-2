@@ -11,68 +11,89 @@ $role = $user->role;
 
 $pi_name = "$info[pi_fname] $info[pi_mi] $info[pi_lname]";
 
-echo "<form action=\"$target_link\" method=\"POST\">";
-echo '<input type="hidden" name="upgrade_form" value="posted">';
-echo '<table style="text-align: left; width: 100%;" border="0" cellpadding="2" 
-cellspacing="2"><tbody>
-<tr>
-<td style="background-color: rgb(100,255,100);" colspan="2" rowspan="1"><small>
-<span style="font-weight: bold;">Account Upgrade Form</span></small></td></tr>';
-if($role == 'admin') {
-  echo '<tr>
-  <td style="width: 25%;">Storage Upgrade :</td>
-  <td><select name="storage">
-  <option value="200">200 MB @ $'.$cost1.'.00 per year</option>
-  <option value="1000">1000 MB @ $'.$cost2.'.00 per year</option>
-  <option value="5000">5000 MB @ $'.$cost3.'.00 per year</option>
-  </select>
-  </td>
-  </tr>
-  <tr>
-  <td>Your Name :</td>
-  <td><input size="30" name="name" value="'.htmlentities($user->name).'"></td>
-  </tr>
-  <tr>
-  <td>Your Email :</td>
-  <td><input size="30" name="email" value="'.$user->email.'"></td>
-  </tr>
-  <tr>
-  <td>PI Name :</td>
-  <td><input size="30" name="pi_name" value="'.htmlentities($pi_name).'"></td>
-  </tr>
-  <tr>
-  <td>PI Email :</td>
-  <td><input size="30" name="pi_email" value="'.$info['email'].'"></td>
-  </tr>
-  <tr>
-  <td>Phone :</td>
-  <td><input size="30" name="phone" value="'.$info['phone'].'"></td>
-  </tr>
-  <tr>
-  <td>P.O. Number :</td>
-  <td><input size="30" name="po_number"></td>
-  </tr>
-  <tr>
-  <td>Billing Address :</td>
-  <td><textarea cols="30" rows="3" name="address">'.$info['address'].'</textarea></td>
-  </tr>
-  <tr>
-  <td><br></td>
-  <td><input name="agree" value="yes" type="checkbox"> '.$agreeText.'</td>
-  </tr>
-  <tr>
-  <td><br></td>
-  <td style="text-align: right;">
-  [ <a href="'.$cancel_link.'" target="_parent">Cancel</a> ] 
-  <input value="Upgrade Account" type="submit"></td>
-  </tr>';
-}
-else {
-  echo '<tr><td style="width: 25%;"><br></td>
-  <td> Sorry, only users with admin privileges are allowed to 
-  upgrade this account.</td></tr>';
+if($role == 'admin') { ?>
+<div style="margin:15px">
+    <form action="<?=$target_link?>" method="POST" class="form-inline">
+	<input type="hidden" name="upgrade_form" value="posted">     
+	<table class="formTable">
+	    <tr>
+		<td><label for="storage" class="control-label">Storage Upgrade :</label></td>
+		<td colspan="3">
+		    <select name="storage" class="input-xlarge">
+			<option value="200">200 MB @ $'.$cost1.'.00 per year</option>
+			<option value="1000">1000 MB @ $'.$cost2.'.00 per year</option>
+			<option value="5000">5000 MB @ $'.$cost3.'.00 per year</option>
+		    </select>
+		</td>
+	    </tr>
+	    <tr>
+		<td>
+		    <label for="name" class="control-label">Your name :</label>
+		</td>
+		<td>
+		    <input type="text" name="name" value="<?=htmlentities($user->name)?>" class="input-block-level">
+		</td>
+		<td>
+		    <label for="pi_name" class="control-label">PI Name :</label>
+		</td>
+		<td>
+		    <input type="text" name="pi_name" value="<?=htmlentities($pi_name)?>" class="input-block-level">
+		</td>
+	    </tr>
+	    <tr>
+		<td>
+		    <label for="email" class="control-label">Your e-mail :</label>
+		</td>
+		<td>
+		    <input type="text" name="email" value="<?=$user->email?>" class="input-block-level">
+		</td>
+		<td>
+		    <label for="pi_email" class="control-label">PI Email :</label>
+		</td>
+		<td>
+		    <input type="text" name="pi_email" value="<?=$info['email']?>" class="input-block-level">
+		</td>
+	    </tr>
+	    <tr>
+		<td>
+		    <label for="phone" class="control-label">Phone :</label>
+		</td>
+		<td>
+		    <input type="text" name="phone" value="<?=$info['phone']?>" class="input-block-level">
+		</td>
+		<td>
+		    <label for="po_number" class="control-label">P.O. Number :</label>
+		</td>
+		<td>
+		    <input type="text" name="po_number" class="input-block-level">
+		</td>
+	    </tr>
+	    <tr>
+		<td>
+		    <label for="address" class="control-label">Billing Address :</label>
+		</td>
+		<td colspan="3">
+		    <textarea rows="3" name="address" class="input-block-level"><?=$info['address']?></textarea>
+		</td>
+	    </tr>
+	    <tr>
+		<td colspan="4" style="padding-top: 5px">
+		    <input name="agree" value="yes" type="checkbox"> <?=$agreeText?>
+		</td>
+	    </tr>
+	</table>
+	<div style="margin-top:5px">
+	    <button type="submit" class="btn btn-primary btn-small">Upgrade Account</button>
+	    <a href="<?=$cancel_link?>" target="_parent" class="btn btn-danger">Cancel</a>
+	</div>
+    </form>
+</div>
+
+<?
+} else {
+   echo "Sorry, only users with admin privileges are allowed to upgrade this account";
 }
 
-echo '</tbody></table>';
-printColoredLine('rgb(100,255,100)', '2px');
+
+
 

@@ -98,6 +98,7 @@ class Admin_Controller extends Lis_Controller {
 	    $this->properties['version_number'] = "1.31";
 	    $this->properties['version'] = $this->properties['version_number']." 01/30/2012";
 	    $this->properties['home.directory'] = CIPATH."/admin/";
+	    $this->properties['home.url'] = base_url().'admin/main';
 	}
 	
 	// Returns an array which contains one data record for each administrator
@@ -115,8 +116,7 @@ class Admin_Controller extends Lis_Controller {
 		'info'	    =>	'Administrator'
 	    );
 	    
-	    $this->load->library('user',$userdata);
-	    $users['johnsmith'] = $this->user;
+	    $users['johnsmith'] = new User($userdata);
 	    return $users;
 	}
 	
@@ -206,8 +206,7 @@ class Group_Controller extends Lis_Controller {
 		    'info'	=>	''
 		);
 
-	    $this->load->library('user',$userdata);
-	    return $this->user;
+	    return new User($userdata);
 	}
 
 	// funtion to return an array of users
@@ -243,8 +242,8 @@ class Group_Controller extends Lis_Controller {
 			'status'    =>	$status, 
 			'info'	=>	$info
 		    );
-		    $this->load->library('user',$userdata,$userid);
-		    $users[$userid] = $this->{$userid};
+		    
+		    $users[$userid] = new User($userdata);
 		    $counter++;
 		}
 	    }

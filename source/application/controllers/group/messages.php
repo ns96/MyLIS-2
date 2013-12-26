@@ -10,6 +10,7 @@ class Messages extends Group_Controller {
 	// Setup paramaters for initializing models below
 	$params['user'] = $this->session->userdata('user');
 	$params['account'] = $this->session->userdata('group');
+	$params['properties'] = $this->properties;
 	
 	$this->load->model('filemanager');
 	$this->filemanager->initialize($params);
@@ -89,6 +90,7 @@ class Messages extends Group_Controller {
 		$file_id = $old_message['file_id'];
 		if(empty($file_id)) {
 		    $file_id = $this->filemanager->uploadFile(1, $table, $data['message_id']);
+		    echo "new file id = ".$file_id."<br>";
 		    $data['file_id'] = $file_id;
 		}
 		else {

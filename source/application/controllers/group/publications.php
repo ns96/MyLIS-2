@@ -38,7 +38,6 @@ class Publications extends Group_Controller {
 	    $data2['session_userid'] = $this->userobj->userid;
 	    $pubsHTML .= $this->load_view('group/publications/userPublications',$data2,TRUE);
 	}
-	
 	$data['page_title'] = "Group Publications $status_text";
 	$data['pubsHTML'] = $pubsHTML;
 	
@@ -63,7 +62,7 @@ class Publications extends Group_Controller {
 	    }
 	}
 	
-	$data['page_title'] = "Publication Info";
+	$data['page_title'] = "Publication Info <span style='margin-left:8px; font-weight:normal'>(ID: ".$pub_id.")</span>";
 	$data['pub_id'] = $pub_id;
 	$data['pub'] = $pub;
 	$data['session_userid'] = $this->userobj->userid;
@@ -145,7 +144,7 @@ class Publications extends Group_Controller {
 		}
 	    }
 	    
-	    $data['page_title'] = "Edit Publication";
+	    $data['page_title'] = "Edit Publication <span style='margin-left:8px; font-weight:normal'>(ID: ".$pub_id.")</span>";
 	    $data['pub'] = $publication;
 	    $data['fileData'] = $fileData;
 	    

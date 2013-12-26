@@ -1,99 +1,77 @@
 <?php
 
-echo "<html>";
-echo "<head>";
-echo "<title>$title</title>";
-echo "</head>";
-echo '<body>';
-echo '<table style="width: 100%; text-align: left;" border="0" cellpadding="2" cellspacing="0">';
-echo '<tbody>';
-echo '<tr>';
-echo '<td style="vertical-align: top;">';
-echo '<span style="color: #3366FF;"><b>'.$title.'</b></span><br>';
-echo '</td>';
-echo '<td style="vertical-align: top; text-align: right;">';
-echo "[ <a href=\"$back_link\">Back</a> ]<br>";
-echo '</td></tr></tbody></table>';
-
-echo printColoredLine('#3366FF', '2px').'<pre></pre>';
+echo "<div style='text-align:right'><a href='$back_link'>Back</a></div>";
 
 $count = count($items);
 if($count > 0) {
     echo "<small><span style=\"color: rgb(225, 0, 0);\"><b>$count</b></span> Total ...</small><br>";
-    $cell_color1 = 'rgb(150,200,255)';
-    $cell_color2 = 'rgb(230,230,230)';
     $location_link = base_url()."group/supplies/listLocations";
-
-    echo '<form enctype="multipart/form-data" action="'.base_url().'group/supplies/bulkActions/" method="POST">';
-    echo '<input type="hidden" name="listing_form" value="posted">';
-    echo '<table style="background-color: rgb(255, 255, 255); width: 100%; text-align: left;"
-    border="0" cellpadding="2" cellspacing="2"><tbody>';
-
-    echo '<tr>';
-    echo '<td style="vertical-align: top; background-color: '.$cell_color1.';"><small><b>Chem ID</b></small></td>';
-    echo '<td style="vertical-align: top; background-color: '.$cell_color1.';"><small><b>Model #</b></small></td>';
-    echo '<td style="vertical-align: top; background-color: '.$cell_color1.';"><small><b>Name</b></small></td>';
-    echo '<td style="vertical-align: top; background-color: '.$cell_color1.';"><small><b>Amount</b></small></td>';
-    echo '<td style="vertical-align: top; background-color: '.$cell_color1.';"><small><b>Status</b></small></td>';
-    echo '<td style="vertical-align: top; background-color: '.$cell_color1.';">
-    <small><b>Location [ <a href="'.$location_link.'" target="_blank">?</a> ]</b></small></td>';
-    echo '</tr>';
-
+    
     // variable that holds the ids as string
     $all_ids = '';
+    
+    ?>
+    <form enctype="multipart/form-data" action="<?=base_url()?>group/chemicals/bulkActions/" method="POST">
+	<input type="hidden" name="listing_form" value="posted">
+	<table class="table table-condensed table-bordered">
+	    <thead>
+		<th>Chem ID</th>
+		<th>Model #</th>
+		<th>Name</th>
+		<th>Amount</th>
+		<th>Status</th>
+		<th>Location [ <a href="<?=$location_link?>" target="_blank">?</a> ]</th>
+	    </thead>
+	    <tbody>
+		<?
+		foreach($items as $supply){
+		    $item_id = $supply['item_id'];
+		    $model = $supply['model'];
+		    $name = $supply['name'];
+		    $amount = $supply['amount'];
+		    $unit = $supply['units'];
+		    $status = $supply['status'];
+		    $location_id = $supply['location_id'];
 
-    foreach($items as $supply){
-	$item_id = $supply['item_id'];
-	$model = $supply['model'];
-	$name = $supply['name'];
-	$amount = $supply['amount'];
-	$unit = $supply['units'];
-	$status = $supply['status'];
-	$location_id = $supply['location_id'];
+		    // add this to the ids list
+		    $all_ids .= $item_id.' ';
 
-	// add this to the ids list
-	$all_ids .= $item_id.' ';
-
-	// define some variables
-	$amount = $amount.'x '.$unit; // the total amount
-	$info_link = base_url().'group/supplies/view?item_id='.$item_id;
-
-	echo '<tr>';
-	echo '<td style="vertical-align: top; background-color: '.$cell_color2.';"><small>
-	<input type="checkbox" name="item_ids[]" value="'.$item_id.'">';
-	echo "[ <a href=\"$info_link\">$item_id</a> ]</td></small>";
-
-	echo '<td style="vertical-align: center; background-color: '.$cell_color2.';"><small>
-	'.$model.'</td></small>';
-	echo '<td style="vertical-align: center; background-color: '.$cell_color2.';"><small>
-	'.$name.'</small></td>';
-	echo '<td style="vertical-align: center; background-color: '.$cell_color2.';"><small>
-	'.$amount.'</small></td>';
-	echo '<td style="vertical-align: center; background-color: '.$cell_color2.';"><small>
-	'.$status.'</small></td>';
-	echo '<td style="vertical-align: center; background-color: '.$cell_color2.';"><small>
-	'.$location_id.'</small></td>';
-	echo '</tr>';
-    }
-
-    echo '<tr>';
-    echo '<td style="vertical-align: top; background-color: '.$cell_color2.';"><small>
-    <input type="checkbox" name="all" value="'.$all_ids.'"> ALL </small></td>';
-
-    echo '<td colspan="4" rowspan="1" style="vertical-align: top; background-color: '.$cell_color2.';"><small>
-    <input type="radio" value="view" name="group_task" checked="checked">
-    <span style="font-weight: bold; color: rgb(0, 0, 0);">View Selected</span> 
-    <input type="radio" value="transfer" name="group_task">
-    <span style="font-weight: bold; color: rgb(0, 0, 0);">Make Selected Mine</span> 
-    </small></td>';
-    echo '<td style="vertical-align: center; text-align: center; background-color: '.$cell_color2.';">
-    <input type="submit" value="Do Task" 
-    style="background: rgb(238, 238, 238); color: #3366FF"></td>';
-    echo '</tr>';
-
-    echo '</tbody></table></form>';
+		    // define some variables
+		    $amount = $amount.'x '.$unit; // the total amount
+		    $info_link = base_url().'group/supplies/view?item_id='.$item_id;
+		    ?>
+		    <tr>
+			<td>
+			    <input type="checkbox" name="item_ids[]" value="<?=$item_id?>">
+			    &nbsp;&nbsp;<a href='<?=$info_link?>'><?=$item_id?></a>
+			</td>
+			<td><?=$model?></td>
+			<td><?=$name?></td>
+			<td><?=$amount?></td>
+			<td><?=$status?></td>
+			<td><?=$location_id?></td>
+		    </tr>
+		<? } ?>
+		    <tr>
+			<td>
+			    <input type="checkbox" name="all" value="<?=$all_ids?>"> ALL
+			</td>
+			<td colspan="4">
+			    <input type="radio" value="view" name="group_task" checked="checked">
+			    View Selected
+			    <input type="radio" value="transfer" name="group_task" style="margin-left: 10px">
+			    Make Selected Mine
+			</td>
+			<td style="text-align: center">
+			    <button type="submit" class="btn btn-primary btn-small">Do Task</button>
+			</td>
+		    </tr>
+	    </tbody>
+	</table>
+    </form>
+    <?
 } else {
     echo 'No Entries Found ...';
 }
 
-echo '</body></html>';
+

@@ -1,7 +1,6 @@
 <?php
-    $base = base_url()."group/";
-    $post_link = $base."accounts/user_profile";
-    $cancel_link = $base."group/main";
+    $post_link = base_url()."group/accounts/user_profile";
+    $cancel_link = base_url()."group/main";
 ?>
 
 <form action="<?=$post_link?>" method="POST" class="form-horizontal" style="margin:20px">

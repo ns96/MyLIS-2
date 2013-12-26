@@ -61,6 +61,7 @@ class Main extends Group_Controller {
 
 	if (isset($plugins))
 		$data['plugins'] = $plugins; 
+	
 	$data['ads_html'] = $this->google_ads->displayAds();
 	
 	$this->load_view('group/main',$data);
@@ -203,9 +204,11 @@ class Main extends Group_Controller {
 
 	$data['poster'] = $this->user_model->getUser($messageItem['userid']);
 
-	if(!empty($link)) 
+	if(!empty($link)) {
 	    $data['link'] = $link;
-
+	} else {
+	   $data['link'] = $link;
+	}
 	if(!empty($file_id)) {
 	    $data['file_link'] = $this->filemanager->getFileURL($file_id);
 	}
@@ -217,8 +220,8 @@ class Main extends Group_Controller {
 	if(($this->userobj->userid == $userid) || ($this->userobj->role == 'admin')) {
 	    $data['delete_link'] = $base."messages/delete/".$message_id;
 	}
-
-	$table = $this->load_view('group/userMessageTable',$data,true);
+	
+	$table = $this->load->view('group/userMessageTable',$data,true);
 
 	return $table;
     }

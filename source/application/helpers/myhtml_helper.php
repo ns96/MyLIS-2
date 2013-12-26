@@ -103,7 +103,7 @@ function loadAdminMenu(){
 		'icon'		=>  base_url().'images/icons/tube.png',
 	),
 	'add	'	=>  array(
-		'controller'	=>  "accounts",
+		'controller'	=>  "accounts/create",
 		'title'		=>  'Add account',
 		'icon'		=>  base_url().'images/icons/meeting.png',
 	),

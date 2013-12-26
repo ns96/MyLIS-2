@@ -196,7 +196,7 @@ foreach($users as $user) {
 ?>
   <tr>
     <td>
-          <input type="checkbox" name="userids[]" value="'.htmlentities($userid).'">
+          <input type="checkbox" name="userids[]" value="<?=htmlentities($userid)?>">
     </td>
     <td>
           <?=$userid?>

@@ -33,7 +33,7 @@ if(!empty($message_id)) {
 </tbody>
 </table>
 <br>
-<form action="$target_url" method="POST" enctype="multipart/form-data" class="form-horizontal" style="margin-right:10px">
+<form action="<?=$target_url?>" method="POST" enctype="multipart/form-data" class="form-horizontal" style="margin-right:10px">
   <input type="hidden" name="message_id" value="<?=$message_id ?>">
   <div class="control-group">
     <label for="website_link" class="control-label">Website Link:</label>

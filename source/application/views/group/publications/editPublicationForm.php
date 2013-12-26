@@ -8,193 +8,192 @@ $delete_link = base_url()."group/publications/delete/".$pub['publication_id'];
 // get information about the publication
 $author = $pub['userid'];
 $title = htmlentities($pub['title']);
-$authors = htmlentities($pub['title']);
+$authors = htmlentities($pub['authors']);
 $abstract = htmlentities($pub['abstract']);
 $comments = htmlentities($pub['comments']);
+?>
 
-echo '<table style="text-align: left; width: 100%;" border="0"
-cellpadding="2" cellspacing="2"><tr><td>
-<b><font color="#3366FF"> Update Publication # </font><font color="#cc0000">'.$pub['publication_id'].'</font></b></td>
-<td style="text-align: right;">
-[ <a href="'.$view_link.'">View</a> ] 
-[ <a href="'.$delete_link.'">Delete Publication</a> ]
-[ <a href="'.$publication_link.'">Publication List</a> ] 
-</td></tr></tbody></table>';
+<div style="text-align:right; margin:15px;">
+    <a href="<?=$publication_link?>">Back to Publication List</a>
+</div>
 
+<div class="formWrapper">
+    
+    <table class="formTopBar" style="width: 100%" cellpadding="4" cellspacing="2">
+	<tbody>
+	<tr>
+	    <td colspan="2" style="background-color: rgb(180,200,230); width: 25%;">
+		Edit Publication Information
+	    </td>
+	</tr>
+	</tbody>
+    </table>
+    
+    <form method="POST" action ="<?=base_url()?>group/publications/edit/<?=$pub['publication_id']?>">
+    <input type="hidden" name="publication_edit_form" value="posted">
+    <table id="pub_info_table">
+	<tr>
+	    <td class="pub_info_label">Title :</td>
+	    <td colspan="4">
+		<input type="text" name="title" class="input-block-level" value="<?=$title?>">
+	    </td>
+	</tr>
+	<tr>
+	    <td class="pub_info_label">Author(s) :</td>
+	    <td colspan="4">
+		<input type="text" name="authors" class="input-block-level" value="<?=$authors?>">
+	    </td>
+	</tr>
+	<tr>
+	    <td colspan="5">&nbsp;</td>
+	</tr>
+	<tr>
+	    <td class="pub_info_label">Type :</td>
+	    <td class="pub_info_label">Status :</td>
+	    <td class="pub_info_label">Start Date :</td>
+	    <td class="pub_info_label">Last Update :</td>
+	    <td class="pub_info_label">Deadline :</td>
+	</tr>
+	<tr>
+	    <td>
+		<select name="type" class="input-block-level">
+		    <option value="<?=$pub['type']?>"><?=ucwords($pub['type'])?></option>
+		    <option value="paper">Paper</option>
+		    <option value="review">Review</option>
+		    <option value="research proposal">Research Proposal</option>
+		    <option value="dissertation">Dissertation</option>
+		    <option value="patent">Patent</option>
+		</select>
+	    </td>
+	    <td>
+		<select name="status" class="input-block-level">
+		    <option value="<?=$pub['status']?>"><?=$pub['status']?></option>
+		    <option value="Proposed">Proposed</option>
+		    <option value="In Progress">In Progress</option>
+		    <option value="Submitted">Submitted</option>
+		    <option value="Accepted">Accepted</option>
+		    <option value="In Press">In Press</option>
+		    <option value="Withdrawn">Withdrawn</option>
+		</select>
+	    </td>
+	    <td><input type="text" name="start_date" class="input-block-level" value="<?=$pub['start_date']?>"></td>
+	    <td><input type="text" name="modify_date" class="input-block-level" value="<?=$pub['modify_date']?>"></td>
+	    <td><input type="text" name="end_date" class="input-block-level" value="<?=$pub['end_date']?>"></td>
+	</tr>
+	<tr>
+	    <td colspan="5">&nbsp;</td>
+	</tr>
+	<tr>
+	    <td class="pub_info_label">Abstract :</td>
+	    <td colspan="4"><textarea name="abstract" class="input-block-level"><?=$abstract?></textarea></td>
+	</tr>
+	<tr>
+	    <td class="pub_info_label">Comments :</td>
+	    <td colspan="4"><textarea name="comments" class="input-block-level"><?=$comments?></textarea></td>
+	</tr>
+	<tr>
+	    <td colspan="5" style="text-align: center">
+		<button type="submit" class="btn btn-primary">Update Publication</button>
+		<a href="<?=$delete_link?>" class="btn btn-danger">Delete Publication</a>
+	    </td>
+	</tr>
+    </table>
+    </form>    
+</div>
 
-echo "<form method=\"POST\" action ='".base_url()."group/publications/edit/".$pub['publication_id']."'>";
-echo '<input type="HIDDEN" name="publication_edit_form" value="posted">';
-
-echo printColoredLine('#3366FF', '2px').'<pre></pre>';
-
-// add the title table
-echo '<table cellpadding="2" cellspacing="2" border="0" width="100%"><tbody>';
-echo '<tr>';
-echo '<td valign="top" width="15%" bgcolor="#b5cbe7"><font color="#212063"><small><b>Title</b></small></font><br></td>';
-echo '<td valign="top" width="85%" bgcolor="#F0F0F0">';
-echo '<input name="title" type="text" size="80" value="'.$title.'">';
-echo '</td>';
-echo '</tr>';
-echo '<tr>';
-echo '<td valign="top" width="15%" bgcolor="#b5cbe7"><font color="#212063"><small><b>Author(s)</b></small></font><br></td>';
-echo '<td valign="top" width="85%" bgcolor="#F0F0F0">';
-echo '<input name="authors" type="text" size="80" value="'.$pub['authors'].'">';
-echo '</td>';
-echo '</tr>';
-echo '</tbody></table>';
-echo '<br>';
-
-// add the type, status, dates here
-echo '<table cellpadding="2" cellspacing="2" border="0" width="100%"><tbody>';
-echo '<tr>';
-echo '<td valign="top" width="15%" bgcolor="#b5cbe7"><font color="#212063"><small><b>Type</b></small></font><br></td>';
-echo '<td valign="top" width="25%" bgcolor="#b5cbe7"><font color="#212063"><small><b>Status</b></small></font><br></td>';
-echo '<td valign="top" width="20%" bgcolor="#b5cbe7"><font color="#212063"><small><b>Start Date</b></small></font><br></td>';
-echo '<td valign="top" width="20%" bgcolor="#b5cbe7"><font color="#212063"><small><b>Last Update</b></small></font><br></td>';
-echo '<td valign="top" width="20%" bgcolor="#b5cbe7"><font color="#212063"><small><b>Deadline</b></small></font><br></td>';
-echo '</tr>';
-echo '<tr>';
-echo '<td valign="top" width="15%" bgcolor="#F0F0F0">';
-echo '<select name="type" size="1">';
-echo '<option value="'.$pub['type'].'">'.ucwords($pub['type']).'</option>';
-echo '<option value="paper">Paper</option>';
-echo '<option value="review">Review</option>';
-echo '<option value="research proposal">Research Proposal</option>';
-echo '<option value="dissertation">Dissertation</option>';
-echo '<option value="patent">Patent</option>';
-echo '</select>';
-echo '</td>';
-echo '<td valign="top" width="25%" bgcolor="#F0F0F0">';
-echo '<select name="status" size="1">';
-echo '<option value="'.$pub['status'].'">'.$pub['status'].'</option>';
-echo '<option value="Proposed">Proposed</option>';
-echo '<option value="In Progress">In Progress</option>';
-echo '<option value="Submitted">Submitted</option>';
-echo '<option value="Accepted">Accepted</option>';
-echo '<option value="In Press">In Press</option>';
-echo '<option value="Withdrawn">Withdrawn</option>';
-echo '</select>';
-echo '</td>';
-echo '<td valign="top" width="20%" bgcolor="#F0F0F0">';
-echo '<input name="start_date" type="text" size="15" value="'.$pub['start_date'].'">';
-echo '</td>';
-echo '<td valign="top" width="20%" bgcolor="#F0F0F0">';
-echo '<input name="modify_date" type="text" size="15" value="'.$pub['modify_date'].'">';
-echo '</td>';
-echo '<td valign="top" width="20%" bgcolor="#F0F0F0">';
-echo '<input name="end_date" type="text" size="15" value="'.$pub['end_date'].'">';
-echo '</td>';
-echo '</tr>';
-echo '</tbody></table>';
-
-// add the abstract table here
-echo '<br>';
-echo '<table cellpadding="2" cellspacing="2" border="0" width="100%"><tbody>';
-echo '<tr>';
-echo '<td valign="top" width="15%" bgcolor="#b5cbe7"><font color="#212063"><small><b>Abstract</b></small></font><br></td>';
-echo '<td valign="top" width="85%" bgcolor="#F0F0F0">';
-echo '<textarea name="abstract" rows="5" cols="80" >'.$abstract.'</textarea>';
-echo '</td>';
-echo '</tr>';
-echo '<tr>';
-echo '<td valign="top" width="15%" bgcolor="#b5cbe7"><font color="#212063"><small><b>Comments</b></small></font><br></td>';
-echo '<td valign="top" width="85%" bgcolor="#F0F0F0">';
-echo '<textarea name="comments" rows="5" cols="80">'.$comments.'</textarea>';
-echo '</td>';
-echo '</tr>';
-echo '</tbody></table>';
-echo '<br>';
-
-// table holding submit button
-echo "<div style=\"text-align: right;\">";
-echo '<input type="submit" value="Update Publication" 
-style="background: rgb(238, 238, 238); color: #3366FF">';
-echo '</div>';
-echo '</form>';
-
-echo printColoredLine('#3366FF', '1px').'<pre></pre>';
-
-// add the tables that allow removal and addition of files
-echo '<font color="#3366FF"><b>File Management</b></font>';
-
-echo '<table cellpadding="2" cellspacing="2" border="0" width="100%"><tbody>';
-echo '<tr>';
-echo '<td valign="top" width="5%" bgcolor="#b5cbe7"><font color="#212063"><small><b>File</b></small></font><br></td>';
-echo '<td valign="top" width="80%" bgcolor="#b5cbe7"><font color="#212063"><small><b>Description</b></small></font><br></td>';
-echo '<td valign="top" width="15%" bgcolor="#b5cbe7"><font color="#212063"><small><b>Type/Delete</b></small></font><br></td>';
-echo '</tr>';
-
-if(count($fileData)>0) {
-    $i = 1;
-    foreach ($fileData as $fileItem) {
-	$delete_link = base_url()."group/publications/delete/".$fileItem['id'];
-	echo '<tr>';
-	echo '<td valign="top" width="5%" bgcolor="#F0F0F0"><font color="#000000"><small>'.$i.'</small></font></td>';
-	echo '<td valign="top" width="80%" bgcolor="#F0F0F0"><font color="#000000"><small>'.$fileItem['info']['description'].'</small></font></td>';
-	echo '<td valign="top" width="15%" bgcolor="#F0F0F0"><font color="#000000"><small>[ <a href="'.$fileItem['link'].'">'.$fileItem['info']['type'].'</a> ]</small></font>'; 
-	echo '<form method="post" action="'.base_url().'group/publications/deleteFile">
-	    <input type="hidden" name="publication_id" value="'.$pub['publication_id'].'" >
-	    <input type="hidden" name="file_id" value="'.$fileItem['id'].'" >
-	    <input type="submit" value="Delete" ></form>';
-	echo '</td></tr>';
-	$i++;
-    }
-} else {
-    echo '<tr>';
-    echo '<td valign="top" width="5%" bgcolor="#F0F0F0"><font color="#000000"><small>0</small></font></td>';
-    echo '<td valign="top" width="85%" bgcolor="#F0F0F0"><font color="#000000"><small>No Files Found</small></font></td>';
-    echo '<td valign="top" width="10%" bgcolor="#F0F0F0"><br></td>';
-    echo '</tr>';
-}
-echo '</tbody></table>';
-
-// add the table to add a new file
-echo '<br>';
-echo '<table cellpadding="2" cellspacing="2" border="0" width="100%"><tbody>';
-echo '<tr>';
-echo '<td valign="top" width="25%" bgcolor="#b5cbe7" colspan="2" rowspan="1"><font color="#212063"><small><b>Add New File</b></small></font><br></td>';
-echo '</tr>';
-echo '<tr>';
-echo '<td valign="top" width="25%" bgcolor="#F0F0F0"><font color="#000000"><small>File Type : </small></font>';
-echo '<form method="POST" action ="'.base_url().'group/publications/addFile" enctype="multipart/form-data">';
-echo '<input type="HIDDEN" name="add_publication_file_form" value="posted">';
-echo '<input type="HIDDEN" name="publication_id" value="'.$pub['publication_id'].'">';
-echo '<select name="filetype_1" size="1">
-<option value="none">No File</option>
-<option value="url">Website URL</option>
-<option value="pdf">PDF</option>
-<option value="doc">Word</option>
-<option value="ppt">Powerpoint</option>
-<option value="xls">Excel</option>
-<option value="rtf">RTF</option>
-<option value="odt">OO Text</option>
-<option value="odp">OO Impress</option>
-<option value="ods">OO Calc</option>
-<option value="zip">Zip</option>
-<option value="other">Other</option>
-</select>';
-echo '</td>';
-echo '<td valign="top" width="75%" bgcolor="#F0F0F0">';
-echo '<small>File Name :</small>';
-echo '<input name="fileupload_1" size="30" type="file">';
-echo '</td>';
-echo '</tr>';
-echo '<tr>';
-echo '<td valign="top" width="25%" bgcolor="#F0F0F0"><font color="#000000"><small>Website Link :</small></font>';
-echo '</td>';
-echo '<td valign="top" width="75%" bgcolor="#F0F0F0">';
-echo '<input name="url_1" type="text" size="50">';
-echo '</td>';
-echo '</tr>';
-echo '<tr>';
-echo '<td valign="top" width="25%" bgcolor="#F0F0F0"><font color="#000000"><small>File Description :</small></font>';
-echo '</td>';
-echo '<td valign="top" width="75%" bgcolor="#F0F0F0">';
-echo '<input name="description_1" type="text" size="50">';
-echo '<input name="Submit" value="Upload File" type="submit"
-style="background: rgb(238, 238, 238); color:#3366FF"> <small>(2MB Max)</small>';
-echo '</td>';
-echo '</tr>';
-echo '</tbody></table>';
-echo '</form>';
-echo '</body></html>';
+<div style="text-align: center; font-weight: bold;">Publication Files</div>
+<div style="margin:0px 15px 10px 15px">
+<table id="pub_info_filetable">
+    <thead>
+	<th width="5%">File</th>
+	<th width="72%">Description</th>
+	<th style="text-align: center">Actions</th>
+    </thead>
+    <tbody>
+	<?
+	if(count($fileData)>0) {
+	    $i = 1;
+	    foreach ($fileData as $fileItem) {
+		$delete_link = base_url()."group/publications/delete/".$fileItem['id'];
+		echo '<tr>';
+		echo '<td>'.$i.'</td>';
+		echo '<td>'.$fileItem['info']['description'].'</td>';
+		echo '<td style="text-align:center"><a href="'.$fileItem['link'].'">Get '.strtoupper($fileItem['info']['type']).'</a> ';
+		echo '<form method="post" action="'.base_url().'group/publications/deleteFile" style="display:inline">
+		    <input type="hidden" name="publication_id" value="'.$pub['publication_id'].'" >
+		    <input type="hidden" name="file_id" value="'.$fileItem['id'].'" >
+		    <input type="submit" value="Delete" class="btn btn-danger btn-small" ></form>';
+		echo '</td></tr>';
+		$i++;
+	    }
+	} else {
+	    echo '<tr>';
+	    echo '<td>0</td>';
+	    echo '<td>No Files Found</td>';
+	    echo '<td><br></td>';
+	    echo '</tr>';
+	}
+	?>
+    </tbody>
+</table> 
+</div>
+    
+<?
+    $add_link = base_url().'group/publications/addFile';
+?>
+<div class="formWrapper">
+    
+    <table class="formTopBar" style="width: 100%" cellpadding="4" cellspacing="2">
+	<tbody>
+	<tr>
+	    <td colspan="2" style="background-color: rgb(180,200,230); width: 25%;">
+		Add New File
+	    </td>
+	</tr>
+	</tbody>
+    </table>
+    
+    <form action="<?=$add_link?>" method="POST" enctype="multipart/form-data" class="form-inline" >
+	<input type="hidden" name="add_publication_file_form" value="posted">
+	<input type="hidden" name="publication_id" value="<?=$pub['publication_id']?>">      
+	<table class="formTable">
+	    <tr>
+		<td><label for="website_link" class="control-label">Select File:</label></td>
+		<td>
+		    <select name="filetype_1" class="input-medium">
+			<option value="none">No File</option>
+			<option value="url">Website URL</option>
+			<option value="pdf">PDF</option>
+			<option value="doc">Word</option>
+			<option value="ppt">Powerpoint</option>
+			<option value="xls">Excel</option>
+			<option value="rtf">RTF</option>
+			<option value="odt">OO Text</option>
+			<option value="odp">OO Impress</option>
+			<option value="ods">OO Calc</option>
+			<option value="zip">Zip</option>
+			<option value="other">Other</option>
+		    </select>
+		    <div align="left" style="display:inline">
+			<input id="fileupload_1" name="fileupload_1" class="filestyle" type="file" data-icon="false" style="position: fixed; left: -500px;">  
+			<span style="color:grey; margin-left: 5px; margin-right: 10px">(maximum filesize: 2MB)</span>
+		    </div>
+		</td>
+	    </tr>
+	    <tr>
+		<td><label for="url_1" class="control-label">Website Link:</label></td>
+		<td>
+		    <input type="text" name="url_1" class="input-block-level">
+		</td>
+	    </tr>
+	    <tr>
+		<td><label for="description_1" class="control-label">File description:</label></td>
+		<td>
+		    <input type="text" name="description_1" class="input-block-level">
+		</td>
+	    </tr>
+	</table>
+	<button type="submit" class="btn btn-primary btn-small">Upload File</button>
+    </form>
+    
+</div>

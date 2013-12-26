@@ -23,26 +23,28 @@ $note = 'Note: ';
 if(!empty($item_info['note'])) {
   $note = $item_info['note'];
 }
+?>
 
-echo '<p style="background-color: '.$bgc.'">';
-echo '<input name="item_ids[]" value="'.$item_id.'" type="checkbox">';
-echo '<small><b>'.$month_name.'</b> ';
+<div class="grouptask_box" style="background-color: <?=$bgc?>">
+    <div style="min-height:25px">
+	<input name="item_ids[]" value="<?=$item_id?>" type="checkbox">
+	<small><b>$month_name</b> 
 
-if($completed != 'YES') {
-  $link = base_url()."group/grouptask/setTaskItemCompleted=?item_id=$item_id";
-  echo '( <a href ="'.$link.'">task completed</a> )<br>';
-  echo '<input size="30" name="person_'.$item_id.'" value="'.htmlentities($person).'"><br>';
-  echo '<input size="30" name="note_'.$item_id.'" value="'.htmlentities($note).'" 
-  style="background-color:'.$bgc.'; border: 1px solid red; color:blue" >';
-}
-else {
-  echo '<br><input size="30" name="person_'.$item_id.'" 
-  value="'.htmlentities($person).'" disabled="disabled"
-  style="background-color:white;"><br>';
-  echo '<input size="30" name="note_'.$item_id.'" 
-  value="'.htmlentities($note).'" disabled="disabled" 
-  style="background-color:'.$bgc.'; border: 1px solid red; color:blue" >';
-}
+	<?
+	if($completed != 'YES') {
+	    $link = base_url()."group/grouptask/setTaskItemCompleted?item_id=$item_id";
+	    echo '<a href ="'.$link.'" class="btn btn-success btn-mini" style="margin-left:10px">Mark as completed</a>';
+	    ?>
+		</div>
+	    <input type="text" name="person_<?=$item_id?>" class="input-block-level" value="<?=htmlentities($person)?>">
+	    <input type="text" name="note_<?=$item_id?>" class="input-block-level" value="<?=htmlentities($note)?>">
+	    <?
+	} else { ?>
+	    </div>
+	    <input type="text" name="person_<?=$item_id?>" class="input-block-level" value="<?=htmlentities($person)?>" disabled="disabled">
+	    <input type="text" name="note_<?=$item_id?>" class="input-block-level" value="<?=htmlentities($note)?>" disabled="disabled">
+	<? } ?>
+	</small>
+</div>
 
-echo '</small></p>';
 

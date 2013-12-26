@@ -1,7 +1,6 @@
 <?php
-    $base = base_url()."group/";
-    $post_link = $base."accounts/group_profile";
-    $cancel_link = $base."group/main";
+    $post_link = base_url()."group/accounts/group_profile";
+    $cancel_link = base_url()."group/main";
 ?>
 <div style="font-size:12px">last edited on <span style="color:#285e8e"><?=$info['edit_date']?></span> by <span style="color:#285e8e"><?=$editor->name?></span></div>
 <form action="<?=$post_link?>" method="POST" class="form-horizontal" style="margin:10px">

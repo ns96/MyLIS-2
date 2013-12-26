@@ -347,7 +347,7 @@ class Supplies extends Group_Controller {
 	    $other_location = $this->input->post("other_location");
 	    $notes = $this->input->post("notes");
 	    $personal = $this->input->post("personal");
-
+	    
 	    // create some variable to add to the database
 	    $userid = $this->userobj->userid;
 	    $status_date = getLISDate();
@@ -357,7 +357,7 @@ class Supplies extends Group_Controller {
 	    } else {
 		$owner = 'myadmin';
 	    }
-
+	    
 	    if(!empty($other_category)) {
 		$category = $other_category;
 		$this->supplies_model->addCategory($other_category, $userid); 
@@ -414,7 +414,6 @@ class Supplies extends Group_Controller {
 	    $data['sn'] = $sn;
 	    $data['category'] = $category;
 	    $data['location'] = $location;
-	    $data['notes'] = $owner;
 	    $data['userid'] = $userid;
 	    $data['item_id'] = $item_id;
 	    
@@ -553,7 +552,7 @@ class Supplies extends Group_Controller {
     
     // function to return the search terms
     protected function getWhereClause($searchby, $searchterm) {
-	$where_clause;
+	$where_clause = '';
 
 	if($searchby == 'id') {
 	$ids = preg_split("/[\s,]+/", $searchterm); // split on white spaces or commas

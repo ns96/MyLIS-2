@@ -367,6 +367,10 @@ input[type="checkbox"] {
     border-color: #B1B1B1;
 }
 
+.table input[type="checkbox"], .table input[type="radio"] {
+    margin-top: 0px;
+}
+
 #chem_table td:nth-child(1), #item_table td:nth-child(1) {
     text-align: center;
 }
@@ -621,4 +625,40 @@ input[type="checkbox"] {
 
 #orderlist_table td:nth-child(1) {
     padding-left: 10px;
+}
+
+.inline-form {
+    display:inline;
+}
+
+#pub_info_table {
+    font-size: 14px;
+    width: 100%;
+}
+
+#pub_info_table td {
+    padding: 2px 4px;
+}
+
+.pub_info_label {
+    font-weight: bold;
+}
+
+#pub_info_filetable {
+    width: 100%;
+    font-size: 14px;
+    margin-top: 10px;
+    border-collapse: separate;
+    border-spacing: 2px;
+}
+
+#pub_info_filetable th {
+    font-weight: bold;
+    text-align: left;
+    background-color:#CDC0C0;
+    padding: 3px;
+}
+
+#pub_info_filetable td {
+    padding: 3px;
 }

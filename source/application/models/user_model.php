@@ -26,8 +26,7 @@ class User_model extends CI_Model {
 	    $userdata['status'] = $records[0]['status'];
 	    $userdata['info'] = $records[0]['info'];
 	    
-	    $this->load->library('user',$userdata);
-	    $user = $this->user;
+	    $user = new User($userdata);
 	} else {
 	    $user = null;
 	}

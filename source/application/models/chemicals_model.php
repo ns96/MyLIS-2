@@ -57,16 +57,7 @@ class Chemicals_model extends CI_Model {
 	$sql = "SELECT * FROM $this->l_table ORDER BY location_id";
 	$records = $this->lisdb->query($sql)->result_array();
 	
-	$locations = array();
-	if(count($records)>0) {
-	    foreach($records as $location) {
-		$locations[] =$location['location_id'];
-	    }
-	} else {
-	    $locations[] = 'None In List';
-	}
-	
-	return $locations;
+	return $records;
     }
     
     public function getFullLocation($location_id){

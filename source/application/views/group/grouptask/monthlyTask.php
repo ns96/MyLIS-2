@@ -1,59 +1,53 @@
 <?php
+    $target_link = base_url().'group/grouptask/updateTasks';
+    $print_page_link = base_url().'group/grouptask/printable';
+?>
 
-$months = getMonths();
-$manager = getUser($grouptask_info['manager_id']);
+<script language="Javascript">
+    <!--Hide script from older browsers
 
-$ismanager = false;
-if($role == 'admin' || $userid == $grouptask_info['manager_id']) {
-  $ismanager = true;
-}
+    function updateList(task) {
+	document.forms.monthlyform.task2.value = task;
+	document.forms.monthlyform.submit();
+    }
+    // End hiding script from older browsers-->              
+</script>
 
-// some javascript code
-echo '<script language="Javascript">
-<!--Hide script from older browsers
+<div class="formWrapper">
+    <table class="formTopBar" style="width: 100%" cellpadding="4" cellspacing="2">
+	<tbody>
+	<tr>
+	    <td colspan="2" style="background-color: rgb(180,200,230); width: 25%;">
+		Task Manager : <i><?=$manager->name?></i>
+		( <a href="<?=$print_page_link?>">Printable View<a> )
+	    </td>
+	</tr>
+	</tbody>
+    </table>
+    <form name="monthlyform\" action="<?=$target_link?>" method="POST" class="form-inline" style="margin-right:10px">
+	<input type="hidden" name="task" value="grouptask_update">
+	<input type="hidden" name="task2" value="">
+	<input type="hidden" name="grouptask_id" value="<?=$grouptask_id?>"> 
+	<table class="formTable">
+	    <tr>
+		<td style="vertical-align: top">
+		    <?=$monthlyFields?>
+		</td>
+	    </tr>
+	    <tr>
+		<td align="right" colspan="2">
+		    <? if($ismanager) { ?>
+			<button class="btn btn-primary" onClick="updateList('reset')">Reset Selected</button>
+		    <? } ?>
+		    <button class="btn btn-primary" onClick="updateList('update_info')">Update</button>
+		</td>
+	    </tr>
+	</table>
+    </form>
+    <?=$taskNotesForm?>
+</div>
 
-function updateList(task) {
-  document.forms.monthlyform.task2.value = task;
-  document.forms.monthlyform.submit();
-}
-// End hiding script from older browsers-->              
-</script>';
 
-$target_link = base_url().'group/grouptask/updateTasks';
-$print_page_link = base_url().'group/grouptask/printable';
 
-echo "<form name=\"monthlyform\" action=\"$target_link\" method=\"POST\">";
-echo '<input type="hidden" name="task" value="grouptask_update">';
-echo '<input type="hidden" name="task2" value="">';
-echo '<input type="hidden" name="grouptask_id" value="'.$grouptask_id.'">';
 
-echo '<table style="text-align: left; width: 100%;" border="1"
-cellpadding="2" cellspacing="0"><tbody><tr>';
-echo '<td colspan="2" rowspan="1" style="width: 50%; vertical-align: top; background-color: #b5cbe7;" >
-<small><b>Task Manager : <i>'.$manager->name.'</i></b> ';
-echo '( <a href="'.$print_page_link.'">Printable View<a> )';
-echo '</small></td>';
-echo '</tr><tr>';
-
-echo '<td style="width: 50%; vertical-align: top;">';
-
-echo $monthlyFields;
-
-echo '</td></tr>';
-echo '<tr align="right"><td colspan="2" rowspan="1">';
-
-if($ismanager) {
-  echo '<input value="Reset Selected" type="button" 
-  style="background: rgb(238, 238, 238); color: #3366FF" 
-  onClick="updateList(\'reset\')"> ';
-}
-
-echo '<input value="Update" type="button" 
-style="background: rgb(238, 238, 238); color: #3366FF" 
-onClick="updateList(\'update_info\')">';
-
-echo '</td></tr>';
-echo '</tbody></table></form>';
-
-echo $taskNotesForm;
 

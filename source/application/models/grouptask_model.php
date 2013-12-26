@@ -39,7 +39,7 @@ class Grouptask_model extends CI_Model {
       }
 
       $records = $this->lisdb->query($sql)->result_array();
-      return $records;
+      return $records[0];
     }
     
     // function to get the number of items for a grouptask

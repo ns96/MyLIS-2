@@ -33,7 +33,7 @@ if(!empty($item_info['note'])) {
 
 	<?
 	if($completed != 'YES') {
-	    $link = base_url()."group/grouptask/task_completed?item_id=$item_id";
+	    $link = base_url()."group/grouptask/setTaskItemCompleted?item_id=$item_id";
 	    $delete_link = base_url()."group/grouptask/delete_task_item?item_id=$item_id";
 	    echo '<a href ="'.$link.'" class="btn btn-success btn-mini" style="margin-left:10px">Mark as completed</a>';
 	    if($ismanager) {
@@ -48,7 +48,7 @@ if(!empty($item_info['note'])) {
 	    </div>
 	    <input type="text" name="person_<?=$item_id?>" class="input-block-level" value="<?=htmlentities($person)?>" disabled="disabled">
 	    <input type="text" name="note_<?=$item_id?>" class="input-block-level" value="<?=htmlentities($note)?>" disabled="disabled">
-	<? }
-
-echo '</small></div>'; 
+	<? } ?>
+	</small>
+</div>
 

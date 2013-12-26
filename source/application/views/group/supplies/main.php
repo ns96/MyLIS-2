@@ -57,14 +57,14 @@ echo '[ <a href="'.$list_bylocation.'">List All By Location</a> ] ';
                             </label>
                             <br>
                             <div id="location_list_option" style="margin-top:5px; display:none">
-                                <select name="location" size="1">';
+                                <select name="location">
                                     <?
                                     foreach($locations as $location) {
                                         echo '<option value="'.$location.'">'.$location.'</option>';
                                     }
                                     ?>
                                 </select>
-                                <input type="button" value="Location List" onClick="window.open(\''.$location_link.'\',\'locations\',\'width=500,height=600,location=no,resizable=yes,scrollbars=yes\')">
+                                <input type="button" value="Location List" onClick="window.open('<?=$location_link?>','locations','width=500,height=600,location=no,resizable=yes,scrollbars=yes')">
                             </div>
                         </td>
                         <td rowspan="2">
@@ -133,7 +133,7 @@ $add_supply_link = base_url().'group/supplies/add';
             <table class="formTable">
                 <tr>
                     <td style="width: 25%">
-                        <label for="model" class="control-label">model # :</label><br>
+                        <label for="model" class="control-label">Model # :</label><br>
                         <input type="text" id="model" name="model" class="input-block-level">
                     </td>
                     <td style="width: 25%">
@@ -194,7 +194,7 @@ $add_supply_link = base_url().'group/supplies/add';
                         <input type="text" id="other_category" name="other_category">
                     </td>
                     <td colspan="2">
-                        <label for="location" class="control-label">Location: :</label><br>
+                        <label for="location" class="control-label">Location :</label><br>
                         <select name="location" size="1" class="input-medium">';
                         <?
                         foreach($locations as $location) {
@@ -208,11 +208,11 @@ $add_supply_link = base_url().'group/supplies/add';
                 </tr>
                 <tr>
                     <td colspan="3">
-                        <label for="notes" class="control-label">Notes: :</label><br>
+                        <label for="notes" class="control-label">Notes :</label><br>
                         <textarea id="notes" name="notes" class="input-block-level"></textarea>
                     </td>
                     <td align="center" style="vertical-align: middle">
-                        <input type="checkbox" name="personal" value="personal" checked="checked">Personal Item
+                        <input type="checkbox" name="personal" value="personal" checked="checked"> Personal Item
                     </td>
                 </tr>
             </table>

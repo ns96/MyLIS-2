@@ -69,7 +69,7 @@ class Accounts extends Group_Controller {
             } else {
                 $data['page_title'] = 'Error message';
                 $data['error_message'] = $this->error_message;
-                $this->load_view('error/error_and_back',$data);
+                $this->load_view('errors/error_and_back',$data);
             }
         } else {       
             $data['page_title'] = 'Upgrade your Account';
@@ -95,10 +95,15 @@ class Accounts extends Group_Controller {
 		$data['email'] = $this->input->post('email'); // email
 		$data['info'] = $this->input->post('info'); // additional information about the user
 		$data['userid'] = $this->userobj->userid;
-
+		
 		$this->load->model('profile_model');
 		$this->profile_model->update($data);
 
+		// update the session data
+		$this->load->model('user_model');
+		$user = $this->user_model->getUser($this->userobj->userid);
+		$this->session->set_userdata('user',$user);
+		
 		// now redirect group profile page
 		redirect($base."accounts/user_profile");
 	    }
@@ -185,17 +190,9 @@ class Accounts extends Group_Controller {
 	}
 
 	if(!empty($error)) {
-	    echo "<html>";
-	    echo "<head>";
-	    echo "<title>Profile Update Error</title>";
-	    echo "</head>";
-	    echo "<body bgcolor=\"white\">";
-	    echo '<h3><span style="background-color: rgb(255, 100, 100);">
-	    Error, the following value(s) were not entered, or the formating is 
-	    incorrect. Please use the back button and correct the values.</span></h3>
+	    echo '<h3>The following value(s) were not entered, or the formating is 
+	    incorrect. <br>Please use the back button and correct the values.</h3>
 	    <ul style="list-style-type: square;"> '.$error.'</ul>';
-	    echo "</body>";
-	    echo "</html>";
 
 	    return false;
 	}

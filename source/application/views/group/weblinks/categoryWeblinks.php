@@ -18,8 +18,8 @@
 		echo "<td><a href=\"$url\" target=\"_blank\">$title</a></td>";
 		echo "<td>";
 		if($userid == $weblinkItem['userid'] || $role == 'admin') {
-		    $edit_link = base_url()."group/weblinks/index/".$link_id;
-		    echo "<a href='$edit_link\'><img src='".base_url()."images/icons/edit.png' class='icon' title='edit'/>";
+		    $edit_link = base_url()."group/weblinks/index/".$link_id."#add";
+		    echo "<a href='$edit_link'><img src='".base_url()."images/icons/edit.png' class='icon' title='edit'/>";
 		}
 
 		if($userid == $weblinkItem['userid'] || $role == 'admin') {

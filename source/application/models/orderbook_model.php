@@ -53,43 +53,43 @@ class Orderbook_model extends CI_Model {
     }
     
     public function addOrder($data){
-        $sql = "INSERT INTO $this->o_table VALUES('', '$company', '$ponum', '$conum', '$priority', 
-            '$account', '$order_date', '$status', '$status_date', '0.00', '0.00', '$s_expense', '0.00', '$notes', '$owner', '$user_id', '$maxitems')";
+        $sql = "INSERT INTO $this->o_table VALUES('', '$data[company]', '$data[ponum]', '$data[conum]', '$data[priority]', 
+            '$data[account]', '$data[order_date]', '$data[status]', '$data[status_date]', '0.00', '0.00', '$data[s_expense]', '0.00', '$data[notes]', '$data[owner]', '$data[user_id]', '$data[maxitems]')";
         $this->lisdb->query($sql);
         return $this->lisdb->insert_id();
     }
     
     public function addOrderItem($data){
-        $sql = "INSERT INTO $this->i_table VALUES('', '$order_id', '$stock_id', '$i', '$type', '$company', '$product', 
-            '$description', '$amount', '$units', '$price', '$status', '$status_date', '$owner', '$user_id')";
+        $sql = "INSERT INTO $this->i_table VALUES('', '$data[order_id]', '$data[stock_id]', '$data[i]', '$data[type]', '$data[company]', '$data[product]', 
+            '$data[description]', '$data[amount]', '$data[units]', '$data[price]', '$data[status]', '$data[status_date]', '$data[owner]', '$data[user_id]')";
         $this->lisdb->query($sql);
     }
     
     public function updateOrderKeepUser($data){
-        $sql = "UPDATE $this->o_table SET company='$company', ponum='$ponum', conum='$conum', priority='$priority', account='$account', 
-            status='$status', status_date='$status_date', s_expense='$s_expense', notes='$notes' WHERE order_id='$order_id'";
+        $sql = "UPDATE $this->o_table SET company='$data[company]', ponum='$data[ponum]', conum='$data[conum]', priority='$data[priority]', account='$data[account]', 
+            status='$data[status]', status_date='$data[status_date]', s_expense='$data[s_expense]', notes='$data[notes]' WHERE order_id='$data[order_id]'";
         $this->lisdb->query($sql);
     }
     
     public function updateOrderChangeUser($data){
-        $sql = "UPDATE $this->o_table SET company='$company', ponum='$ponum', conum='$conum', priority='$priority', account='$account', 
-          status='$status', status_date='$status_date', s_expense='$s_expense', notes='$notes', userid='$user_id'";
+        $sql = "UPDATE $this->o_table SET company='$data[company]', ponum='$data[ponum]', conum='$data[conum]', priority='$data[priority]', account='$data[account]', 
+          status='$data[status]', status_date='$data[status_date]', s_expense='$data[s_expense]', notes='$data[notes]', userid='$data[user_id]'";
         if (isset($data['maxitems'])){
-            $sql .= ", maxitems = '$maxitems'";
+            $sql .= ", maxitems = '$data[maxitems]'";
         }
-        $sql .= " WHERE order_id='$order_id'";
+        $sql .= " WHERE order_id='$data[order_id]'";
         $this->lisdb->query($sql);
     }
     
     public function updateOrderItemKeepUser($data){
-        $sql = "UPDATE $this->i_table SET type = '$type', company='$company', product_id='$product', description='$description', amount='$amount', units='$units', 
-            price='$price', status='$status', status_date='$status_date', owner='$owner' WHERE (order_id='$order_id' AND item_num='$i')";
+        $sql = "UPDATE $this->i_table SET type = '$data[type]', company='$data[company]', product_id='$data[product]', description='$data[description]', amount='$data[amount]', units='$data[units]', 
+            price='$data[price]', status='$data[status]', status_date='$data[status_date]', owner='$data[owner]' WHERE (order_id='$data[order_id]' AND item_num='$data[i]')";
         $this->lisdb->query($sql);
     }
     
     public function updateOrderItemChangeUser($data){
-        $sql = "UPDATE $this->i_table SET type = '$type', company='$company', product_id='$product', description='$description', amount='$amount', units='$units', 
-            price='$price', status='$status', status_date='$status_date', owner='$owner', userid='$user_id' WHERE (order_id='$order_id' AND item_num='$i')";
+        $sql = "UPDATE $this->i_table SET type = '$data[type]', company='$data[company]', product_id='$data[product]', description='$data[description]', amount='$data[amount]', units='$data[units]', 
+            price='$data[price]', status='$data[status]', status_date='$data[status_date]', owner='$data[owner]', userid='$data[user_id]' WHERE (order_id='$data[order_id]' AND item_num='$data[i]')";
         $this->lisdb->query($sql);
     }
     

@@ -32,6 +32,12 @@ class Grouptask extends Group_Controller {
             $data1['role'] = $this->userobj->role;
             $data1['grouptask_id'] = $this->grouptask_id;
             $data1['grouptask_info'] = $grouptask_info;
+	    $ismanager = false;
+            if($this->userobj->role == 'admin' || $this->userobj->userid == $grouptask_info['manager_id']) {
+              $ismanager = true;
+            }
+	    
+	    $months = getMonths();
             
             $monthlyFields = '';
             // printout the hours now
@@ -39,7 +45,7 @@ class Grouptask extends Group_Controller {
               $month_name = $months[$i];
               $data2['month_name'] = $month_name;
               $data2['month_num'] = $i;
-              $data2['item_info'] = $this->grouptask_model->getTaskItemInformation('monthly', $month_num);
+              $data2['item_info'] = $this->grouptask_model->getTaskItemInformation('monthly', $i);
               $monthlyFields .= $this->load->view('group/grouptask/monthlyTaskField',$data2,TRUE);
             }
 
@@ -49,14 +55,18 @@ class Grouptask extends Group_Controller {
             for($i = 7; $i < 13; $i++) {
               $data2['month_name'] = $month_name;
               $data2['month_num'] = $i;
-              $data2['item_info'] = $this->grouptask_model->getTaskItemInformation('monthly', $month_num);
+              $data2['item_info'] = $this->grouptask_model->getTaskItemInformation('monthly', $i);
               $monthlyFields .= $this->load->view('group/grouptask/monthlyTaskField',$data2,TRUE);
             }
 
             $data3['grouptask_info'] = $grouptask_info;
             $data3['grouptask_id'] = $this->grouptask_id;
             $data1['taskNotesForm'] = $this->load->view('group/grouptask/taskNotesForm',$data3,TRUE);
+	    $data1['ismanager'] = $ismanager;
             
+	    $this->load->model('user_model');
+	    $data1['manager'] = $this->user_model->getUser($grouptask_info['manager_id']);
+	    
             $data1['monthlyFields'] = $monthlyFields;
             $taskTable = $this->load->view('group/grouptask/monthlyTask',$data1,TRUE);
         } else if($type == 'list') {
@@ -102,7 +112,8 @@ class Grouptask extends Group_Controller {
                   $max_num = $item_info['item_num'];
                 }
               }
-            
+	      
+	      $data1['max_num'] = $max_num;
               $data1['listTaskFields'] = $listTaskFields;
               $data1['count'] = $count;
               
@@ -264,6 +275,7 @@ class Grouptask extends Group_Controller {
       $start_num = $this->input->post('max_num') + 1;
       $add_amount = $this->input->post('add_amount');
       $total = $this->input->post('total');
+      $grouptask_id = $this->input->post('grouptask_id');
 
       for($i = $start_num; $i < ($start_num + $add_amount); $i++) {
         $data['grouptask_id'] = $grouptask_id;
@@ -396,4 +408,5 @@ class Grouptask extends Group_Controller {
       return $y;
     }
     
+
 }

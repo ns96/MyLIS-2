@@ -413,7 +413,6 @@ class Chemicals extends Group_Controller {
 	    $data['mfmw'] = $mfmw;
 	    $data['category'] = $category;
 	    $data['location'] = $location;
-	    $data['notes'] = $owner;
 	    $data['userid'] = $userid;
 	    $data['chem_id'] = $chem_id;
 	    
@@ -553,7 +552,7 @@ class Chemicals extends Group_Controller {
     
     // function to return the search terms
     protected function getWhereClause($searchby, $searchterm) {
-	$where_clause;
+	$where_clause = '';
 
 	if($searchby == 'id') {
 	$ids = preg_split("/[\s,]+/", $searchterm); // split on white spaces or commas
@@ -561,10 +560,9 @@ class Chemicals extends Group_Controller {
 	$i = 0;
 	foreach($ids as $id) {
 	    if($i == 0) {
-	    $where_clause .= "chem_id='$id'";
-	    }
-	    else {
-	    $where_clause .= " OR chem_id='$id'";
+		$where_clause .= "chem_id='$id'";
+	    } else {
+		$where_clause .= " OR chem_id='$id'";
 	    }
 	    $i++;
 	}

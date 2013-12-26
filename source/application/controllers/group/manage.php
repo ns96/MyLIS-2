@@ -158,8 +158,9 @@ class Manage extends Group_Controller {
                           $this->user_model->update_user($data);
                       } else {
                           $main_error = 'Errors found modifying '.$userid.' ( '.$this->error_message.')<br>';
+			  $data['page_title'] = 'Error!';
                           $data['error_message'] = $this->error_message;
-                          $this->load_view('error/error_and_back',$data);
+                          $this->load_view('errors/error_and_back',$data);
                           return;
                       }
                   } else { // remove user

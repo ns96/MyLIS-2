@@ -1,15 +1,14 @@
 <?php
     $target_link = base_url().'group/grouptask/updateTasks';
     $print_page_link = base_url().'group/grouptask/printable';
-    $max_num = 0;
 ?>
 
 <script language="Javascript">
     <!--Hide script from older browsers
 
     function updateList(task) {
-    document.forms.listform.task2.value = task;
-    document.forms.listform.submit();
+	document.forms.listform.task2.value = task;
+	document.forms.listform.submit();
     }
     // End hiding script from older browsers-->              
 </script>
@@ -25,7 +24,7 @@
 	</tr>
 	</tbody>
     </table>
-    <form action="<?=$target_link?>" method="POST" class="form-inline" style="margin-right:10px">
+    <form name="listform" action="<?=$target_link?>" method="POST" class="form-inline" style="margin-right:10px">
 	<input type="hidden" name="task" value="grouptask_update">
 	<input type="hidden" name="task2" value="">
 	<input type="hidden" name="grouptask_id" value="<?=$grouptask_id?>"> 

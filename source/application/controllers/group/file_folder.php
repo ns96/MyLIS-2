@@ -54,6 +54,7 @@ class File_folder extends Group_Controller {
                  $linksHTML .= '<td>'.$i.'</td><td>'.$array['title'].'</td><td>';
 
                 $download_link = $this->filemanager->getFileURL($array['file_id']);
+		
                 if($file_info['type'] != 'url') {
                    $linksHTML .= "<a href='$download_link'><img src='".base_url()."images/icons/download2.png' class='icon' title='download'/></a>";
                 }

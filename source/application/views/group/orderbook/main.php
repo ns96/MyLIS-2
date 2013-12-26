@@ -126,7 +126,7 @@ $order_link = base_url().'group/orderbook/order_process';
         </tbody>
     </table>
     <div class="formSubBar">General Order Information</div>
-    <form action="<?=$order_link?>" method="POST" class="form-inline" style="margin-right:10px">
+    <form name="form1" action="<?=$order_link?>" method="POST" class="form-inline" style="margin-right:10px">
         <input type="hidden" name="task" value="orderbook_add">
         <input type="hidden" name="task2" value="save"> 
         <input type="hidden" name="status" value="<?=$status?>">
@@ -379,7 +379,7 @@ $order_link = base_url().'group/orderbook/order_process';
 	echo '</tbody></table>';
 
 	// Add the buttons
-	echo '<div style="text-align: right;">
+	echo '<div style="text-align: right; margin-top: 5px">
 	<input type="button" name="butSave" value="Save" class="btn" onclick="submitOrder(\'save\')"/> ';
 
 	if(!empty($order_id)) {
