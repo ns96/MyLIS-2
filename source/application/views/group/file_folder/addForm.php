@@ -18,14 +18,20 @@ if(isset($fileInfo['title'])) {
         <tbody>
         <tr>
             <td colspan="2" style="background-color: rgb(180,200,230); width: 25%;">
-                Add New File
+                <?  if (!empty($file_id)){
+			echo "Edit File";
+		    } else {
+			echo "Add New File";
+		    }
+		?>
             </td>
         </tr>
         </tbody>
     </table>
+    <a name="add"></a>
     <form action="<?=$target_link?>" method="POST" enctype="multipart/form-data" class="form-inline" style="margin-right:10px">
-        <input type="hidden" name="task" value="'.$task.'">
-        <input type="hidden" name="file_id" value="'.$file_id.'">     
+        <input type="hidden" name="task" value="<?=$task?>">
+        <input type="hidden" name="file_id" value="<?=$file_id?>">     
         <table class="formTable">
             <tr>
                 <td>

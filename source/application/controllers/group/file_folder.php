@@ -63,7 +63,7 @@ class File_folder extends Group_Controller {
                 }
 
                 if($userid == $array['userid'] || $role == 'admin') {
-                  $edit_link = base_url()."group/file_folder?file_id=$file_id";
+                  $edit_link = base_url()."group/file_folder?file_id=$file_id#add";
                    $linksHTML .= "<a href='$edit_link'><img src='".base_url()."images/icons/edit.png' class='icon' title='edit'/></a>";
                 }
 
@@ -103,7 +103,7 @@ class File_folder extends Group_Controller {
     
     public function addfile(){
         $userid = $this->userobj->userid;
-
+	
         if($this->checkFormInput()) {
           $title = $this->input->post('title');
           $category = $this->input->post('category');
@@ -113,7 +113,7 @@ class File_folder extends Group_Controller {
           if(!empty($other_category)) {
             $cat_id = $this->file_folder_model->addCategory('filing', $other_category,$userid);
           }
-
+	  
           // add the file inorder to get the file ID
           $table_name = $this->session->userdata('group').'_folder_files';
           $file_id = $this->filemanager->uploadFile(1, $table_name, 0);

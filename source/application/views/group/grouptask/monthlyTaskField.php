@@ -28,7 +28,7 @@ if(!empty($item_info['note'])) {
 <div class="grouptask_box" style="background-color: <?=$bgc?>">
     <div style="min-height:25px">
 	<input name="item_ids[]" value="<?=$item_id?>" type="checkbox">
-	<small><b>$month_name</b> 
+	<small><b><?=$month_name?></b> 
 
 	<?
 	if($completed != 'YES') {

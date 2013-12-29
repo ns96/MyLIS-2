@@ -103,6 +103,15 @@ class Managedb_model extends CI_Model {
 	
     }
     
+    // function to return a property for a particular account. usefull for getting a variable before account is deleted
+    function getMyLISProperty($account_id, $key_id) {
+	$table = $account_id.'_properties';
+	$sql = "SELECT value FROM $table WHERE key_id = '$key_id'";
+	$records = $this->lisdb->query($sql)->result_array();
+
+	return $records[0]['value'];
+    }
+    
     // function to create the tables for a particular account
     function createMyLISTables($account_id) {
 	$this->initializeTableNames();

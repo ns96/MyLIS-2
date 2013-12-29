@@ -13,7 +13,7 @@
 			    </td>
 			    <td style="text-align: right">
 				<b><small>
-				    <a href='$main_link&pry=$y&chy=1'><?=($y+1)?> >></b></small>
+				    <a href='<?=$main_link?>&pry=<?=$y?>&chy=1'><?=($y+1)?> >></b></small>
 			    </td>
 			</tr>
 		    </table>

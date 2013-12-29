@@ -22,10 +22,10 @@
     // End hiding script from older browsers-->              
 </script>
 
-<form action="<?=$target_link?>" method="POST" class="form-inline" style="margin-right:10px; font-size: 15px;">
+<form name="form2" action="<?=$target_link?>" method="POST" class="form-inline" style="margin-right:10px; font-size: 15px;">
     <input type="hidden" name="task" value="grouptask_addtask">
-    <input type="hidden" name="egrouptask_id" value="'.$egrouptask_id.'">
-    <input type="hidden" name="selected_year" value="'.$y.'">     
+    <input type="hidden" name="egrouptask_id" value="<?=$egrouptask_id?>">
+    <input type="hidden" name="selected_year" value="<?=$y?>">     
     <table class="formTable-compact">
 	<tr>
 	    <td width="30%">

@@ -69,7 +69,7 @@ class File_folder_model extends CI_Model {
     }
     
     public function updateFile($title,$cat_id,$file_id){
-        $sql = "UPDATE $this->table SET title = '$title', category_id = '$cat_id' WHERE file_id='$file_id'";
+        $sql = "UPDATE $this->table SET title = '$title', category_id = '$cat_id' WHERE file_id = '$file_id'";
         $this->lisdb->query($sql);
     }
     

@@ -93,7 +93,7 @@ echo '<input type="hidden" name="task" value="accounts_find_acct">';
 echo '<b>Search by :</b>';
 echo '<table style="text-align: left; width: 70%;" border="1" cellpadding="1" cellspacing="0"><tbody>
 <tr><td style="width: 25%;">Account ID :</td>
-<td><input size="50" name="accountid"></td>
+<td><input size="50" name="account_id"></td>
 </tr>
 <tr><td style="width: 25%;">Group or PI Name :</td>
 <td><input size="50" name="gname"></td>

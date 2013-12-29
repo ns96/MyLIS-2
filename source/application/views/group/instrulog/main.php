@@ -12,7 +12,7 @@
 		    <tbody>
 		    <tr>
 			<td colspan="2" style="background-color: rgb(180,200,230); width: 25%;">
-			    Group task list
+			    Add new instrument
 			</td>
 		    </tr>
 		    </tbody>
@@ -24,7 +24,7 @@
 		    <tbody>
 		    <tr>
 			<td colspan="2" style="background-color: rgb(180,200,230); width: 25%;">
-			    Add new instrument
+			    Group task list
 			</td>
 		    </tr>
 		    </tbody>

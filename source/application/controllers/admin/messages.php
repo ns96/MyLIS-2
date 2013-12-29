@@ -11,9 +11,6 @@ class Messages extends Admin_Controller {
 	$params['user'] = $this->session->userdata('user');
 	$params['account'] = $this->session->userdata('group');
 	
-	$this->load->model('filemanager');
-	$this->filemanager->initialize($params);
-	
 	$this->load->model('proputil_model');
 	$this->proputil_model->initialize($params);
 	

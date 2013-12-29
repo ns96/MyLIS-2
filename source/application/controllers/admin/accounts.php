@@ -62,7 +62,16 @@ class Accounts extends Admin_Controller {
 	}
     }
     
-    public function create(){
+    public function create($template=null){
+	
+	if ($template == 'test'){
+	    $this->create_test_account();
+	    return;
+	} elseif ($template == 'sandbox'){
+	    $this->create_sandbox_account();
+	    return;
+	}
+	
 	if (isset($_POST['add_account_form'])){
 	    if($this->checkFormInput('add')) {
 		$fname = addslashes(trim($this->input->post('fname'))); // PI first name
@@ -179,6 +188,225 @@ class Accounts extends Admin_Controller {
 	    $data['lis_tz'] = $this->lis_tz;
 	    $this->load_view('admin/accounts/add',$data);
 	}
+    }
+    
+    protected function create_test_account() {
+	$fname = 'Bob'; // PI first name
+	$mi = 'J'; // PI middle name
+	$lname = 'Hane'; // PI last name
+	$group_name = 'Hane'; // group name
+	$group_type = 'Academia'; // group type or location
+	$discipline = 'Chemistry'; // discipline
+	$institution = 'Nano'; // name of institution
+	$address = "Nano University\nDepartment of Chemistry\n1000 Nano Drive, NY, New York, 10031"; // institution adress
+	$phone = '1111-555-5555';
+	$fax = '1111-555-5555';
+	$email = 'hane@nano.edu';
+	$password1 = 'sandbox'; // this password should be the same
+	$password2 = 'sandbox';
+	$keywords = 'unix,materials, photons, laser, organic dyes'; // research keywords
+	$description = "Some Cool\nEnvironmentally Friendly Research"; // research keywords
+	$piurl = 'www.cnn.com'; // the group web page of the PI
+	$piurl = checkURL($piurl);
+
+	$term = 4;
+	$cost = 0;
+	$activate_date = getLISDate();
+	$status = 'trial';
+	$expire_date = getExpireDate($activate_date, $status, $term); // automatically set
+	$storage = 50;
+	$max_users = '25';
+	$time_zone = 'UTC';
+	$notes = 'Test User Account';
+	$group_pi = "$fname $mi. $lname";
+	$name = $this->userobj->name;
+	$department_id = ''; // blank on purpose
+	$manager_id = $this->userobj->userid;
+	$activate_code = $this->getActivateCode();
+
+	if(!empty($notes)) {
+	    $notes = $name.' ('.getLISDateTime().") >>Account Created\n$notes\n";
+	}
+	else {
+	    $notes = $name.' ('.getLISDateTime().") >>Account Created\n";
+	}
+
+	$this->load->model('managedb_model');
+
+	// if this account already exist remove it
+	$account_id = strtolower($lname).'1';
+	if($this->account_model->accountExists($account_id)) {
+	    $dir = $this->admin_filemanager->moveToTrash($account_id);
+	    // dump and then remove tables from LISDB
+	    $this->managedb_model->removeMyLISTables($account_id);
+	    $this->managedb_model->removeMyLISUsers($account_id);
+	}
+
+	$data['account_id'] = $account_id;
+	$data['fname'] = $fname;		    $data['term'] = $term;
+	$data['mi'] = $mi;			    $data['cost'] = $cost;
+	$data['lname'] = $lname;		    $data['activate_date'] = $activate_date;
+	$data['group_name'] = $group_name;	    $data['expire_date'] = $expire_date;
+	$data['group_type'] = $group_type;	    $data['status'] = $status;
+	$data['discipline'] = $discipline;	    $data['storage'] = $storage;
+	$data['institution'] = $institution;	    $data['max_users'] = $max_users;
+	$data['address'] = $address;		    $data['time_zone'] = $time_zone;
+	$data['phone'] = $phone;		    $data['activate_code'] = $activate_code;
+	$data['fax'] = $fax;			    $data['notes'] = $notes;
+	$data['email'] = $email;		    $data['department_id'] = $department_id;
+	$data['network_ids'] = $network_ids;	    $data['manager_id'] = $manager_id;
+	$data['password1'] = $password1;	    $data['group_pi'] = $group_pi;
+	$data['keywords'] = $keywords;		    $data['description'] = $description;
+	$data['piurl'] = $piurl;
+
+	$this->account_model->add_account($data);
+
+	// create the tables associated wthis account
+	$this->managedb_model->createMyLISTables($account_id);
+
+	// now add the username and password for login purposes
+	$this->account_model->add_account_admin($data);
+
+	// add default and location into account database categories
+	$this->account_model->setDefaultDatabaseEntries($account_id);
+
+	// set the version number
+	$this->account_model->setVersionNumber($account_id,$this->version);
+
+	// now create a directory for this account
+	$props = array(
+	    'lis.account' => $account_id,
+	    'lis.expire' => $expire_date,
+	    'lis.status' => $status,
+	    'timezone' => $time_zone,
+	    'storage.quota' => $storage,
+	    'max.users' => $max_users,
+	    'group.name' => $group_name,
+	    'site.manager' => $group_pi,
+	    'site.manager.email' => $email
+	);
+
+	$this->admin_filemanager->createMyLISDirectory($account_id, $props);
+	
+	$title = 'New Account Created!';
+	$message = 'Test account has been created successfully!';
+	$destination = base_url().'admin/accounts';
+	showModal($title,$message,$destination);
+    }
+    
+    protected function create_sandbox_account(){
+	$fname = 'John'; // PI first name
+	$mi = 'H'; // PI middle name
+	$lname = 'Smith'; // PI last name
+	$group_name = 'Smith'; // group name
+	$group_type = 'Academia'; // group type or location
+	$discipline = 'Chemistry'; // discipline
+	$institution = 'Nano University'; // name of institution
+	$address = "Nano University\nDepartment of Chemistry\n1000 Nano Drive, NY, New York, 10031"; // institution adress
+	$phone = '1111-555-5555';
+	$fax = '1111-555-5555';
+	$email = 'jhsmith@nano.edu';
+	$password1 = 'sandbox'; // this password should be the same
+	$password2 = 'sandbox';
+	$keywords = 'software,materials, photons, laser, bio materials, sensors'; // research keywords
+	$description = "Some Cool\nEnvironmentally Friendly Research"; // research keywords
+	$piurl = 'www.nano.edu/jhsmith'; // the group web page of the PI
+	$piurl = checkURL($piurl);
+
+	$term = 4;
+	$cost = 0;
+	$activate_date = getLISDate();
+	$status = 'active';
+	$expire_date = getExpireDate($activate_date, $status, $term); // automatically set
+	$storage = 50;
+	$max_users = '25';
+	$time_zone = 'UTC';
+	$notes = 'Sandbox User Account';
+	$group_pi = "$fname $mi. $lname";
+	$name = $this->user->name;
+	$department_id = ''; // blank on purpose
+	$manager_id = $this->user->userid;
+	$activate_code = $this->getActivateCode();
+	$login_count = 0;
+
+	if(!empty($notes)) {
+	    $notes = $name.' ('.getLISDateTime().") >>Account Created\n$notes\n";
+	}
+	else {
+	    $notes = $name.' ('.getLISDateTime().") >>Account Created\n";
+	}
+
+	$this->load->model('managedb_model');
+
+	// if this account already exist remove it
+	$account_id = strtolower($lname).'1';
+	if($this->account_model->accountExists($account_id)) {
+	    $dir = $this->admin_filemanager->moveToTrash($account_id);
+	    $login_count = $this->managedb_model->getMyLISProperty($account_id, 'login.count');
+	    // dump and then remove tables from LISDB
+	    $this->managedb_model->removeMyLISTables($account_id);
+	    $this->managedb_model->removeMyLISUsers($account_id);
+	} else {
+	    $login_count = 0;
+	}
+
+	$data['account_id'] = $account_id;
+	$data['fname'] = $fname;		    $data['term'] = $term;
+	$data['mi'] = $mi;			    $data['cost'] = $cost;
+	$data['lname'] = $lname;		    $data['activate_date'] = $activate_date;
+	$data['group_name'] = $group_name;	    $data['expire_date'] = $expire_date;
+	$data['group_type'] = $group_type;	    $data['status'] = $status;
+	$data['discipline'] = $discipline;	    $data['storage'] = $storage;
+	$data['institution'] = $institution;	    $data['max_users'] = $max_users;
+	$data['address'] = $address;		    $data['time_zone'] = $time_zone;
+	$data['phone'] = $phone;		    $data['activate_code'] = $activate_code;
+	$data['fax'] = $fax;			    $data['notes'] = $notes;
+	$data['email'] = $email;		    $data['department_id'] = $department_id;
+	$data['network_ids'] = $network_ids;	    $data['manager_id'] = $manager_id;
+	$data['password1'] = $password1;	    $data['group_pi'] = $group_pi;
+	$data['keywords'] = $keywords;		    $data['description'] = $description;
+	$data['piurl'] = $piurl;
+
+	$this->account_model->add_account($data);
+
+	// create the tables associated wthis account
+	$this->managedb_model->createMyLISTables($account_id);
+
+	// now add the username and password for login purposes
+	$this->account_model->add_account_admin($data);
+
+	// add default and location into account database categories
+	$this->account_model->setDefaultDatabaseEntries($account_id);
+
+	// set the version number
+	$this->account_model->setVersionNumber($account_id,$this->version);
+
+	// set the login count now
+	$this->account_model->set_login_count($account_id,$login_count);
+
+	// add the dummy information to this account
+	$this->load->model('datasource_model');
+	$this->datasource_model->addSandboxData($account_id);
+
+	// now create a directory for this account
+	$props = array(
+	    'lis.account' => $account_id,
+	    'lis.expire' => $expire_date,
+	    'lis.status' => 'demo',
+	    'timezone' => $time_zone,
+	    'storage.quota' => $storage,
+	    'max.users' => $max_users,
+	    'group.name' => $group_name,
+	    'site.manager' => $group_pi,
+	    'site.manager.email' => $email
+	);
+
+	$this->admin_filemanager->createMyLISDirectory($account_id, $props);
+
+	$title = 'New Account Created!';
+	$message = 'Sandbox account has been created successfully!';
+	$destination = base_url().'admin/accounts';
+	showModal($title,$message,$destination);
     }
     
     public function edit($account_id){
@@ -346,6 +574,55 @@ class Accounts extends Admin_Controller {
 	redirect('admin/accounts/edit'.$account_id);
     }
     
+    public function update(){
+	
+	$current_version = '1.2';
+	$new_version = '1.3';
+	$account_ids = $this->getAccountIDs();
+
+	$this->load->model('updater_model');
+	$update_logs = '';
+	foreach($account_ids as $account_id) {
+	    $update_logs .= $this->updater_model->updateAccount($account_id);
+	}
+	
+	$data['page_title'] = 'MyLIS Account Updater';
+	$data['new_version'] = $new_version;
+	$data['update_logs'] = $update_logs;
+	$this->load_view('admin/accounts/update',$data);
+    }
+    
+    public function search(){
+	if(isset($_POST['account_id'])) {
+	    $account_id = $_POST['account_id'];
+	} else {
+	    $account_id = '';
+	}
+	if(!empty($account_id) && $this->account_model->accountExists($account_id)) {
+	    $accountInfo = $this->account_model->getAccountInfo($account_id);
+	    $accountProfile = $this->account_model->getAccountProfile($account_id);
+	    $userList = $this->loadUsers();
+	    $managerInfo = $userList[$accountInfo['manager_id']];
+	    
+	    // get the userid and password from DB
+	    $userids_passwords = '';
+	    $accountUsers = $this->account_model->getAccountUsers($account_id);
+	    foreach($accountUsers as $user) {
+		$userids_passwords .=$user['email'].' : '.$user['password'].' ;';
+	    }
+	    
+	    $data['page_title'] = 'Search Results';
+	    $data['account_id'] = $account_id;
+	    $data['accountInfo'] = $accountInfo;
+	    $data['accountProfile'] = $accountProfile;
+	    $data['managerInfo'] = $managerInfo;
+	    $data['userids_passwords'] = $userids_passwords;
+	    $this->load_view('admin/accounts/search_results',$data);
+	} else {
+	    // redirect to the accounts view page
+	    redirect('admin/accounts/view/'.$account_id);
+	}
+    }
     
     // function to check the input form data from add account and edit account page
     function checkFormInput($page) {
@@ -465,5 +742,7 @@ class Accounts extends Admin_Controller {
 
 	mail($to, $subject, $body);
     }
+ 
+    
     
 }

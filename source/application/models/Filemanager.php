@@ -62,8 +62,8 @@ class Filemanager extends CI_Model {
     <option value="zip">Zip</option>
     <option value="other">Other</option>
     </select>
-    <label for="fileupload'.$field_id.'" class="control-label">:</label>
-	<input id="fileupload'.$field_id.'" name="fileupload'.$field_id.'" class="filestyle" type="file" data-icon="false" style="position: fixed; left: -500px;">  
+    <label for="fileupload_'.$field_id.'" class="control-label">:</label>
+	<input id="fileupload_'.$field_id.'" name="fileupload_'.$field_id.'" class="filestyle" type="file" data-icon="false" style="position: fixed; left: -500px;">  
     </label><br>
     <input type="text" name="url_'.$field_id.'" placeholder="enter website url here" class="input-block-level" style="margin-top:6px">';
     

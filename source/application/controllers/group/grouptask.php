@@ -215,7 +215,7 @@ class Grouptask extends Group_Controller {
         $manager_id = $this->input->post('manager_id');
         $notes = ''; // blank on purpose
         $grouptask_id = '';
-        $userid = $this->user->userid;
+        $userid = $this->userobj->userid;
         $year = $this->input->post('selected_year');
 
         if(!empty($task_name)) {

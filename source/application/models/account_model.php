@@ -96,26 +96,25 @@ class Account_model extends CI_Model {
     }
     
     public function add_account($data){
-	$sql = "INSERT INTO accounts VALUES('$account_id', '$fname', '$mi', '$lname', '$group_name', '$group_type', 
-	'$discipline', '$institution', '$address', '$phone', '$fax', '$email', '$term', 
-	'$cost', '$activate_date', '$expire_date', '$status', '$storage', '$max_users', '$time_zone', 
-	'$activate_code', '$notes', '$department_id', '$network_ids', $manager_id')";
+	$sql = "INSERT INTO accounts VALUES('$data[account_id]', '$data[fname]', '$data[mi]', '$data[lname]', '$data[group_name]', '$data[group_type]', 
+	'$data[discipline]', '$data[institution]', '$data[address]', '$data[phone]', '$data[fax]', '$data[email]', '$data[term]', 
+	'$data[cost]', '$data[activate_date]', '$data[expire_date]', '$data[status]', '$data[storage]', '$data[max_users]', '$data[time_zone]', 
+	'$data[activate_code]', '$data[notes]', '$data[department_id]', '$data[network_ids]', $data[manager_id]')";
 	$this->lismdb->query($sql);
 
-	$sql = "INSERT INTO users VALUES('$email', '$account_id', '$password1')";
+	$sql = "INSERT INTO users VALUES('$data[email]', '$data[account_id]', '$data[password1]')";
 	$this->lismdb->query($sql);
 
 	// now insert info into research profile database
-	mysql_select_db($this->properties['lisprofile.database']) or die(mysql_error());
-	$sql = "INSERT INTO profiles VALUES('', '$account_id', '$group_pi', '$email', '$phone', '$group_type', '$institution', 
-	'$address', '$discipline', '$keywords', '$description', 'List Instruments',  '$piurl', 
-	'List Colloborators IDs', 'YES', '$activate_date', '$email')";
+	$sql = "INSERT INTO profiles VALUES('', '$data[account_id]', '$data[group_pi]', '$data[email]', '$data[phone]', '$data[group_type]', '$data[institution]', 
+	'$data[address]', '$data[discipline]', '$data[keywords]', '$data[description]', 'List Instruments',  '$data[piurl]', 
+	'List Colloborators IDs', 'YES', '$data[activate_date]', '$data[email]')";
 	$this->lismdb->query($sql);
     }
     
     public function add_account_admin($data){
-	$table = $account_id.'_users';
-	$sql = "INSERT INTO $table VALUES('$email', '$password1', 'admin', '$group_pi', '$email', 'Group PI', 'none')";
+	$table = $data[account_id].'_users';
+	$sql = "INSERT INTO $table VALUES('$data[email]', '$data[password1]', 'admin', '$data[group_pi]', '$data[email]', 'Group PI', 'none')";
 	$this->lisdb->query($sql);
     }
     
@@ -147,6 +146,12 @@ class Account_model extends CI_Model {
     public function setVersionNumber($account_id,$version){
 	$table = $account_id.'_properties';
 	$sql = "INSERT INTO $table VALUES('version', '$version', 'myadmin')";
+	$this->lisdb->query($sql);
+    }
+    
+    public function setLoginCount($account_id,$login_count){
+	$table = $account_id.'_properties';
+	$sql = "INSERT INTO $table VALUES('login.count', '$login_count', 'myadmin')";
 	$this->lisdb->query($sql);
     }
     

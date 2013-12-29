@@ -49,8 +49,8 @@
 $active_record = TRUE;
 
 $db['lisdb']['hostname'] = 'localhost';
-$db['lisdb']['username'] = 'mylisuser';
-$db['lisdb']['password'] = 'trogQ1-.';
+$db['lisdb']['username'] = 'root';
+$db['lisdb']['password'] = 'mysqladmin';
 $db['lisdb']['database'] = 'mylis0_lisdb';
 $db['lisdb']['dbdriver'] = 'mysql';
 $db['lisdb']['dbprefix'] = '';
@@ -65,8 +65,8 @@ $db['lisdb']['autoinit'] = TRUE;
 $db['lisdb']['stricton'] = FALSE;
 
 $db['lismdb']['hostname'] = 'localhost';
-$db['lismdb']['username'] = 'mylisuser';
-$db['lismdb']['password'] = 'trogQ1-.';
+$db['lismdb']['username'] = 'root';
+$db['lismdb']['password'] = 'mysqladmin';
 $db['lismdb']['database'] = 'mylis0_lismdb';
 $db['lismdb']['dbdriver'] = 'mysql';
 $db['lismdb']['dbprefix'] = '';
@@ -81,8 +81,8 @@ $db['lismdb']['autoinit'] = TRUE;
 $db['lismdb']['stricton'] = FALSE;
 
 $db['lispdb']['hostname'] = 'localhost';
-$db['lispdb']['username'] = 'mylisuser';
-$db['lispdb']['password'] = 'trogQ1-.';
+$db['lispdb']['username'] = 'root';
+$db['lispdb']['password'] = 'mysqladmin';
 $db['lispdb']['database'] = 'mylis0_lispdb';
 $db['lispdb']['dbdriver'] = 'mysql';
 $db['lispdb']['dbprefix'] = '';
@@ -97,8 +97,8 @@ $db['lispdb']['autoinit'] = TRUE;
 $db['lispdb']['stricton'] = FALSE;
 
 $db['lissdb']['hostname'] = 'localhost';
-$db['lissdb']['username'] = 'mylisuser';
-$db['lissdb']['password'] = 'trogQ1-.';
+$db['lissdb']['username'] = 'root';
+$db['lissdb']['password'] = 'mysqladmin';
 $db['lissdb']['database'] = 'mylis0_lissdb';
 $db['lissdb']['dbdriver'] = 'mysql';
 $db['lissdb']['dbprefix'] = '';

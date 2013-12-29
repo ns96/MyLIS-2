@@ -13,7 +13,7 @@ $delete_link = base_url()."group/instrulog/delete/".$instrulog_id;
 <table style='margin-left:8px; margin-top:8px; font-size: 12px;'>
     <tr>
 	<td colspan="2">
-	    <a href ='$link' target='_parent'><?=$instrumentName?></a>
+	    <a href ='<?=$link?>' target='_parent'><?=$instrumentName?></a>
 	</td>
     </tr>
     <tr>
