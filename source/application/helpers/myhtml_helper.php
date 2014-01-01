@@ -108,12 +108,12 @@ function loadAdminMenu(){
 		'icon'		=>  base_url().'images/icons/meeting.png',
 	),
 	'test'	=>  array(
-		'controller'	=>  "accounts",
+		'controller'	=>  "accounts/create/test",
 		'title'		=>  'Add Test Account',
 		'icon'		=>  base_url().'images/icons/orders2.png',
 	),
 	'sandbox'	=>  array(
-		'controller'	=>  "accounts",
+		'controller'	=>  "accounts/create/sandbox",
 		'title'		=>  'Add Sandbox Account',
 		'icon'		=>  base_url().'images/icons/pdfs.png',
 	),
@@ -128,18 +128,17 @@ function loadAdminMenu(){
 		'icon'		=>  base_url().'images/icons/pdfs.png',
 	),
 	'update'	=>  array(
-		'controller'	=>  "accounts",
+		'controller'	=>  "accounts/update",
 		'title'		=>  'Update Accounts',
 		'icon'		=>  base_url().'images/icons/update.png',
-	),
-	'manage'	=>  array(
-		'controller'	=>  "manage",
-		'title'		=>  'Manage',
-		'icon'		=>  base_url().'images/icons/weblink.png',
 	),
     );
 
     $menuHTML = '';
+    
+// Add a 'Home' item 
+    $menuHTML .= "<li><a href='".$base."main'>Home Page<img src='".base_url()."images/icons/home.png' class='menu_image' /></a></li>";
+    
     foreach($menu as $key => $menuItem){
 	if ($CI->uri->segment(2) == $menuItem['controller']) 
 	    $classHTML = "class='active'";
@@ -198,7 +197,6 @@ function loadAdminTopArea(){
 	    </button>
 	    <ul class="dropdown-menu" role="menu">
 		<li><a href="<?=$home_link ?>">Home</a></li>
-		<li><a href="<?=$profile_link ?>">My Profile</a></li>
 		<li class="divider"></li>
 		<li><a href="<?=$logout_link ?>">Logout</a></li>
 	    </ul>

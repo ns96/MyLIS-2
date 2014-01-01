@@ -7,21 +7,73 @@ class Admin_filemanager extends CI_Model {
     var $accounts_dir;
     var $conn;
     var $user;
+    var $lismdb = null;
     
-public function initialize($params) {
-    $this->properties = $params['properties'];
-    $this->user = $params['user'];
-    $this->base_dir = CIPATH;
-    $this->accounts_dir = CIPATH."/accounts/";
-    
-    // create the trash directory if it doesn't exist
-    $this->trash_dir = $this->accounts_dir.'trash/';
-    if(!is_dir($this->trash_dir)) {
-      mkdir($this->trash_dir, 0775);
-    }
-}
+    public function initialize($params) {
+	$this->properties = $params['properties'];
+	$this->user = $params['user'];
+	$this->base_dir = CIPATH;
+	$this->accounts_dir = CIPATH."/accounts/";
 
-// function to modifiy the initiation file for a new account
+	// create the trash directory if it doesn't exist
+	$this->trash_dir = CIPATH.'/accounts/trash';
+	if(!is_dir($this->trash_dir)) {
+	    mkdir($this->trash_dir, 0775);
+	}
+    }
+
+    public function getLogs(){
+	$this->lismdb = $this->load->database('lismdb',TRUE);
+	$sql = "SELECT * FROM update_log WHERE type='file'";
+	$records = $this->lismdb->query($sql)->result_array();
+	return $records;
+    }
+
+    public function remove_all_logs(){
+	$this->lismdb = $this->load->database('lismdb',TRUE);
+	$sql = "DELETE FROM update_log WHERE update_type='file'";
+	$this->lismdb->query($sql);
+
+	// if there are no records left in the database reset the count to zero
+	$sql = "SELECT * FROM update_log";
+	$records = $this->lismdb->query($sql)->result_array();
+
+	if(count($records) == 0) {
+	    $sql = "ALTER TABLE update_log AUTO_INCREMENT=0";
+	    $this->lismdb->query($sql);
+	}
+    }
+  
+    public function remove_log_entries($entries){
+	foreach($entries as $entry) {
+	    $sql = "DELETE FROM update_log WHERE update_id='$entry'";
+	    $this->lismdb->query($sql);
+	}
+    }
+    
+    // function to add a log entry
+    function addLog($account_ids, $files, $type, $notes,$manager_id) {
+	$ids;
+	foreach($account_ids as $id) {
+	    $ids .= $id.' ';
+	}
+
+	$f_list;
+	foreach($files as $file) {
+	    $f_list .= $file.' ';
+	}
+
+	if(empty($notes)) {
+	    $notes = 'none';
+	}
+
+	$dt = getLISDateTime();
+
+	$sql = "INSERT INTO update_log VALUES(' ', '$dt', 'file', '$ids', '$f_list', '$notes', '$manager_id')";
+	$this->lismdb->query($sql);
+    }
+    
+  // function to modifiy the initiation file for a new account
   function modifyInitiationFile($account_id, $new_props) {
     $props = $this->readInitiationFile($account_id);
     
@@ -193,5 +245,54 @@ public function initialize($params) {
 	$this->modifyInitiationFile($account_id, $props);
     }
     
-    
+    // function to get the file list that can be updated
+    function getFileList() {
+	$f_list = array();
+	$f_list[] = 'index.php;Web Page;Login Web Page';
+	$f_list[] = 'password.png;PNG Image;Image for login page';
+	return $f_list;
+    }
+
+    // function to get the list of files or directories in the trash directory
+    function getTrashFiles() {
+	$files = array();
+
+	$handle = opendir($this->trash_dir);
+	if($handle) {
+	    while(false !== ($file = readdir($handle))) {
+		if($file != "." && $file != "..") {
+		    $full_name = $this->trash_dir.$file;
+		    $mdate = getLISDateTimeFrom(filemtime($full_name));
+
+		    $type;
+		    if(is_dir($full_name)) {
+			$type = "Directory";
+		    } else {
+			$type = "Regular File";
+		    }
+
+		    $description;
+		    if(eregi("mylis_",$full_name)) {
+			$description = "Removed MyLIS Account";
+		    } else {
+			$description = "Unkown";
+		    }
+
+		    $files[] = "$file;$type;$mdate;$description";
+		}
+	    }
+
+	    sort($files);
+	    $this->files = $files; //?
+	    closedir($handle);
+	}
+
+	return $files;
+    }
+
+    public function getAccountIDs(){
+	$sql = "SELECT account_id FROM accounts";
+	$records = $this->lismdb->query($sql)->result_array();
+	return $records;
+    }
 }

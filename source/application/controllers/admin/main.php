@@ -15,12 +15,11 @@ class Main extends Admin_Controller {
 	// Load a Proputil model
 	$this->load->model('proputil_model');
 	$this->proputil_model->initialize($params);
+	$this->restrict_access();
     }
     
     public function index()
     {
-	$this->restrict_access();
-	
 	// Load necessery data for the view
 	$data = array();
 	$data['page_title']	    = "Home Page";

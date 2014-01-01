@@ -191,6 +191,12 @@ input[type="checkbox"] {
     border:1px solid #99AAC4;
 }
 
+.formWrapper2 {
+    background-color: #E9EDF3;
+    margin:5px 15px 0px 15px; 
+    border:1px solid #99AAC4;
+}
+
 .formWrapper-inline {
     background-color: #E9EDF3;
     margin:15px; 
@@ -207,6 +213,16 @@ input[type="checkbox"] {
     border-bottom: 1px solid #99AAC4;
     text-align: left;
     margin-bottom: 10px;
+}
+
+.formTopBar2 {
+    font-family: "Helvetica Neue",Helvetica,Arial,sans-serif;
+    font-size: 13px;
+    line-height: 20px;
+    text-shadow: 0 1px 0 rgba(255, 255, 255, 0.5);
+    font-weight: bold;
+    border-bottom: 1px solid #99AAC4;
+    text-align: left;
 }
 
 .formUpperBar {
@@ -661,4 +677,47 @@ input[type="checkbox"] {
 
 #pub_info_filetable td {
     padding: 3px;
+}
+
+#dblist_table {
+    font-size: 14px;
+    margin-left: 15px;
+}
+
+#dblist_table tr:hover {
+    background-color:#D7DBE0;
+} 
+
+#dblist_table td {
+    padding: 2px;
+}
+
+#message_outer_table {
+    padding: 0px; 
+    width:100%; 
+    font-size:14px
+}
+
+#message_outer_table td {
+    border: 1px solid grey;
+    padding: 0px;
+}
+
+#message_outer_table td:nth-child(1) {
+    font-weight: bold;
+    background-color: #E9EDF3;
+}
+
+#message_inner_table {
+    width: 100%;
+    margin: 0px;
+    font-size: 14px;
+}
+
+#message_inner_table td {
+    padding: 2px;
+}
+
+#message_inner_table td:nth-child(1) {
+     background-color: #F5F5F5;
 }

@@ -25,6 +25,7 @@ class Accounts extends Admin_Controller {
 	$this->admin_filemanager->initialize($params);
 	
 	$this->load->model('account_model');
+	$this->restrict_access();
     }
     
     public function index(){
@@ -44,7 +45,7 @@ class Accounts extends Admin_Controller {
     public function view($account_id){
 
 	if(!empty($account_id) && $this->account_model->accountExists($account_id)) {
-	    $data['page_title'] = '';
+	    $data['page_title'] = "MyLIS Account ($account_id)";
 	    $data['account_id'] = $account_id;
 	    $accountInfo = $this->account_model->getAccountInfo($account_id);
 	    
@@ -496,7 +497,7 @@ class Accounts extends Admin_Controller {
 		$userList = $this->loadUsers();
 		$managerInfo = $userList[$manager_id];
 		
-		$data['page_title'] = '';
+		$data['page_title'] = "Edit MyLIS Account  ($account_id)";
 		$data['accountInfo'] = $accountInfo;
 		$data['account_id'] = $account_id;
 		$data['managerInfo'] = $managerInfo;

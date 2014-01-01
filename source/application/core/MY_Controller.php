@@ -132,7 +132,7 @@ class Admin_Controller extends Lis_Controller {
 		}
 	    } else {
 		// The user is not logged in
-		$this->load_view('admin/login');
+		$this->load->view('admin/login'); 
 		$this->output->_display(); die();
 	    }
 	}

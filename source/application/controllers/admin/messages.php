@@ -58,7 +58,7 @@ class Messages extends Admin_Controller {
 	    }
 	    // If the message has been saved or the message data were not valid
 	    // redirect to main page
-		redirect('admin/main');
+		redirect('admin/messages');
 	} else { // If no form has been posted load an empty form
 	    //
 	    $this->load->model('message_model');
@@ -68,7 +68,7 @@ class Messages extends Admin_Controller {
 	    $data['post_end'] = addDaysToDate($data['post_start'], 7);
 	    $data['messageList'] = $messageList;
 	    $data['accounts'] = $this->loadUsers();
-	    $data['title'] = 'Message Poster';
+	    $data['page_title'] = 'Message Poster';
 	
 	    $this->load_view('admin/messagePoster',$data);
 	}
@@ -107,7 +107,7 @@ class Messages extends Admin_Controller {
 	    $this->load->model('message_model');
 	    $message = $this->message_model->getSystemMessage($message_id);
 	    // Load the message editing form
-	    $data['title'] = "Edit Message";
+	    $data['page_title'] = "Edit Message";
 	    $data['message_id'] = $message_id;
 	    $data['home_link'] = encodeUrl(base_url()."admin/main");
 	    $data['back_link'] = encodeUrl(base_url()."admin/messages");

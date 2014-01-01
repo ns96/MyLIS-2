@@ -1,181 +1,197 @@
 <?php
-    
-
-// initialize some links and variables
-$title = "MyLIS Account";
-$view_link = base_url().'admin/accounts/view/'.$account_id;
-$db_link = encodeUrl(base_url().'admin/managedb/account/'.$account_id);
-$back_link = encodeUrl(base_url().'admin/accounts');
-$edit_link = encodeUrl(base_url().'admin/accounts/edit/'.$account_id);
-$home_link = encodeUrl(base_url().'admin/main');
-
-echo '<table style="width: 100%; text-align: left;" border="0" cellpadding="2" cellspacing="0">';
-echo '<tbody>';
-echo '<tr>';
-echo '<td style="vertical-align: top;">';
-echo '<h3><span style="color: rgb(0, 0, 102);">MyLIS Account ( </span>
-<span style="color: rgb(255, 0, 0);">'.$account_id.'</span>
-<span style="color: rgb(0, 0, 102);">)</span><br></h3>';
-echo '</td>';
-echo '<td style="vertical-align: top; text-align: right;">';
-echo "<b>[ <a href=\"$view_link\" target=\"_blank\">View</a> ] ";
-echo "<b>[ <a href=\"$db_link\">DB</a> ] ";
-echo "[ <a href=\"$edit_link\">Edit</a> ] ";
-echo "[ <a href=\"$back_link\">Back</a> ] ";
-echo "[ <a href=\"$home_link\">Home</a> ]</b><br>";
-echo '</td></tr></tbody></table>';
-echo '<hr style="width: 100%; height: 2px;">';
 
 if (!empty($accountInfo)){
-    
-} else {
+
+    // initialize some links and variables
+    $title = "MyLIS Account";
+    $db_link = encodeUrl(base_url().'admin/managedb/account/'.$account_id);
+    $back_link = encodeUrl(base_url().'admin/accounts');
+    $edit_link = encodeUrl(base_url().'admin/accounts/edit/'.$account_id);
+
+    $group_pi = $accountInfo['pi_fname'].' '.$accountInfo['pi_mi'].' '.$accountInfo['pi_lname'];
+
+    $notes = $accountInfo['notes'];
+    if(empty($notes)) {
+	$notes = 'None';
+    }
+    ?>
+
+    <div style='text-align:right; margin: 0px 15px'>
+	[ <a href='<?=$db_link?>'>DB</a> ] 
+	[ <a href='<?=$edit_link?>'>Edit</a> ] 
+	[ <a href='<?=$back_link?>'>Back</a> ] 
+    </div>
+
+
+    <div style="margin:10px 15px 5px 15px; padding: 3px; text-align: center; background-color:#F3A3A3; border-bottom: 2px solid #8C6969; border-top:2px solid #8C6969;">Account ID: <span style="font-weight: bold"><?=$account_id?></span></div>
+
+    <div class="formWrapper">
+	<table class="formTopBar" style="width: 100%" cellpadding="4" cellspacing="2">
+	    <tbody>
+	    <tr>
+		<td colspan="2" style="background-color: rgb(180,200,230); width: 25%;">
+		    Basic Information
+		</td>
+	    </tr>
+	    </tbody>
+	</table>
+	    <input type="hidden" name="add_account_form" value="posted">     
+	    <table class="formTable top-align-cells">
+		<tr>
+		    <td><label for="account_id" class="control-label">Account ID :</label></td>
+		    <td colspan="3"><input type="text" name="account_id" class="input-block-level" disabled value="<?=$managerInfo->name?>"></td>
+		</tr>
+		<tr>
+		    <td><label for="pi_name" class="control-label">Principal Investigator :</label></td>
+		    <td colspan="3"><input type="text" name="pi_name" class="input-block-level" disabled value="<?=$group_pi?>"></td>
+		</tr>
+		<tr>
+		    <td><label for="group_name" class="control-label">Group Name :</label></td>
+		    <td><input type="text" name="group_name" class="input-block-level" disabled value="<?=$accountInfo['group_name']?>"></td>
+		    <td><label for="institution_name" class="control-label">Institution Name :</label></td>
+		    <td><input type="text" name="institution_name" class="input-block-level" disabled value="<?=$accountInfo['institution']?>"></td>
+		</tr>
+		<tr>
+		    <td><label for="group_type" class="control-label">Group @ :</label></td>
+		    <td><input type="text" name="group_type" class="input-block-level" disabled value="<?=$accountInfo['group_type']?>"></td>
+		    <td><label for="discipline" class="control-label">Discipline :</label></td>
+		    <td><input type="text" name="discipline" class="input-block-level" disabled value="<?=$accountInfo['discipline']?>"></td>
+		</tr>
+		<tr>
+		    <td><label for="phone" class="control-label">Phone Number :</label></td>
+		    <td><input type="text" name="phone" class="input-block-level" disabled value="<?=$accountInfo['phone']?>"></td>
+		    <td><label for="fax" class="control-label">Fax Number :</label></td>
+		    <td><input type="text" name="fax" class="input-block-level" disabled value="<?=$accountInfo['fax']?>"></td>
+		</tr>
+		<tr>
+		    <td><label for="email" class="control-label">E-mail :</label></td>
+		    <td><input type="text" name="email" class="input-block-level" disabled value="<?=$accountInfo['email']?>"></td>
+		    <td><label for="address" class="control-label">Address :</label></td>
+		    <td><textarea name="address" class="input-block-level" disabled><?=$accountInfo['address']?></textarea></td>
+		</tr>
+		<tr>
+		    <td><label for="password" class="control-label">UserID/Passwords :</label></td>
+		    <td colspan="3"><input type="text" name="password" class="input-block-level" disabled value="<?=$userids_passwords?>"></td>
+		</tr>
+	    </table>
+    </div>
+
+    <!-- table holding billing info -->
+    <div class="formWrapper">
+	<table class="formTopBar" style="width: 100%" cellpadding="4" cellspacing="2">
+	    <tbody>
+	    <tr>
+		<td colspan="2" style="background-color: rgb(180,200,230); width: 25%;">
+		    Billing Information
+		</td>
+	    </tr>
+	    </tbody>
+	</table>
+	<table class="formTable">
+	    <tr>
+		<td width="15%"><label for="term" class="control-label">Term (years) :</label></td>
+		<td><label for="cost" class="control-label">Cost per Year ($0.00) :</label></td>
+		<td><label for="activate_date" class="control-label">Activated (mm/dd/yyyy) :</label></td>
+		<td><label for="email" class="control-label">Expires (mm/dd/yyyy) :</label></td>
+		<td><label for="activate_code" class="control-label">Activation Code :</label></td>
+	    </tr>
+	    <tr>
+		<td>
+		    <input type="text" name="email" class="input-block-level" disabled value="<?=$accountInfo['term']?>">
+		</td>
+		<td>
+		    <input type="text" name="cost" disabled value="<?=$accountInfo['cost']?>">
+		</td>
+		<td>
+		    <input type="text" name="activate_date" disabled value="<?=$accountInfo['activate_date']?>">
+		</td>
+		<td>
+		    <input type="text" name="email" class="input-block-level" disabled value="<?=$accountInfo['email']?>">
+		</td>
+		<td>
+		    <input type="text" name="activate_code" class="input-block-level" disabled value="<?=$accountInfo['activate_code']?>">
+		</td>
+	    </tr>
+	</table>
+    </div>
+
+    <!-- table holding some account settings -->
+    <div class="formWrapper">
+	<table class="formTopBar" style="width: 100%" cellpadding="4" cellspacing="2">
+	    <tbody>
+	    <tr>
+		<td colspan="2" style="background-color: rgb(180,200,230); width: 25%;">
+		    Account Settings
+		</td>
+	    </tr>
+	    </tbody>
+	</table>
+	<table class="formTable">
+	    <tr>
+		<td><label for="status" class="control-label">Status :</label></td>
+		<td><label for="storage" class="control-label">Storage :</label></td>
+		<td><label for="max_users" class="control-label">Max Users :</label></td>
+		<td><label for="time_zone" class="control-label">Time Zone :</label></td>
+	    </tr>
+	    <tr>
+		<td>
+		    <input type="text" name="status" class="input-block-level" disabled value="<?=ucfirst($accountInfo['status'])?>">
+		</td>
+		<td>
+		    <input type="text" name="storage" disabled value="<?=$accountInfo['storage']?>">
+		</td>
+		<td>
+		    <input type="text" name="max_users" disabled value="<?=$accountInfo['max_users']?>">
+		</td>
+		<td>
+		    <input type="text" name="time_zone" class="input-block-level" disabled value="<?=$accountInfo['time_zone']?>">
+		</td>
+	    </tr>
+	    <tr>
+		<td><label for="notes" class="control-label">Notes :</label></td>
+		<td colspan="3"><textarea name="notes" class="input-block-level" disabled><?=$notes?></textarea></td>
+	    </tr>
+	</table>
+    </div>
+
+    <b>Research Profile</b> ( Publicly Viewable : <?=$accountProfile['public']?> )
+
+    <!-- table holding extra info -->
+    <div class="formWrapper">
+	<table class="formTopBar" style="width: 100%" cellpadding="4" cellspacing="2">
+	    <tbody>
+	    <tr>
+		<td colspan="2" style="background-color: rgb(180,200,230); width: 25%;">
+		    Extra Information
+		</td>
+	    </tr>
+	    </tbody>
+	</table>
+	<table class="formTable">
+	    <tr>
+		<td><label for="keywords" class="control-label">Keywords :</label></td>
+		<td width="80%"><input type="text" name="keywords" class="input-block-level" disabled value="<?=$accountProfile['keywords']?>"></td>
+	    </tr>
+	    <tr>
+		<td><label for="description" class="control-label">Research Description :</label></td>
+		<td width="80%"><textarea name="description" class="input-block-level" disabled value="<?=$accountProfile['description']?>"></textarea></td>
+	    </tr>
+	    <tr>
+		<td><label for="piurl" class="control-label">Instruments :</label></td>
+		<td width="80%"><input type="text" name="piurl" class="input-block-level" disabled value="<?=$accountProfile['instruments']?>"></td>
+	    </tr>
+	    <tr>
+		<td><label for="piurl" class="control-label">Website :</label></td>
+		<td width="80%"><a href='<?=$accountProfile['url']?>' target='_blank'><?=$accountProfile['url']?></a></td>
+	    </tr>
+	    <tr>
+		<td><label for="piurl" class="control-label">Collaborator IDs :</label></td>
+		<td width="80%"><input type="text" name="piurl" class="input-block-level" disabled value="<?=$accountProfile['collaborator_ids']?>"></td>
+	    </tr>
+	</table>
+    </div>
+
+
+<?} else {
     echo "No account found!";
 }
-// display the tables holding the information now
-echo '<table style="width: 100%; text-align: left;" border="1" cellpadding="2" cellspacing="0">';
-echo '<tbody>';
-
-echo '<tr>';
-echo '<td style="width: 25%; vertical-align: center;"><b>Account Manager</b></td>';
-echo '<td style="width: 75%; vertical-align: center;">'.$managerInfo->name.'<br></td>';
-echo'</tr>';
-
-$group_pi = $accountInfo['pi_fname'].' '.$accountInfo['pi_mi'].' '.$accountInfo['pi_lname'];
-
-echo '<tr>';
-echo '<td style="width: 25%; vertical-align: center;"><b>Principal Investigator</b></td>';
-echo '<td style="width: 75%; vertical-align: center;">'.$group_pi.'</td>';
-echo'</tr>';
-
-echo '<tr>';
-echo '<td style="width: 25%; vertical-align: center;"><b>Group Name</b></td>';
-echo '<td style="width: 75%; vertical-align: center;">'.$accountInfo['group_name'].'<br></td>';
-echo'</tr>';
-
-echo '<tr>';
-echo '<td style="width: 25%; vertical-align: center;"><b>Group @</b></td>';
-echo '<td style="width: 75%; vertical-align: center;">'.$accountInfo['group_type'].'</td>';
-echo'</tr>';
-
-echo '<tr>';
-echo '<td style="width: 25%; vertical-align: center;"><b>Discipline</b></td>';
-echo '<td style="width: 75%; vertical-align: center;">'.$accountInfo['discipline'].'</td>';
-echo'</tr>';
-
-echo '<tr>';
-echo '<td style="width: 25%; vertical-align: center;"><b>Institution</b></td>';
-echo '<td style="width: 75%; vertical-align: center;">'.$accountInfo['institution'].'</td>';
-echo'</tr>';
-
-echo '<tr>';
-echo '<td style="width: 25%; vertical-align: center;"><b>Phone Number</b></td>';
-echo '<td style="width: 75%; vertical-align: center;">'.$accountInfo['phone'].'</td>';
-echo'</tr>';
-
-echo '<tr>';
-echo '<td style="width: 25%; vertical-align: center;"><b>Fax Number</b></td>';
-echo '<td style="width: 75%; vertical-align: center;">'.$accountInfo['fax'].'</td>';
-echo'</tr>';
-
-echo '<tr>';
-echo '<td style="width: 25%; vertical-align: center;"><b>E-mail</b></td>';
-echo '<td style="width: 75%; vertical-align: center;">'.$accountInfo['email'].'</td>';
-echo'</tr>';
-
-/*$new_lines = array("\n", "\r\n");
-$address = str_replace($new_lines, "<br>", $array[address]);
-no longer used 11/5/07*/
-echo '<tr>';
-echo '<td style="width: 25%; vertical-align: top;"><b>Address</b></td>';
-echo '<td style="width: 75%; vertical-align: center;"><pre>'.$accountInfo['address'].'</pre></td>';
-echo'</tr>';
-
-echo '<tr>';
-echo '<td style="width: 25%; vertical-align: top;"><b>UserID/Passwords</b></td>';
-echo '<td style="width: 75%; vertical-align: center;">'.$userids_passwords.'</td>';
-echo'</tr>';
-
-echo '</tbody></table><br>';
-
-// table holding billing info
-echo '<table style="width: 100%; text-align: left;" border="1" cellpadding="2" cellspacing="0">';
-echo '<tbody>';
-
-echo '<tr>';
-echo '<td style="vertical-align: center;"><b>Term (years)</b></td>';
-echo '<td style="vertical-align: center;"><b>Cost per Year</b></td>';
-echo '<td style="vertical-align: center;"><b>Activated (mm/dd/yyyy)</b></td>';
-echo '<td style="vertical-align: center;"><b>Expires (mm/dd/yyyy)</b></td>';
-echo '<td style="vertical-align: center;"><b>Activation Code</b></td>';
-echo'</tr>';
-
-echo '<tr>';
-echo '<td style="vertical-align: center;">'.$accountInfo['term'].'</td>';
-echo '<td style="vertical-align: center;">$'.$accountInfo['cost'].'</td>';
-echo '<td style="vertical-align: center;">'.$accountInfo['activate_date'].'</td>';
-echo '<td style="vertical-align: center;">'.$accountInfo['expire_date'].'</td>';
-echo '<td style="vertical-align: center;">'.$accountInfo['activate_code'].'</td>';
-echo '</tr>';
-echo '</tbody></table><br>';
-
-// table holding some account settings
-echo '<table style="width: 100%; text-align: left;" border="1" cellpadding="2" cellspacing="0">';
-echo '<tbody>';
-
-echo '<tr>';
-echo '<td style="vertical-align: center;"><b>Status</b></td>';
-echo '<td style="vertical-align: center;"><b>Storage</b></td>';
-echo '<td style="vertical-align: center;"><b>Max Users</b></td>';
-echo '<td style="vertical-align: center;"><b>Time Zone</b></td>';
-echo'</tr>';
-
-echo '<tr>';
-echo '<td style="vertical-align: center;">'.ucfirst($accountInfo['status']).'</td>';
-echo '<td style="vertical-align: center;">'.$accountInfo['storage'].' MB</td>';
-echo '<td style="vertical-align: center;">'.$accountInfo['max_users'].'</td>';
-echo '<td style="vertical-align: center;">'.$accountInfo['time_zone'].'</td>';
-echo '</tr>';
-echo '<tr>';
-echo '<td style="vertical-align: top;"><b>Notes :</b></td>';
-
-//$notes = str_replace($new_lines, "<br>", $array[notes]);
-$notes = $accountInfo['notes'];
-if(empty($notes)) {
-    $notes = 'None';
-}
-
-echo '<td colspan="3" rowspan="1" style="vertical-align: top;"><pre>'.$notes.'</pre></td>';
-echo '</tr>';
-echo '</tbody></table><br>';
-
-// display the tables holding the information now
-echo '<b>Research Profile</b> ( Publicly Viewable : '.$accountProfile['public'].' )';
-echo '<table style="width: 100%; text-align: left;" border="1" cellpadding="2" cellspacing="0">';
-echo '<tbody>';
-
-echo '<tr>';
-echo '<td style="width: 25%; vertical-align: center;"><b>Keywords</b></td>';
-echo '<td style="width: 75%; vertical-align: center;">'.$accountProfile['keywords'].'<br></td>';
-echo'</tr>';
-
-echo '<tr>';
-echo '<td style="width: 25%; vertical-align: center;"><b>Research Description</b></td>';
-echo '<td style="width: 75%; vertical-align: center;"><pre>'.$accountProfile['description'].'</pre><br></td>';
-echo'</tr>';
-
-echo '<tr>';
-echo '<td style="width: 25%; vertical-align: center;"><b>Instruments</b></td>';
-echo '<td style="width: 75%; vertical-align: center;"><pre>'.$accountProfile['instruments'].'</pre><br></td>';
-echo'</tr>';
-
-echo '<tr>';
-echo '<td style="width: 25%; vertical-align: center;"><b>Website</b></td>';
-echo '<td style="width: 75%; vertical-align: center;"><a href="'.$accountProfile['url'].'" target="_blank">'.$accountProfile['url'].'</a><br></td>';
-echo'</tr>';
-
-echo '<tr>';
-echo '<td style="width: 25%; vertical-align: center;"><b>Collaborator IDs</b></td>';
-echo '<td style="width: 75%; vertical-align: center;">'.$accountProfile['collaborator_ids'].'<br></td>';
-echo'</tr>';
-
-echo '</tbody></table><br>';

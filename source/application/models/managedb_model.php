@@ -10,6 +10,10 @@ class Managedb_model extends CI_Model {
     
     public function __construct() {
 	parent::__construct();
+	$this->lisdb = $this->load->database('lisdb',TRUE);
+	$this->lismdb = $this->load->database('lismdb',TRUE);
+	$this->lispdb = $this->load->database('lispdb',TRUE);
+	$this->lissdb = $this->load->database('lissdb',TRUE);
     }
     
     public function current_databases(){
@@ -41,31 +45,31 @@ class Managedb_model extends CI_Model {
 	$aname = 'test_';  // account name that is appended to the table
 	foreach ($this->lis_tables as $key => $value) {
 	    if($key != 'lismessages') {
-		$this->managedb_model->create_table(2,$db,$key,$value,$aname);
+		$this->create_table(2,$db,$key,$value,$aname);
 	    }
 	}
 	// create the account wide tables "lismessages, etc..."
-	$this->managedb_model->create_table(3,$db,null,$this->lis_tables['lismessages']);
+	$this->create_table(3,$db,null,$this->lis_tables['lismessages']);
     }
     
     public function create_lismdb_tables($db){
 	$this->initializeTableNames();
 	foreach ($this->lism_tables as $key => $value) {
-	    $this->managedb_model->create_table(1,$db,$key,$value);
+	    $this->create_table(1,$db,$key,$value);
 	}
     }
     
     public function create_lispdb_tables($db){
 	$this->initializeTableNames();
 	foreach ($this->lisp_tables as $key => $value) {
-	    $this->managedb_model->create_table(1,$db,$key,$value);
+	    $this->create_table(1,$db,$key,$value);
 	}
     }
     
     public function create_lissdb_tables($db){
 	$this->initializeTableNames();
 	foreach ($this->liss_tables as $key => $value) {
-	    $this->managedb_model->create_table(1,$db,$key,$value);
+	    $this->create_table(1,$db,$key,$value);
 	}
     }
     
@@ -73,16 +77,16 @@ class Managedb_model extends CI_Model {
 	
 	switch($db){
 	    case 'LISMDB':
-		$this->database = $this->load->database('lismdb',TRUE);
+		$this->database = $this->lismdb;
 		break;
 	    case 'LISPDB':
-		$this->database = $this->load->database('lispdb',TRUE);
+		$this->database = $this->lispdb;
 		break;
 	    case 'LISSDB':
-		$this->database = $this->load->database('lissdb',TRUE);
+		$this->database = $this->lissdb;
 		break;
 	    case 'LISDB':
-		$this->database = $this->load->database('lisdb',TRUE);
+		$this->database = $this->lisdb;
 		break;
 	}
 	

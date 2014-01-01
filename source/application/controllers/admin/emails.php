@@ -10,6 +10,7 @@ class Emails extends Admin_Controller {
 	parent::__construct();
 	$this->userobj = $this->session->userdata('user');
 	$this->filename = CIPATH.'admin/files/email_list.txt';
+	$this->restrict_access();
     }
     
     public function index(){

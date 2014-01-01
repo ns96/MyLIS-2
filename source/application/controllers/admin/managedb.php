@@ -7,9 +7,11 @@ class Managedb extends Admin_Controller {
     public function __construct() {
 	parent::__construct();
 	$this->userobj = $this->session->userdata('user');
+	$this->restrict_access();
     }
     
     public function index(){
+	
 	$this->load->model('managedb_model');
 	$databaseList = $this->managedb_model->current_databases();
 	
