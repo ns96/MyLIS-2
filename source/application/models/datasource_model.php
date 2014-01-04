@@ -23,25 +23,25 @@ class datasource {
   }
   
   // function to add demo data
-  function addSandboxData($account_id) {
+  function add_sandbox_data($account_id) {
     $this->account_id = $account_id;
-    $this->addUsers();
-    $this->addMessages();
-    $this->addLocations();
-    $this->addChemicals(250);
-    $this->addSupplies(75);
-    $this->addGroupMeetings();
-    $this->addOrders();
-    $this->addPublications();
-    $this->addInstruments();
-    $this->addGroupTask();
-    $this->addBibliographies();
-    $this->addFiles();
-    $this->addWeblinks();
+    $this->add_users();
+    $this->add_messages();
+    $this->add_locations();
+    $this->add_chemicals(250);
+    $this->add_supplies(75);
+    $this->add_group_meetings();
+    $this->add_orders();
+    $this->add_publications();
+    $this->add_instruments();
+    $this->add_group_task();
+    $this->add_bibliographies();
+    $this->add_files();
+    $this->add_weblinks();
   }
   
   // function to add a set of three users to database
-  function addUsers() {
+  function add_users() {
     $table = $this->account_id.'_users';
     $this->user_names[] = 'Carl Higgins';
     $this->user_names[] = 'Dylan Marks';
@@ -59,7 +59,7 @@ class datasource {
   }
   
   // add messages
-  function addMessages() {
+  function add_messages() {
     $table = $this->account_id.'_messages';
     $date = getLISDateTime();
     $text1 = 'Some message of interest to the group in general dealing with chemicals';
@@ -71,7 +71,7 @@ class datasource {
   }
   
   // function to add 5 locations
-  function addLocations() {
+  function add_locations() {
     $table = $this->account_id.'_locations';
     
     // set default location table now
@@ -84,7 +84,7 @@ class datasource {
   }
   
   // function to add dumy chemicals
-  function addChemicals($count) {
+  function add_chemicals($count) {
     $table = $this->account_id.'_chemicals';
     $date = getLISDateTime();
     $locations = array('CA', 'CB', 'CC', 'FC');
@@ -109,7 +109,7 @@ class datasource {
   }
   
   // function to add dummy supplies
-  function addSupplies($count) {
+  function add_supplies($count) {
     $table = $this->account_id.'_supplies';
     $date = getLISDateTime();
     $locations = array('CA', 'CB', 'CC', 'FC');
@@ -132,34 +132,34 @@ class datasource {
     $this->lisdb->query($sql);
   }
   
-  function addGroupMeetings() {
+  function add_group_meetings() {
      $year = date("Y");
-     $this->addGroupMeetingForYear($year-1);
-     $this->addGroupMeetingForYear($year);
-     $this->addGroupMeetingForYear($year+1);
+     $this->add_group_meeting_for_year($year-1);
+     $this->add_group_meeting_for_year($year);
+     $this->add_group_meeting_for_year($year+1);
   }
   
   // function to add group meeting dates
-  function addGroupMeetingForYear($year) {
+  function add_group_meeting_for_year($year) {
     // add group meeting dates
     $table = $this->account_id.'_gmdates';
     $semester = 2; // winter semester
     $date_id = array();
     
     for($i = 1; $i <= 12; $i++) {
-      $date = $this->getFirstMonday($i, $year);
+      $date = $this->get_first_monday($i, $year);
       $sql = "INSERT INTO $table VALUES ('', '$semester', '$date', '10:00 PM', 'myadmin')";
       $this->lisdb->query($sql);
       $date_id[$i] = $this->lisdb->insert_id();
       $i++;
       
-      $date = $this->getFirstMonday($i, $year);
+      $date = $this->get_first_monday($i, $year);
       $sql = "INSERT INTO $table VALUES ('', '$semester', '$date', '10:00 PM', 'myadmin')";
       $this->lisdb->query($sql);
       $date_id[$i] = $this->lisdb->insert_id();
       $i++;
       
-      $date = $this->getFirstMonday($i, $year);
+      $date = $this->get_first_monday($i, $year);
       $sql = "INSERT INTO $table VALUES ('', '$semester', '$date', '10:00 PM', 'myadmin')";
       $this->lisdb->query($sql);
       $date_id[$i] = $this->lisdb->insert_id();
@@ -185,7 +185,7 @@ class datasource {
   }
   
   // function to get the fisrt monday of month
-  function getFirstMonday($month, $year) {
+  function get_first_monday($month, $year) {
     $num = date("w",mktime(0,0,0,$month,1,$year));
     
     if($num==1) {
@@ -200,7 +200,7 @@ class datasource {
   }
   
   // function to add dummy orders
-  function addOrders() {
+  function add_orders() {
     $year = date("Y");
     $month = date("m");
     $companies = array('Fisher', 'Aldrich', 'VWR', 'Chem Glass', 'Invitrogen');
@@ -220,12 +220,12 @@ class datasource {
     }
     
     // add orders for last year and this year
-    $this->addOrdersForYear($year, $month, $companies, $accounts);
-    $this->addOrdersForYear($year-1, 12, $companies, $accounts);
+    $this->add_orders_for_year($year, $month, $companies, $accounts);
+    $this->add_orders_for_year($year-1, 12, $companies, $accounts);
   }
   
   //function to add orders for a particular year
-  function addOrdersForYear($year, $month, $companies, $accounts) {
+  function add_orders_for_year($year, $month, $companies, $accounts) {
     //echo "Year $year Month $month<br>";
     $table = $this->account_id.'_orders';
     $itable = $this->account_id.'_order_items';
@@ -297,7 +297,7 @@ class datasource {
   }
   
   // function to add dummy publication data
-  function addPublications() {
+  function add_publications() {
     $table = $this->account_id.'_publications';
     $year = date("Y");
     $month = date("m");
@@ -342,7 +342,7 @@ class datasource {
   }
   
   // function to add instrument logs
-  function addInstruments() {
+  function add_instruments() {
     $table = $this->account_id.'_instrulog';
     $rtable = $this->account_id.'_reservations';
     $year = date("Y");
@@ -372,7 +372,7 @@ class datasource {
   }
   
   // function to add group task
-  function addGroupTask() {
+  function add_group_task() {
     $table = $this->account_id.'_grouptask';
     $itable = $this->account_id.'_grouptask_item';
     $year = date("Y");
@@ -427,7 +427,7 @@ class datasource {
   }
   
   // function to add a few fake files
-  function addBibliographies() {
+  function add_bibliographies() {
     $table = $this->account_id.'_doclibrary';
     $ctable = $this->account_id.'_categories';
     $ftable = $this->account_id.'_files';
@@ -470,7 +470,7 @@ class datasource {
   }
   
   // function to add file folders
-  function addFiles() {
+  function add_files() {
     $table = $this->account_id.'_folder_files';
     $ctable = $this->account_id.'_categories';
     $ftable = $this->account_id.'_files';
@@ -505,7 +505,7 @@ class datasource {
   }
   
   // function to add weblinks
-  function addWeblinks() {
+  function add_weblinks() {
     $table = $this->account_id.'_weblinks';
     $ctable = $this->account_id.'_categories';
     $categories = array('Journal Sites', 'Spectroscopy Sites', 'Cell Biology Sites', 'Safe Sites');

@@ -1,11 +1,11 @@
 <?php
 
-$ajaxlink1 = base_url()."group/orderbook/itemlist/getList"; // uses ajax to load the list of saved items for this company
-$itemlist_link = base_url()."group/orderbook/itemlist/companyItems"; // function to display a page wih items from a particular company 
-$remove_company_link = base_url()."group/orderbook/orders/removeCompany?order_id=$order_id&company="; // reomve a saved company
+$ajaxlink1 = base_url()."group/orderbook/itemlist/get_list"; // uses ajax to load the list of saved items for this company
+$itemlist_link = base_url()."group/orderbook/itemlist/company_items"; // function to display a page wih items from a particular company 
+$remove_company_link = base_url()."group/orderbook/orders/remove_company?order_id=$order_id&company="; // reomve a saved company
 $remove_account_link = base_url()."group/orderbook/orders/remove_account?order_id=$order_id&account="; // reomve a saved company
 $add_tally_link = base_url()."group/orderbook/orders/addTally?order_id=$order_id&account=";  // add current account to the tally list
-$remove_tally_link = base_url()."group/orderbook/orders/removeTally?order_id=$order_id&account=";  // remove the current account from tally list
+$remove_tally_link = base_url()."group/orderbook/orders/remove_tally?order_id=$order_id&account=";  // remove the current account from tally list
 
 // some javascript code
 echo '<script language="Javascript">

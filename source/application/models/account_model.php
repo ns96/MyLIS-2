@@ -13,14 +13,14 @@ class Account_model extends CI_Model {
 	$this->lispdb = $this->load->database('lispdb',TRUE);
     }
     
-    public function getAllAccounts(){
+    public function get_all_accounts(){
 	$sql = "SELECT * FROM accounts";
 	$records = $this->lismdb->query($sql)->result_array();
 	return $records; 
     }
     
     // function to return information about the database
-    public function getAccountInfo($account_id){
+    public function get_account_info($account_id){
         $array = null;
         $sql = "SELECT * FROM accounts WHERE account_id = '$account_id'";
         $records = $this->lismdb->query($sql)->result_array();
@@ -29,7 +29,7 @@ class Account_model extends CI_Model {
     }
     
     // checks to see if an account already exist
-    public function accountExists($account_id){
+    public function account_exists($account_id){
 	$exists = 0;
     
 	$sql = "SELECT * FROM accounts WHERE account_id = '$account_id'";
@@ -41,13 +41,13 @@ class Account_model extends CI_Model {
 	return $exists;
     } 
     
-    public function getAccountUsers($account_id){
+    public function get_account_users($account_id){
 	$sql = "SELECT * FROM users WHERE account_id = '$account_id'";
 	$records = $this->lismdb->query($sql)->result_array();
 	return $records;
     }
     
-    public function getAccountProfile($account_id){
+    public function get_account_profile($account_id){
 	$sql = "SELECT * FROM profiles WHERE account_id = '$account_id'";
 	$records = $this->lispdb->query($sql)->result_array();
 	return $records[0];
@@ -119,7 +119,7 @@ class Account_model extends CI_Model {
     }
     
     // function to set default locations and categories
-    function setDefaultDatabaseEntries($account_id) {
+    function set_default_database_entries($account_id) {
 	$ct_table = $account_id.'_categories';
 	$l_table = $account_id.'_locations';
 	$c_table = $account_id.'_chemicals';
@@ -143,27 +143,27 @@ class Account_model extends CI_Model {
 	$this->lisdb->query($sql);
     }
     
-    public function setVersionNumber($account_id,$version){
+    public function set_version_number($account_id,$version){
 	$table = $account_id.'_properties';
 	$sql = "INSERT INTO $table VALUES('version', '$version', 'myadmin')";
 	$this->lisdb->query($sql);
     }
     
-    public function setLoginCount($account_id,$login_count){
+    public function set_login_count($account_id,$login_count){
 	$table = $account_id.'_properties';
 	$sql = "INSERT INTO $table VALUES('login.count', '$login_count', 'myadmin')";
 	$this->lisdb->query($sql);
     }
     
     // function to remove tables from an account
-    public function removeMyLISTables($account_id) {
+    public function remove_MyLIS_tables($account_id) {
 
 	// delete this account from the database
 	$sql = "DELETE FROM accounts WHERE account_id = '$account_id'";
 	$this->lismdb->query($sql);
 
 	// remove the tables from LISM
-	$this->loadTableNames();
+	$this->load_table_names();
 
 	foreach ($this->lis_tables as $tableName) {
 	    $sql  = 'DROP TABLE IF EXISTS '.$account_id."$tableName";
@@ -172,14 +172,14 @@ class Account_model extends CI_Model {
     }
     
     // function to remove mylis users from the users table
-    function removeMyLISUsers($account_id) {
+    public function remove_MyLIS_users($account_id) {
 
 	// delete this accpunt from the database
 	$sql = "DELETE FROM users WHERE account_id = '$account_id'";
 	$this->lismdb->query($sql);
     }
     
-    function loadTableNames(){
+    protected function load_table_names(){
 	$this->lis_tables = array(
 	    'chemicals',
 	    'supplies',

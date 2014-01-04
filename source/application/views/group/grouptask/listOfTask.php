@@ -1,5 +1,5 @@
 <?php
-    $target_link = base_url().'group/grouptask/updateTasks';
+    $target_link = base_url().'group/grouptask/update_tasks';
     $print_page_link = base_url().'group/grouptask/printable';
 ?>
 

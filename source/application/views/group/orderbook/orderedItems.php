@@ -1,6 +1,6 @@
 <?php
 
-$update_link = base_url()."group/orderbook/updateStatus";
+$update_link = base_url()."group/orderbook/update_status";
 echo '<form name="form1" action="'.$update_link.'" method="post">';
 echo '<input type="hidden" name="task" value="orderbook_update2">'; // must change this
 

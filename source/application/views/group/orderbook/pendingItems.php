@@ -1,5 +1,5 @@
 <?php
-    $update_link = base_url()."group/orderbook/updateStatus";
+    $update_link = base_url()."group/orderbook/update_status";
     $back_link = base_url()."group/orderbook"; // link to go back to the orders
     
     echo '<div style="text-align: right;">';

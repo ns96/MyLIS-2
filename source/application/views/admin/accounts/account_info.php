@@ -20,7 +20,7 @@ if(empty($notes)) {
 }
 ?>
 
-<div style='text-align:right'>
+<div style='text-align:right; margin:0px 15px'>
     [ <a href='<?=$db_link?>'>DB</a> ] 
     [ <a href='<?=$edit_link?>'>Edit</a> ] 
     [ <a href='<?=$back_link?>'>Back</a> ] 

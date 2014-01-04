@@ -10,7 +10,7 @@ class Proputil_model extends CI_Model {
   }
   
   // function to get a property from database
-  function getProperty($key) {
+  function get_property($key) {
     $lisdb = $this->load->database('lisdb',TRUE);
     $lisdb->where('key_id',$key);
     $records = $lisdb->get($this->table)->result_array();
@@ -21,7 +21,7 @@ class Proputil_model extends CI_Model {
   }
   
   // function to see if it as the key is already in DB
-  function hasKey($key) {
+  function has_key($key) {
     $lisdb = $this->load->database('lisdb',TRUE);
     $lisdb->where('key_id',$key);
     $record = $lisdb->get($this->table)->result_array();
@@ -35,11 +35,11 @@ class Proputil_model extends CI_Model {
   }
   
   // save a property in the database
-  function storeProperty($key, $value) {
+  function store_property($key, $value) {
     $lisdb = $this->load->database('lisdb',TRUE);
     $userid = $this->user->userid;
     
-    $has_key = $this->hasKey($key); // check to make sure key is not alredy there
+    $has_key = $this->has_key($key); // check to make sure key is not alredy there
     if(!$has_key) {
 	$data = array(
 	    'key_id'	=>  $key,
@@ -58,7 +58,7 @@ class Proputil_model extends CI_Model {
   }
   
   // function to return all the properties as an array with key value pair
-  function getProperties() {
+  function get_properties() {
     
     $properties = array();
     
@@ -73,7 +73,7 @@ class Proputil_model extends CI_Model {
   }
   
   // function to remove a property
-  function removeProperty($key) {
+  function remove_property($key) {
       
     $lisdb = $this->load->database('lisdb',TRUE);
     $lisdb->where('key_id',$key);

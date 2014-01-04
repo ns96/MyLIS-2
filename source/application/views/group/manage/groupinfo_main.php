@@ -19,12 +19,8 @@ else {
 <div style="text-align: left; margin-left:15px">
     <button class="btn btn-mini" type="button" id="groupstatus">Show Current Status</button>
 </div>
-<script type="text/javascript">
-    $("groupstatus").onClick(function(){
-	
-    });
-</script>
-<div style="margin:5px 15px; display: none"> 
+
+<div style="margin:5px 15px; display: none" id="status_div"> 
     <table class="status_table">
 	<thead>
 	    <th>Status</th>
@@ -61,76 +57,82 @@ else {
 	<input type="hidden" name="groupinfo_update_form" value="posted">      
 	<table class="formTable">
 	    <tr>
-		<td><label for="fname" class="control-label">PI Name :</label></td>
+		<td style="vertical-align: top"><label for="fname" class="control-label">PI Name :</label></td>
 		<td>
-		    <table style="font-size:12px">
+		    <table style="font-size:12px; width: 100%">
 			<tr>
 			    <td>First name :</td>
 			    <td>
-				<input type="text" name="fname" class="input-medium" value="<?=htmlentities($info['pi_fname'])?>">
+				<input type="text" name="fname" class="input-block-level" value="<?=htmlentities($info['pi_fname'])?>">
 			    </td>
 			</tr>
 			<tr>
 			    <td> Middle Name:</td>
 			    <td>
-				<input type="text" name="mi" class="input-medium" value="<?=$info['pi_mi']?>">
+				<input type="text" name="mi" class="input-block-level" value="<?=$info['pi_mi']?>">
 			    </td>
 			</tr>
 			<tr>
 			    <td>Last name :</td>
 			    <td>
-				<input type="text" name="lname" class="input-medium" value="<?=htmlentities($info['pi_lname'])?>">
+				<input type="text" name="lname" class="input-block-level" value="<?=htmlentities($info['pi_lname'])?>">
 			    </td>
 			</tr>
 		    </table>
 		</td>
-		<td><label for="group_name" class="control-label">Group Name :</label></td>
-		<td>
-		    <input type="text" name="group_name" class="input-large" value="<?=htmlentities($info['group_name'])?>">
-		</td>
-	    </tr>
-	    <tr>
-		<td><label for="group_type" class="control-label">Group @ :</label></td>
-		<td>
-		    <select name="group_type" class="input-large" >
-		    <option><?=$info['group_type']?></option>
-		    <?
-		    foreach($this->gtypes as $gtype) {
-			echo "<option>$gtype</option>";
-		    }
-		    ?>
-		    </select>
-		</td>
-		<td><label for="discipline" class="control-label">Group @ :</label></td>
-		<td>
-		    <select name="discipline" class="input-large" >
-			<option><?=$info['discipline']?></option>
-			<?
-			foreach($this->disciplines as $discipline) {
-			    echo "<option>$discipline</option>";
-			}
-			?>
-		    </select>
+		<td colspan="2">
+		    <table style="width: 100%">
+			<tr>
+			    <td><label for="group_name" class="control-label">Group Name :</label></td>
+			    <td><input type="text" name="group_name" class="input-block-level" value="<?=htmlentities($info['group_name'])?>"></td>
+			</tr>
+			<tr>
+			    <td><label for="group_type" class="control-label">Group @ :</label></td>
+			    <td>
+				<select name="group_type" class="input-block-level" >
+				    <option><?=$info['group_type']?></option>
+				    <?
+				    foreach($gtypes as $gtype) {
+					echo "<option>$gtype</option>";
+				    }
+				    ?>
+				</select>
+			    </td>
+			</tr>
+			<tr>
+			    <td><label for="discipline" class="control-label">Discipline :</label></td>
+			    <td>
+				<select name="discipline" class="input-block-level" >
+				    <option><?=$info['discipline']?></option>
+				    <?
+				    foreach($disciplines as $discipline) {
+					echo "<option>$discipline</option>";
+				    }
+				    ?>
+				</select>
+			    </td>
+			</tr>
+		    </table>	   
 		</td>
 	    </tr>
 	    <tr>
 		<td><label for="institution_name" class="control-label">Institution Name :</label></td>
 		<td>
-		    <input type="text" name="institution_name" class="input-large" value="<?=$info['institution']?>">
+		    <input type="text" name="institution_name" class="input-block-level" value="<?=$info['institution']?>">
 		</td>
 		<td><label for="phone" class="control-label">Phone :</label></td>
 		<td>
-		    <input type="text" name="phone" class="input-large" value="<?=$info['phone']?>">
+		    <input type="text" name="phone" class="input-block-level" value="<?=$info['phone']?>">
 		</td>
 	    </tr>
 	    <tr>
 		<td><label for="fax" class="control-label">Fax :</label></td>
 		<td>
-		    <input type="text" name="fax" class="input-large" value="<?=$info['fax']?>">
+		    <input type="text" name="fax" class="input-block-level" value="<?=$info['fax']?>">
 		</td>
 		<td><label for="email" class="control-label">PI's E-mail :</label></td>
 		<td>
-		    <input type="text" name="email" class="input-large" value="<?=$info['email']?>">
+		    <input type="text" name="email" class="input-block-level" value="<?=$info['email']?>">
 		</td>
 	    </tr>
 	    <tr>
@@ -140,7 +142,7 @@ else {
 		</td>
 		<td><label for="address" class="control-label">Site Manager :</label></td>
 		<td>
-		    <select name="site_manager">
+		    <select name="site_manager" class="input-block-level">
 		    <option value="<?=$site_manager?>"><?=$site_manager_name?></option>
 		    <?
 		    foreach($users as $user) {
@@ -161,4 +163,14 @@ else {
     </form>
 </div>
 
-
+<script type="text/javascript">
+    $("#groupstatus").click(function(){
+	if ($('#status_div').is(':visible')){
+	    $('#status_div').hide();
+	    $(this).text('Show Current Status');
+	} else {
+	    $('#status_div').show();
+	    $(this).text('Hide Current Status');
+	}
+    });
+</script>

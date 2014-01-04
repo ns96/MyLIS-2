@@ -1,5 +1,5 @@
 <?php
-    $target_link = base_url().'group/grouptask/addEditTask';
+    $target_link = base_url().'group/grouptask/add_edit_task';
 ?>
 
 <script language="Javascript">

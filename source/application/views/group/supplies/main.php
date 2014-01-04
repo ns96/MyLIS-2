@@ -11,7 +11,7 @@ $list_bycategory = base_url()."group/supplies/listing/by_category"; // list all 
 $list_bylocation = base_url()."group/supplies/listing/by_location"; // list all by categories
 $list_locations = base_url()."group/supplies/list_locations"; // displays the list of locations
 $search_target = base_url()."group/supplies/search";
-$location_link = base_url()."group/supplies/listLocations";
+$location_link = base_url()."group/supplies/list_locations";
 $home_link = base_url()."group/supplies";
 
 echo '[ <a href="'.$list_mine.'">My Supplies</a> ] ';

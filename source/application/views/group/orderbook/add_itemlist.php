@@ -42,161 +42,158 @@ function submitOrder(task) {
 </script>';
 //--end of javascript code 
 
-// display the page header
-echo '<table style="width: 100%; text-align: left;" border="0" cellpadding="2" cellspacing="0">';
-echo '<tbody>';
-echo '<tr>';
-echo '<td style="vertical-align: top;">';
-echo '<span style="color: #3366FF;"><b>'.$title.'</b></span><br>';
-echo '</td>';
-echo '<td style="vertical-align: top; text-align: right;">';
-echo "[ <a href=\"$orderbook_link\">Back to Orders</a> ] ";
-//echo "[ <a href=\"$home_link\">Home</a> ]<br>";
-echo '</td></tr></tbody></table>';
+echo "<div style='text-align:right; margin:0px 15px'><a href='$orderbook_link'>Back to Orders</a></div>";
 
-echo printColoredLine('#3366FF', '2px').'<pre></pre>';
+?>
 
-// the form
-echo '<form name="form1" action="'.$target_link.'" method="post">';
-echo '<input type="hidden" name="save_itemlist_form" value="posted">';
+<div class="formWrapper">
+    <table class="formUpperBar" style="width: 100%" cellpadding="4" cellspacing="2">
+        <tbody>
+        <tr>
+            <td colspan="2" style="background-color: rgb(180,200,230); width: 25%;">
+                <?
+		if(!empty($order_id)) 
+		    echo "Edit Order";
+		else 
+		    echo "Make New Order";
+		?>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+    <div class="formSubBar">General Itemlist Information</div>
+    <form name="form1" action="<?=$target_link?>" method="post">
+	<input type="hidden" name="save_itemlist_form" value="posted">
+	<? if(!empty($order_id)) {
+	    echo '<input type="hidden" name="order_id" value="'.$order_id.'"><br>';
+	} ?>
+	<table class="formTable">
+	    <tr>
+		<td>
+		    <label for="companies" class="control-label"> Company:</label>
+		    <select name="companies" class="input-medium" onChange="changeCompany(this.form.companies, 0)">';
+			<option value="">Select Company</option>
+			<?
+			$length = sizeof($cnames);
+			for($i = 0; $i < $length; $i++) {
+			    echo '<option value="'.$cnames[$i].'">['.($i + 1).'] '.$cnames[$i].'</option>';
+			}
+			?>
+			<option value="Enter Company">Other</option>
+		    </select>
+		    <input type="text" name="company_0" class="input-medium" value="<?=$company?>">
+		</td>
+		<td>
+		    <label for="maxitems" class="control-label"> # of Items (<?=$maxItemsMax?> max.)</label>
+		    <input type="text" name="maxitems" value="<?=$maxitems?>" class="input-medium">
+		</td>
+		<td>
+		    <label for="priority" class="control-label">Share With Group?</label>
+		    <select name="priority" class="input-medium">
+			<?
+			if(!empty($priority)) {
+			    if($priority == 'High') {
+				echo "<option value='$priority'>Yes</option>";
+			    }
+			    else {
+				echo "<option value='$priority'>No</option>";
+			    }
+			}
+			echo '<option value="High">Yes</option>';
+			?>
+			<option value="Low">No</option>
+		    </select>
+		</td>
+		<td>
+		    <label for="orderdate" class="control-label">Modify Date</label>
+		    <input type="text" name="orderdate" readonly="readonly" value="<?=$status_date?>">
+		</td>
+	    </tr>
+	    <tr>
+		<td colspan="3">
+		    <label for="notes" class="control-label" style="display: inline">Itemlist Notes :</label>
+		    <input type="text" name="notes" value="<?=$notes?>" class="input-xxlarge">
+		</td>
+		<td style="text-align: center">
+		    <button name="butSave" type="submit" class="btn btn-primary" style="margin-bottom: 10px" onclick="submitOrder('save')">Save List</button>
+		</td>
+	    </tr>
+	</table>
+	<br>
+	<div class="formSubBar">Items</div>
+	<table class="formTable-compact">
+	    <thead>
+		<th>Item #</th>
+		<th>Type</th>
+		<th width="20%"><a href="javascript:openItemListPage()">Product ID</a></th>
+		<th>Description</th>
+		<th width="15%">Units</th>
+		<th width="11%">Cost</th>
+	    </thead>
+	    <tbody>
+		<?
+		// add slots for up to ten itmes
+		for($i = 1; $i <= $maxitems; $i++) {
+		    // check to see if an item exist for this order
+		    $type = '';
+		    $product = '';
+		    $description = '';
+		    $units = '';
+		    $price = '$0.00';
 
-// set the order id if we loaded a saved record
-if(!empty($order_id)) {
-  echo '<input type="hidden" name="order_id" value="'.$order_id.'"><br>';
-}
+		    if(isset($order['item_'.$i])) {
+			$info = preg_split("/\t/", $order['item_'.$i]);
+			$type = trim($info[0]);
+			$product = trim($info[2]);
+			$description =trim($info[3]);
+			$units = trim($info[5]);
+			$price = '$'.sprintf("%01.2f", $info[6]);
+		    }
+		    ?>
+		    <tr>
+			<td>
+			    <input type="checkbox" name="item_<?=$i?>" value="<?=$i?>"> <?=$i?>
+			</td>
+			<td>
+			    <select name="type_<?=$i?>" class="input-block-level">
+				<? if(!empty($type)) {
+				    echo '<option value="$type">$type</option>';
+				} ?>
+				<option value="Chemical">Chemical</option>
+				<option value="Supply">Supply</option>
+				<option value="Other">Other</option>
+			    </select>
+			</td>
+			<td>
+			    <input type="text" name="product_<?=$i?>" value="<?=$product?>" class="input-block-level">
+			</td>
+			<td>
+			    <input type="text" name="description_<?=$i?>" value="<?=$description?>" class="input-block-level">
+			</td>
+			<td>
+			    <input type="text" name="units_<?=$i?>" value="<?=$units?>" class="input-block-level">
+			</td>
+			<td>
+			    <input type="text" name="price_<?=$i?>" value="<?=$price?>" class="input-block-level">
+			</td>
+		    </tr>
+		    <?
+		}
+		?>
+	    </tbody>
+	</table>
+	<div style="text-align: right">
+	    <?
+	    if(!empty($order_id)) {
+		echo "<button name='butRemove' type='submit' class='btn' style='margin-bottom: 10px; margin-right:10px' onclick='submitOrder(".'remove'.")'>Remove Item</button>";
+		if($role == 'admin' || $role == 'buyer' || $owner == $user_id) {
+		    echo "<button name='' type='submit' class='btn btn-danger' style='margin-bottom: 10px; margin-right:10px' onclick='submitOrder(".'remove_order'.")'>Remove List</button>";
+		}
+	    }
+	    echo "<button name='butSave' type='submit' class='btn btn-primary' style='margin-bottom: 10px' onclick='submitOrder(".'save'.")'>Save List</button>";
+	    ?>
+	</div>
+    </form>
+</div>
 
-// add the table holding order wide variables
-echo '<table style="background-color: rgb(225, 255, 255); text-align: left; width: 100%;" border="1" cellpadding="2"
-cellspacing="0"><tbody>';
-
-echo '<tr>';
-echo '<td style="vertical-align: center;">
-<select name="companies" size="1" onChange="changeCompany(this.form.companies, 0)">';
-echo '<option value="">Select Company</option>';
-$length = sizeof($cnames);
-for($i = 0; $i < $length; $i++) {
-  echo '<option value="'.$cnames[$i].'">['.($i + 1).'] '.$cnames[$i].'</option>';
-}
-echo '<option value="Enter Company">Other</option></select> ';
-echo '<input type="text" name="company_0" size="15" value="'.$company.'"></td>';
-
-echo '<td style="vertical-align: center;"><small># of Items ('.$maxItemsMax.' max.)</small> 
-<input type="text" name="maxitems" size="3" value="'.$maxitems.'"></td>';
-
-echo '<td style="vertical-align: center;"><small>Share With Group?</small> 
-<select name="priority" size="1">';
-if(!empty($priority)) {
-  if($priority == 'High') {
-    echo "<option value=\"$priority\">Yes</option>";
-  }
-  else {
-    echo "<option value=\"$priority\">No</option>";
-  }
-}
-echo '<option value="High">Yes</option>
-<option value="Low">No</option>
-</select>';
-
-echo '<td style="vertical-align: center;"><small>Modify Date</small> 
-<input type="text" name="orderdate" size="8" readonly="readonly" value="'.$status_date.'"></td>';
-echo '</tr>';
-
-echo '<tr>';
-echo '<td style="vertical-align: center;"><span style="color: rgb(235, 0, 0);"><small><b>Item List Notes :</b></small></span></td>';
-echo '<td colspan="2" rowspan="1" style="vertical-align: top;">
-<input type="text" name="notes" size="60" value="'.$notes.'"></td>';
-
-echo '<td style="vertical-align: center; text-align: center;">
-<input type="button" name="butSave" value="Save List" 
-style="background: rgb(238, 238, 238); color: #3366FF" 
-onclick="submitOrder(\'save\')"/></td>';
-
-echo '</tr>';
-
-echo '</tbody></table><br>';
-
-// add the table that allows inputing of items
-echo '<table style="background-color: rgb(225, 255, 255); text-align: left; width: 100%;" border="1" cellpadding="2"
-cellspacing="0"><tbody>';
-
-echo '<tr>';
-echo '<td width="6%" style="vertical-align: top;"><small><b>Item #</b></small></td>';
-echo '<td style="vertical-align: top;"><small><b>Type</b></small></td>';
-echo '<td style="vertical-align: top;"><small><b>Product ID</b></small></td>';
-echo '<td style="vertical-align: top;"><small><b>Description</b></small></td>';
-echo '<td style="vertical-align: top;"><small><b>Units</b></small></td>';
-echo '<td style="vertical-align: top;"><small><b>Cost</b></small></td>';
-echo '</tr>';
-
-// add slots for up to ten itmes
-for($i = 1; $i <= $maxitems; $i++) {
-  // check to see if an item exist for this order
-  $type = '';
-  $product = '';
-  $description = '';
-  $units = '';
-  $price = '$0.00';
-
-  if(isset($order['item_'.$i])) {
-    $info = preg_split("/\t/", $order['item_'.$i]);
-    $type = trim($info[0]);
-    $product = trim($info[2]);
-    $description =trim($info[3]);
-    $units = trim($info[5]);
-    $price = '$'.sprintf("%01.2f", $info[6]);
-  }
-
-  echo '<tr>';
-  echo '<td style="vertical-align: top;">
-  <input type="checkbox" name="item_'.$i.'" value="'.$i.'">'.$i.'</td>';
-
-  echo '<td style="vertical-align: top;">
-  <select name="type_'.$i.'" size="1">';
-  if(!empty($type)) {
-    echo '<option value="'.$type.'">'.$type.'</option>';
-  }
-  echo '<option value="Chemical">Chemical</option>
-  <option value="Supply">Supply</option>
-  <option value="Other">Other</option>
-  </select></td>';
-
-  echo '<td style="vertical-align: top;">
-  <input type="text" name="product_'.$i.'" size="8" value="'.$product.'"></td>';
-
-  echo '<td style="vertical-align: top;">
-  <input type="text" name="description_'.$i.'" size="25" value="'.$description.'"></td>';
-
-  echo '<td style="vertical-align: top;">
-  <input type="text" name="units_'.$i.'" size="4" value="'.$units.'" ></td>';
-
-  echo '<td style="vertical-align: top;">
-  <input type="text" name="price_'.$i.'" size="6" value="'.$price.'" ></td>';
-
-  echo '</tr>';
-}
-
-echo '</tbody></table>';
-
-// Add the buttons
-echo '<div style="color: rgb(51, 102, 255); text-align: right;">';
-
-if(!empty($order_id)) {
-  echo '<input type="button" name="butRemove" value="Remove Item" 
-  style="background: rgb(238, 238, 238); color: #3366FF" 
-  onclick="submitOrder(\'remove\')"/> ';
-
-  if($role == 'admin' || $role == 'buyer' || $owner == $user_id) {
-    echo '<input type="button" name="butRemove" value="Remove List" 
-    style="background: rgb(238, 238, 238); color: #3366FF" 
-    onclick="submitOrder(\'remove_order\')"/> ';
-  }
-}
-
-echo '<input type="button" name="butSave" value="Save List" 
-style="background: rgb(238, 238, 238); color: #3366FF" 
-onclick="submitOrder(\'save\')"/>';
-
-echo '</div>';
-
-echo '</form>';
 

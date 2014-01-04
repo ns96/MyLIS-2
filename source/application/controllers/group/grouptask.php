@@ -22,7 +22,7 @@ class Grouptask extends Group_Controller {
 
     public function index(){
         if (!empty($this->grouptask_id)){
-            $grouptask_info = $this->grouptask_model->getGroupTaskInformation($this->grouptask_id);
+            $grouptask_info = $this->grouptask_model->get_group_task_information($this->grouptask_id);
             $type = $grouptask_info['type'];
         } else
             $type = '';
@@ -45,7 +45,7 @@ class Grouptask extends Group_Controller {
               $month_name = $months[$i];
               $data2['month_name'] = $month_name;
               $data2['month_num'] = $i;
-              $data2['item_info'] = $this->grouptask_model->getTaskItemInformation('monthly', $i);
+              $data2['item_info'] = $this->grouptask_model->get_task_item_information('monthly', $i);
               $monthlyFields .= $this->load->view('group/grouptask/monthlyTaskField',$data2,TRUE);
             }
 
@@ -55,7 +55,7 @@ class Grouptask extends Group_Controller {
             for($i = 7; $i < 13; $i++) {
               $data2['month_name'] = $month_name;
               $data2['month_num'] = $i;
-              $data2['item_info'] = $this->grouptask_model->getTaskItemInformation('monthly', $i);
+              $data2['item_info'] = $this->grouptask_model->get_task_item_information('monthly', $i);
               $monthlyFields .= $this->load->view('group/grouptask/monthlyTaskField',$data2,TRUE);
             }
 
@@ -65,13 +65,13 @@ class Grouptask extends Group_Controller {
 	    $data1['ismanager'] = $ismanager;
             
 	    $this->load->model('user_model');
-	    $data1['manager'] = $this->user_model->getUser($grouptask_info['manager_id']);
+	    $data1['manager'] = $this->user_model->get_user($grouptask_info['manager_id']);
 	    
             $data1['monthlyFields'] = $monthlyFields;
             $taskTable = $this->load->view('group/grouptask/monthlyTask',$data1,TRUE);
         } else if($type == 'list') {
             $max_num = 0;
-            $userList = $this->loadUsers();
+            $userList = $this->load_users();
             $ismanager = false;
             if($this->userobj->role == 'admin' || $this->userobj->userid == $grouptask_info['manager_id']) {
               $ismanager = true;
@@ -83,7 +83,7 @@ class Grouptask extends Group_Controller {
             $data1['grouptask_info'] = $grouptask_info;
             $data1['manager'] = $userList[$grouptask_info['manager_id']];
             $data1['ismanager'] = $ismanager;
-            $groupTaskItems = $this->grouptask_model->getGroupTaskItems($this->grouptask_id);
+            $groupTaskItems = $this->grouptask_model->get_group_task_items($this->grouptask_id);
             
             // get the number of entries for this group task
             $count =count($groupTaskItems);
@@ -127,11 +127,11 @@ class Grouptask extends Group_Controller {
         }
         
         $egrouptask_id = $this->input->get('egrouptask_id'); // group task id used for editing entry
-        $y = $this->getSelectedYear();
+        $y = $this->get_selected_year();
 
         // if egrouptask_id is not empty get its information from database
         if(!empty($egrouptask_id)) {
-          $info = $this->grouptask_model->getGroupTaskInformation($egrouptask_id);
+          $info = $this->grouptask_model->get_group_task_information($egrouptask_id);
           $manager_id = $info['manager_id'];
           $task_name = $info['task_name'];
           $button_title = 'Edit Task';
@@ -140,38 +140,38 @@ class Grouptask extends Group_Controller {
             $button_title = 'Add New Task';
             $task_name = '';
         }
-        $data4['users'] = $this->loadUsers();
+        $data4['users'] = $this->load_users();
         $data4['egrouptask_id'] = $egrouptask_id;
         $data4['y'] = $y;
         $data4['button_title'] = $button_title;
         $data4['task_name'] = $task_name;
         $addTaskForm = $this->load->view('group/grouptask/addGroupTaskForm',$data4,TRUE);
         
-        $data['page_title'] = 'Group task management <span style="font-weight:normal; margin-left:15px">('.$this->getGroupTaskName().')</span>';
+        $data['page_title'] = 'Group task management <span style="font-weight:normal; margin-left:15px">('.$this->get_group_task_name().')</span>';
         $data['taskTable'] = $taskTable;
-        $data['selectedYear'] = $this->getSelectedYear();
-        $data['yearSelector'] = $this->displayYearSelector();
+        $data['selectedYear'] = $this->get_selected_year();
+        $data['yearSelector'] = $this->display_year_selector();
         $data['addTaskForm'] = $addTaskForm;
-	$data['taskPage'] = $this->loadTaskPage();
+	$data['taskPage'] = $this->load_task_page();
         $this->load_view('group/grouptask/main',$data);
     }
     
-    public function updateTasks(){
+    public function update_tasks(){
         $task2 = $this->input->post('task2');
     
         if($task2 == 'reset') {
-            $this->resetTaskItems();
+            $this->reset_task_items();
         } else if($task2 == 'update_info') {
-            $this->updateTaskItems();
+            $this->update_task_items();
         } else if($task2 == 'add') {
-            $this->addTaskItem();
+            $this->add_task_item();
         } else {
             redirect('group/grouptask');
         }
     }
     
     public function printable(){
-        $grouptask_info = $this->grouptask_model->getGroupTaskInformation($this->grouptask_id);
+        $grouptask_info = $this->grouptask_model->get_group_task_information($this->grouptask_id);
         $task_name = $grouptask_info['task_name'];
         $year = $grouptask_info['year'];
         $type = $grouptask_info['type'];
@@ -180,9 +180,10 @@ class Grouptask extends Group_Controller {
         $sql = '';
         if($type == 'monthly') {
             $months = getMonths();
-            $data['items'] = $this->grouptask_model->getItemByMonth($this->grouptask_id);
+	    $data['months'] = $months;
+            $data['items'] = $this->grouptask_model->get_item_by_month($this->grouptask_id);
          } else if ($type == 'list') {
-            $data['items'] = $this->grouptask_model->getGroupTaskItems($this->grouptask_id);
+            $data['items'] = $this->grouptask_model->get_group_task_items($this->grouptask_id);
          }
         
         $data['task_name'] = $task_name;
@@ -191,9 +192,9 @@ class Grouptask extends Group_Controller {
         $this->load->view('group/grouptask/printablePage',$data);
     }
     
-    public function setTaskItemCompleted(){
+    public function set_task_item_completed(){
         $item_id = $this->input->get('item_id');
-        $this->grouptask_model->setTaskItemCompleted($item_id);
+        $this->grouptask_model->set_task_item_completed($item_id);
   
         redirect('group/grouptask');
     }
@@ -202,13 +203,13 @@ class Grouptask extends Group_Controller {
         $notes = $this->input->post(notes);
 
         if(!strstr($notes, 'Enter task notes here')) {
-            $this->grouptask_model->updateTaskNotes($this->grouptask_id,$notes);
+            $this->grouptask_model->update_task_notes($this->grouptask_id,$notes);
         }
 
         redirect('group/grouptask');
     }
     
-    public function addEditTask(){
+    public function add_edit_task(){
         $egrouptask_id = $this->input->post('egrouptask_id');
         $task_name = $this->input->post('taskname');
         $type = $this->input->post('tasktype');
@@ -226,7 +227,7 @@ class Grouptask extends Group_Controller {
               $data['manager_id'] = $manager_id;
               $data['notes'] = $notes;
               $data['userid'] = $userid;
-              $grouptask_id = $this->grouptask_model->addTask($data);
+              $grouptask_id = $this->grouptask_model->add_task($data);
 
             // add entries to grouptask item table now
             if($type == 'monthly') {
@@ -238,7 +239,7 @@ class Grouptask extends Group_Controller {
                     $data['completed'] = 'NO';
                     $data['note'] = '';
                     $data['userid'] = '';
-                    $this->grouptask_model->addTaskItem($data);
+                    $this->grouptask_model->add_task_item($data);
                 }
             } else if($type == 'list') {
               $list_count = $this->input->post('tasknum');
@@ -254,7 +255,7 @@ class Grouptask extends Group_Controller {
                     $data['completed'] = 'NO';
                     $data['note'] = '';
                     $data['userid'] = '';
-                    $this->grouptask_model->addTaskItem($data);
+                    $this->grouptask_model->add_task_item($data);
               }
             }
           } else { // update an existing entry
@@ -263,7 +264,7 @@ class Grouptask extends Group_Controller {
             $data['manager_id'] = $manager_id;
             $data['notes'] = $notes;
             $data['grouptask_id'] = $grouptask_id;
-            $this->grouptask_model->updateTask($data);
+            $this->grouptask_model->update_task($data);
           }
         }
 
@@ -271,7 +272,7 @@ class Grouptask extends Group_Controller {
     }
     
     // function to add an item to the group task
-    public function addTaskItem() {
+    public function add_task_item() {
       $start_num = $this->input->post('max_num') + 1;
       $add_amount = $this->input->post('add_amount');
       $total = $this->input->post('total');
@@ -285,7 +286,7 @@ class Grouptask extends Group_Controller {
         $data['completed'] = 'NO';
         $data['note'] = '';
         $data['userid'] = '';
-        $this->grouptask_model->addTaskItem($data);
+        $this->grouptask_model->add_task_item($data);
         $total++;
         if($total > 50) {
           break;
@@ -295,20 +296,20 @@ class Grouptask extends Group_Controller {
     }
     
     // function to reset the group task items
-    function resetTaskItems() {
+    function reset_task_items() {
       $item_ids = $this->input->post('item_ids');
 
       if(!empty($item_ids)) {
             foreach($item_ids as $item_id) {
-                $this->grouptask_model->resetTaskItem($item_id);
+                $this->grouptask_model->reset_task_item($item_id);
             }
       }
       redirect('group/grouptask');
     }
     
     // function to update the group task items
-    function updateTaskItems() {
-        $items = $this->grouptask_model->getGroupTaskItems($this->grouptask_id);
+    function update_task_items() {
+        $items = $this->grouptask_model->get_group_task_items($this->grouptask_id);
 
         foreach($items as $array) {
             $item_id = $array['item_id'];
@@ -320,7 +321,7 @@ class Grouptask extends Group_Controller {
             }
 
             if($person != '(enter person assigned to task)') {
-                $this->grouptask_model->updateTaskItem($note,$person,$item_id);
+                $this->grouptask_model->update_task_item($note,$person,$item_id);
             }
         }
         redirect('group/grouptask');
@@ -337,7 +338,7 @@ class Grouptask extends Group_Controller {
     
     public function delete_task(){
         $grouptask_id = $this->input->get('grouptask_id');
-        $this->grouptask_model->deleteTask($grouptask_id);
+        $this->grouptask_model->delete_task($grouptask_id);
         $this->session->unset_userdata('grouptask_id'); // unset the grouptask_id in session
         redirect('group/grouptask');
     }
@@ -346,18 +347,18 @@ class Grouptask extends Group_Controller {
         $item_id = $this->input->get('item_id');
 
         // remove the entry from instrulog table
-        $this->grouptask_model->deleteTaskItem($item_id);
+        $this->grouptask_model->delete_task_item($item_id);
 
         redirect('group/grouptask');
     }
     
     // This is the source of the iframe area of main grouptask page
-    public function loadTaskPage(){
-        $y = $this->getSelectedYear();
+    public function load_task_page(){
+        $y = $this->get_selected_year();
         $y_min = $y - 1;
         $y_max = $y + 1;
 
-        $yearTasks = $this->grouptask_model->getYearTasks($y_min,$y_max);
+        $yearTasks = $this->grouptask_model->get_year_tasks($y_min,$y_max);
         $data['yearTasks'] = $yearTasks;
         $data['session_userid'] = $this->userobj->userid;
         $data['session_role'] = $this->userobj->role;
@@ -366,11 +367,11 @@ class Grouptask extends Group_Controller {
     }
     
     // function to return the name of the selected group task
-    function getGroupTaskName() {
+    function get_group_task_name() {
       $task_name = 'No Group Task Selected';
 
       if(!empty($this->grouptask_id)) {
-        $array = $this->grouptask_model->getGroupTaskInformation($this->grouptask_id);
+        $array = $this->grouptask_model->get_group_task_information($this->grouptask_id);
         $task_name = $array['task_name'].' -- '.$array['year'];
       }
       return $task_name;
@@ -380,16 +381,16 @@ class Grouptask extends Group_Controller {
     *pry = previous year
     *chy = change year number
     */
-    function displayYearSelector() {
+    function display_year_selector() {
       $data['main_link'] = base_url().'group/grouptask';
-      $data['y'] = $this->getSelectedYear();
+      $data['y'] = $this->get_selected_year();
 
       $output = $this->load->view('group/grouptask/yearSelector',$data,TRUE);
       return $output;
     }
     
     // function to get the selected year
-    function getSelectedYear() {
+    function get_selected_year() {
       $pry = $this->input->get('pry');
       $chy = $this->input->get('chy');
       $sy = $this->input->get('sy');

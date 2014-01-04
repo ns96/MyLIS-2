@@ -1,8 +1,8 @@
 <?php
 if (!empty($file_id)){
-    $target_link = base_url().'group/file_folder/editfile';
+    $target_link = base_url().'group/file_folder/edit_file';
 } else {
-    $target_link = base_url().'group/file_folder/addfile';
+    $target_link = base_url().'group/file_folder/add_file';
 }
 
 if(isset($fileInfo['title'])) {

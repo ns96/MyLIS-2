@@ -12,40 +12,40 @@ class Message_model extends CI_Model {
     }
     
     // function to return the array containing the message
-    public function getMessage($message_id) {
+    public function get_message($message_id) {
 	$sql = "SELECT * FROM $this->table WHERE message_id=$message_id";
 	$records = $this->lisdb->query($sql)->result_array();
 
 	return $records[0];
     }
     
-    public function getSystemMessage($message_id){
+    public function get_system_message($message_id){
 	$sql = "SELECT * FROM lismessages WHERE message_id='$message_id'";
 	$messages = $this->lisdb->query($sql)->result_array();
 	return $messages[0];
     }
     
-    public function getUserMessages(){
+    public function get_user_messages(){
 	$sql = "SELECT * FROM $this->table ORDER BY message_id DESC";
 	$messages = $this->lisdb->query($sql)->result_array();
 
 	return $messages;
     }
     
-    public function getSystemMessages($account_id){
+    public function get_system_messages($account_id){
 	$sql = "SELECT * FROM lismessages WHERE account_ids='ALL' OR account_ids LIKE '%$account_id%'";
 	$messages = $this->lisdb->query($sql)->result_array();
 	return $messages;
     }
     
-    public function getAllSystemMessages(){
+    public function get_all_system_messages(){
 	// create the tables holding the current messages
 	$sql = "SELECT * FROM lismessages";
 	$messages = $this->lisdb->query($sql)->result_array();
 	return $messages;
     }
     
-    public function addMessage($data){
+    public function add_message($data){
     
 	$sql = "INSERT INTO $this->table VALUES('', '$data[date_time]','', '$data[message]', '$data[url]', '', '$data[userid]')";
 	$this->lisdb->query($sql);
@@ -59,12 +59,12 @@ class Message_model extends CI_Model {
 	}
     }
     
-    public function addSystemMessage($data){
+    public function add_system_message($data){
 	$sql = "INSERT INTO lismessages VALUES(' ', '$data[message_date]', '$data[post_start]', '$data[post_end]', '$data[account_ids]', '$data[message]', '$data[url]', '$data[manager]')";
 	$sql_result = $this->lisdb->query($sql);
     }
     
-    public function updateMessage($data){
+    public function update_message($data){
 
 	$sql = "UPDATE $this->table SET date = '$data[date_time]', message = '$data[message]', url = '$data[url]', userid='$data[userid]' WHERE message_id = '$data[message_id]'";
 	$this->lisdb->query($sql);
@@ -76,19 +76,19 @@ class Message_model extends CI_Model {
 	}
     }
     
-    public function updateSystemMessage($data){
+    public function update_system_message($data){
 	$sql = "UPDATE lismessages set account_ids='$data[account_ids]',post_start='$data[post_start]',post_end='$data[post_end]',
 	url='$data[url]', message='$data[message]' WHERE message_id = $data[message_id]";
 
 	$this->lisdb->query($sql);
     }
     
-    public function deleteMessage($id){
+    public function delete_message($id){
 	$sql = "DELETE FROM $this->table WHERE message_id = '$id'";
 	$this->lisdb->query($sql);
     }
     
-    public function deleteSystemMessage($id){
+    public function delete_system_message($id){
 	$sql = "DELETE FROM lismessages WHERE message_id='$id'";
 	$this->lisdb->query($sql);
 

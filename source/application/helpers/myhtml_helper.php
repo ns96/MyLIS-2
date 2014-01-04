@@ -61,12 +61,28 @@ function loadGroupMenu(){
 
     $menuHTML = '';
     // Add a 'Home' item 
-    $menuHTML .= "<li><a href='".$base."main'>Home Page<img src='".base_url()."images/icons/home.png' class='menu_image' /></a></li>";
+    if ($CI->uri->segment(2) == 'main'){
+	$classHTML = "class='active'";
+    } else {
+	$classHTML = "";
+    }
+    $menuHTML .= "<li $classHTML><a href='".$base."main'>Home Page<img src='".base_url()."images/icons/home.png' class='menu_image' /></a></li>";
     // Add menu items that are configured as visible 
     foreach($menu as $key => $menuItem){
 	if($CI->properties['show.'.$key] == 'yes' && viewLink($key,$role)) {
-	    if ($CI->uri->segment(2) == $menuItem['controller']) $classHTML = "class='active'";
-		else $classHTML = '';
+	    $part3 = $CI->uri->segment(3);
+	    if (!empty($part3)) {
+		$url_part = $CI->uri->segment(2).'/'.$CI->uri->segment(3);
+		if ($url_part == $menuItem['controller']) {
+		    $classHTML = "class='active'";
+		} else 
+		    $classHTML = '';
+	    } else {
+		if ($CI->uri->segment(2) == $menuItem['controller']) {
+		    $classHTML = "class='active'";
+		} else 
+		    $classHTML = '';
+	    }
 	    $menuHTML .= "<li $classHTML><a href='".$base.$menuItem['controller']."'>".$menuItem['title']."<img src='".$menuItem['icon']."' class='menu_image' /></a></li>";
 	}
     }
@@ -87,6 +103,11 @@ function loadAdminMenu(){
     $role = $CI->session->userdata('user')->role;
 
     $menu = array(
+	'home'	=>  array(
+		'controller'	=>  "main",
+		'title'		=>  'Home Page',
+		'icon'		=>  base_url().'images/icons/home.png',
+	),
 	'managedb'	=>  array(
 		'controller'	=>  "managedb",
 		'title'		=>  'Manage DB',
@@ -98,7 +119,7 @@ function loadAdminMenu(){
 		'icon'		=>  base_url().'images/icons/supplies.png',
 	),
 	'view'		=>  array(
-		'controller'	=>  "accounts",
+		'controller'	=>  "accounts/index",
 		'title'	    	=>  'View Accounts',
 		'icon'		=>  base_url().'images/icons/tube.png',
 	),
@@ -110,12 +131,12 @@ function loadAdminMenu(){
 	'test'	=>  array(
 		'controller'	=>  "accounts/create/test",
 		'title'		=>  'Add Test Account',
-		'icon'		=>  base_url().'images/icons/orders2.png',
+		'icon'		=>  base_url().'images/icons/demo.png',
 	),
 	'sandbox'	=>  array(
 		'controller'	=>  "accounts/create/sandbox",
 		'title'		=>  'Add Sandbox Account',
-		'icon'		=>  base_url().'images/icons/pdfs.png',
+		'icon'		=>  base_url().'images/icons/sandbox.png',
 	),
 	'messages'	=>  array(
 		'controller'	=>  "messages",
@@ -136,14 +157,20 @@ function loadAdminMenu(){
 
     $menuHTML = '';
     
-// Add a 'Home' item 
-    $menuHTML .= "<li><a href='".$base."main'>Home Page<img src='".base_url()."images/icons/home.png' class='menu_image' /></a></li>";
-    
     foreach($menu as $key => $menuItem){
-	if ($CI->uri->segment(2) == $menuItem['controller']) 
-	    $classHTML = "class='active'";
-	else 
-	    $classHTML = '';
+	$part3 = $CI->uri->segment(3);
+	if (!empty($part3)) {
+	    $url_part = $CI->uri->segment(2).'/'.$CI->uri->segment(3);
+	    if ($url_part == $menuItem['controller']) {
+		$classHTML = "class='active'";
+	    } else 
+		$classHTML = '';
+	} else {
+	    if ($CI->uri->segment(2) == $menuItem['controller']) {
+		$classHTML = "class='active'";
+	    } else 
+		$classHTML = '';
+	}
 	$menuHTML .= "<li $classHTML><a href='".$base.$menuItem['controller']."'>".$menuItem['title']."<img src='".$menuItem['icon']."' class='menu_image' /></a></li>";
     }
 

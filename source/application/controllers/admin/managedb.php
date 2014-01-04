@@ -49,20 +49,20 @@ class Managedb extends Admin_Controller {
 
 	// check to see if the dn doesn't already exist
 	if(isset($dbnames[$db]) && $tables == 'yes') {
-	    $this->createTables($db);
+	    $this->create_tables($db);
 	} else if(!isset($dbnames[$db])){ // create database
 	    $this->managedb_model->create_db($db);
 
 	    if($tables == 'yes') {
-		$this->createTables($db);
+		$this->create_tables($db);
 	    }
 	}
 	redirect('admin/managedb');
     }
     
     // function to add tables to the database
-    function createTables($db) {
-	$this->initializeTableNames();
+    function create_tables($db) {
+	$this->initialize_table_names();
 
 	if(strstr($db, 'LISMDB')) {
 	    $this->managedb_model->create_lismdb_tables($db);

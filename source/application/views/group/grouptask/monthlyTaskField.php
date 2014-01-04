@@ -32,7 +32,7 @@ if(!empty($item_info['note'])) {
 
 	<?
 	if($completed != 'YES') {
-	    $link = base_url()."group/grouptask/setTaskItemCompleted?item_id=$item_id";
+	    $link = base_url()."group/grouptask/set_task_item_completed?item_id=$item_id";
 	    echo '<a href ="'.$link.'" class="btn btn-success btn-mini" style="margin-left:10px">Mark as completed</a>';
 	    ?>
 		</div>

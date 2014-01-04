@@ -33,7 +33,7 @@
 		</td>
 	    </tr>
 	    <tr>
-		<td colspan="2">
+		<td colspan="2" style="text-align: center">
 		    <button type="submit" class="btn btn-primary btn-small">Add Web Link</button>
 		</td>
 	    </tr>

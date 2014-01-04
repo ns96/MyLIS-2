@@ -28,18 +28,18 @@ class Meetings extends Group_Controller {
 	    $year = date('Y');
 	} 
 	
-	$semesters = $this->getSemesters($year);
-	$default_semester = $this->getDefaultSemester();
-	$dates = $this->meeting_model->getGMDates($year);
+	$semesters = $this->get_semesters($year);
+	$default_semester = $this->get_default_semester();
+	$dates = $this->meeting_model->get_gm_dates($year);
 
 	// For each meeting date
 	foreach($dates as $gmdate_id => $gd){
-	    $allSlots[$gmdate_id] = $this->meeting_model->getDateSlots($gmdate_id);
+	    $allSlots[$gmdate_id] = $this->meeting_model->get_date_slots($gmdate_id);
 	    // For each slot of this date, get the file URL (if a file has been uploaded)
 	    foreach($allSlots[$gmdate_id] as $key => $singleSlot){
 		$fileid = $singleSlot['file_id'];
 		if (!empty($fileid)){
-		    $allSlots[$gmdate_id][$key]['fileURL'] = $this->filemanager->getFileURL($fileid);
+		    $allSlots[$gmdate_id][$key]['fileURL'] = $this->filemanager->get_file_url($fileid);
 		}
 	    }
 	}
@@ -49,7 +49,7 @@ class Meetings extends Group_Controller {
 	if(count($dates) > 0) {
 	    if($default_semester == 1) { // list dates for the entire year
 		foreach ($semesters as $semester_id => $name) {
-		    if($this->hasSemester($dates, $semester_id)) {
+		    if($this->has_semester($dates, $semester_id)) {
 			$data2['dates'] = $dates;
 			$data2['allSlots'] = $allSlots;
 			$data2['semester_id'] = $semester_id;
@@ -84,7 +84,7 @@ class Meetings extends Group_Controller {
 	    // If a slot id has been posted, we diplay an 'Edit Slot' form
 	    // instead of an 'Add Slot' form
 	    if(!empty($slot_id)) {
-		$slot_info = $this->meeting_model->getSlotInfo($slot_id);
+		$slot_info = $this->meeting_model->get_slot_info($slot_id);
 		$title = 'Update Slot';
 	    } else {
 		$slot_info = array();
@@ -103,17 +103,17 @@ class Meetings extends Group_Controller {
 	// instead of an 'Add Date' form
 	$gmdate_id = $this->input->get('gmdate_id');
 	if(!empty($gmdate_id)) {
-	    $gmdate_info = $this->meeting_model->getGMDate($gmdate_id);
+	    $gmdate_info = $this->meeting_model->get_gm_date($gmdate_id);
 	    $title = 'Update';
 	    $date = dateToLIS($gmdate_info['gmdate']);
 	    $time = $gmdate_info['gmtime'];
-	    $target_link = base_url()."group/meetings/updateDate";
+	    $target_link = base_url()."group/meetings/update_date";
 	} else {
 	    $gmdate_info = array();
 	    $date = 'MM/DD/'.$year;
 	    $time = '';
 	    $title = 'Add';
-	    $target_link = base_url()."group/meetings/addDate";
+	    $target_link = base_url()."group/meetings/add_date";
 	}
 	$data4['gmdate_id'] = $gmdate_id;
 	$data4['date'] = $date;
@@ -137,7 +137,7 @@ class Meetings extends Group_Controller {
 	$this->load_view('group/meetings/main',$data);
     }
     
-    public function editSlot(){
+    public function edit_slot(){
 	if (isset($_POST['edit_slot_form'])){
 	    $this->load->model('meeting_model');
 	    $userid = $this->userobj->userid;
@@ -150,12 +150,12 @@ class Meetings extends Group_Controller {
 	    $data['file_id']	= ''; // blank on purpose
 	    $data['modify_date'] = getLISDate();
 
-	    $this->meeting_model->updateSlot($data);
+	    $this->meeting_model->update_slot($data);
 	}
 	redirect('group/meetings');
     }
     
-    public function addSlot(){
+    public function add_slot(){
 	if (isset($_POST['add_slot_form'])){
 	    $this->load->model('meeting_model');
 	    $userid = $this->userobj->userid;
@@ -168,29 +168,29 @@ class Meetings extends Group_Controller {
 	    $data['file_id']	 = ''; // blank on purpose
 	    $data['modify_date'] = getLISDate();
 
-	    $this->meeting_model->addSlot($data);
+	    $this->meeting_model->add_slot($data);
 	}
 	redirect('group/meetings');
     }
     
-    public function deleteSlot(){
+    public function delete_slot(){
 	$this->load->model('meeting_model');
 	$slot_id = $this->input->get('slot_id');
     
 	if(!empty($slot_id)) {
-	    $slot_info = $this->meeting_model->getSlotInfo($slot_id);
+	    $slot_info = $this->meeting_model->get_slot_info($slot_id);
 	    // delete any file
 	    $file_id = $slot_info['file_id'];
 	    if(!empty($file_id)) {
-		$this->filemanager->deleteFile($file_id);
+		$this->filemanager->delete_file($file_id);
 	    }
-	    $this->meeting_model->deleteSlot($slot_id);
+	    $this->meeting_model->delete_slot($slot_id);
 	}
 
 	redirect('group/meetings');
     }
     
-    public function addDate(){
+    public function add_date(){
 	$this->load->model('meeting_model');
 	
 	$data['userid'] = $this->userobj->userid;
@@ -198,12 +198,12 @@ class Meetings extends Group_Controller {
 	$data['gmtime'] = $this->input->post('gmtime');
 	$data['semester_id'] = $this->input->post('semester_id');
 
-	$this->meeting_model->addDate();
+	$this->meeting_model->add_date();
 	
 	redirect('group/meetings');
     }
     
-    public function updateDate(){
+    public function update_date(){
 	$this->load->model('meeting_model');
 	
 	$data['userid'] = $this->userobj->userid;
@@ -212,39 +212,39 @@ class Meetings extends Group_Controller {
 	$data['gmtime'] = $this->input->post('gmtime');
 	$data['semester_id'] = $this->input->post('semester_id');
 
-	$this->meeting_model->updateDate();
+	$this->meeting_model->update_date();
 	
 	redirect('group/meetings');
     }
     
-    public function deleteDate(){
+    public function delete_date(){
 	$userid = $this->userobj->userid;
 	$role = $this->userobj->role;
 	$gmdate_id = $this->input->get('gmdate_id');
 
 	$this->load->model('meeting_model');
-	$this->meeting_model->deleteDate($gmdate_id);
+	$this->meeting_model->delete_date($gmdate_id);
 
 	redirect('group/meetings');
     }
     
-    public function addFile(){
+    public function add_file(){
 	if (isset($_POST['add_slotfile_form'])){
 	    $slot_id = $this->input->post('slot_id');
 	    $file_id = $this->input->post('file_id');
 	    $modify_date = getLISDate();
 
 	    if(empty($file_id)) { // add a new entry
-		$file_id = $this->filemanager->uploadFile(1, $this->s_table, $slot_id);
+		$file_id = $this->filemanager->upload_file(1, $this->s_table, $slot_id);
 	    } else { // update an existing file
-		$this->filemanager->updateFile(1, $file_id);
+		$this->filemanager->update_file(1, $file_id);
 	    }
 
 	    $this->load->model('meeting_model');
 	    $data['file_id'] = $file_id;
 	    $data['modify_date'] = $modify_date;
 	    $data['slot_id'] = $slot_id;
-	    $this->meeting_model->updateSlotFile($data);
+	    $this->meeting_model->update_slot_file($data);
 
 	    redirect('group/meetings');
 	} else {
@@ -262,22 +262,22 @@ class Meetings extends Group_Controller {
 	}
     }
     
-    public function deleteFile(){
+    public function delete_file(){
 
 	$file_id = $this->input->get('file_id');
 
 	$this->load->model('meeting_model');
 	$data['modify_date'] = getLISDate();
 	$data['slot_id'] = $this->input->get('slot_id');
-	$this->meeting_model->deleteSlotFile($data);
+	$this->meeting_model->delete_slot_file($data);
 
-	$this->filemanager->deleteFile($file_id);
+	$this->filemanager->delete_file($file_id);
 
 	redirect('group/meetings');
     }
     
     // functon to return a list of semesters
-    function getSemesters($year) {
+    function get_semesters($year) {
 	$semesters = array(
 	    '1' => 'Year '.$year,
 	    '2' => 'Winter Semester',
@@ -289,12 +289,12 @@ class Meetings extends Group_Controller {
   }
   
     // function to return the default semester ID
-    function getDefaultSemester() {
+    function get_default_semester() {
 	$semester_id = $this->input->get('semester_id');
 
 	$ds = $this->input->get('default_semester');
 	if(!empty($ds)) { // see whether to set the default semester
-	    $this->setDefaultSemester($ds);
+	    $this->set_default_semester($ds);
 	    return $ds;
 	}
 
@@ -309,7 +309,7 @@ class Meetings extends Group_Controller {
 	    $this->load->model('proputil_model');
 	    $this->proputil_model->initialize($params);
 
-	    $semester_id = $this->proputil_model->getProperty('default.semester');
+	    $semester_id = $this->proputil_model->get_property('default.semester');
 	    if(empty($semester_id)) {
 		$semester_id = 1; // set default to display all
 	    }
@@ -318,7 +318,7 @@ class Meetings extends Group_Controller {
     }
 
     // function to check if the list of dates contans the particular semester
-    function hasSemester($dates, $semester_id) {
+    function has_semester($dates, $semester_id) {
 	$hasit = false;
 	foreach ($dates as $gmdate_id => $gd) {
 	    if($semester_id == $gd->semester_id) {
@@ -330,7 +330,7 @@ class Meetings extends Group_Controller {
     }
   
     // function to set the default semester
-    function setDefaultSemester() {
+    function set_default_semester() {
 	$semester_id = $this->input->get('default_semester');
 	
 	// Setup paramaters for initializing models below
@@ -341,6 +341,6 @@ class Meetings extends Group_Controller {
 	$this->load->model('proputil_model');
 	$this->proputil_model->initialize($params);
 
-	$this->proputil_model->storeProperty('default.semester', $semester_id);
+	$this->proputil_model->store_property('default.semester', $semester_id);
     }
 }

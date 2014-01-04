@@ -4,9 +4,9 @@ $count = count($items);
 if($count < 1) {
     echo 'No Entries Found ...';
 } else {
-    $location_link = base_url()."group/chemicals/listLocations";
+    $location_link = base_url()."group/chemicals/list_locations";
 
-    echo '<form enctype="multipart/form-data" action="'.base_url().'group/chemicals/bulkActions/" method="POST">';
+    echo '<form enctype="multipart/form-data" action="'.base_url().'group/chemicals/bulk_actions/" method="POST">';
     echo '<input type="hidden" name="listing_form" value="posted">';
     echo '<table id="chem_table" class="table table-condensed table-bordered"><thead>';
 

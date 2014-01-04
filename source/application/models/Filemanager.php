@@ -24,7 +24,7 @@ class Filemanager extends CI_Model {
   }
   
   // function to display the upload. number is used if multiple file browse are used
-  function getFileUploadField($field_id) {
+  function get_file_upload_field($field_id) {
     $html = 'Select Type :
     <select name="filetype_'.$field_id.'">
     <option value="none">No File</option>
@@ -46,7 +46,7 @@ class Filemanager extends CI_Model {
   
   // function to display the upload form with the option of url upload. 
   // number is used if multiple file browse are used
-  function getURLFileUploadField($field_id) {
+  function get_url_file_upload_field($field_id) {
     $html = 'Select Type :
     <select name="filetype_'.$field_id.'" class="input-smallmedium">
     <option value="none">No File</option>
@@ -71,7 +71,7 @@ class Filemanager extends CI_Model {
   }
   
   // function to get plane file upload with only two choices
-   function getPlainURLFileUploadField($field_id) {
+   function get_plain_url_file_upload_field($field_id) {
      $html = 'Select Type :
      <select name="filetype_'.$field_id.'">
      <option value="other">File</option>
@@ -84,7 +84,7 @@ class Filemanager extends CI_Model {
    }
   
   // function to add to the main table
-  function uploadFile($field_id, $table_name, $table_id) {
+  function upload_file($field_id, $table_name, $table_id) {
     
     // check to see if there is storage space avialable
     if(!$this->hasSpace()) {
@@ -105,7 +105,7 @@ class Filemanager extends CI_Model {
     if(is_uploaded_file($tmp_name)) {
       $ext = '';
       if($file_type == 'other') {
-        $ext = $this->getFileType($filename);
+        $ext = $this->get_file_type($filename);
         $file_type = $ext;
       }
       else {
@@ -132,7 +132,7 @@ class Filemanager extends CI_Model {
   }
   
   // function to update a file
-  function updateFile($field_id, $file_id) {
+  function update_file($field_id, $file_id) {
     global $conn;
     
     // check to see if there is storage space avialable
@@ -155,7 +155,7 @@ class Filemanager extends CI_Model {
       
       $ext = '';
       if($file_type == 'other') {
-        $ext = $this->getFileType($filename);
+        $ext = $this->get_file_type($filename);
         $file_type = $ext;
       }
       else {
@@ -181,8 +181,8 @@ class Filemanager extends CI_Model {
   }
   
   // function to delete a file
-  function deleteFile($file_id) {
-    $file_info = $this->getFileInfo($file_id);
+  function delete_file($file_id) {
+    $file_info = $this->get_file_info($file_id);
     
     if($file_info['type'] != 'url') {
 	$fullname = $this->file_directory.'file_'.$file_id.'.'.$file_info['type'];
@@ -198,8 +198,8 @@ class Filemanager extends CI_Model {
   }
   
   // function to just delete the file and not the database entry
-  function deleteFileOnly($file_id) {
-    $file_info = $this->getFileInfo($file_id);
+  function delete_file_only($file_id) {
+    $file_info = $this->get_file_info($file_id);
     $fullname = $this->file_directory.'file_'.$file_id.'.'.$file_info['type'];
     if(file_exists($fullname)) {
       unlink($fullname); //or die ("Coudn't delete file ...");
@@ -207,8 +207,8 @@ class Filemanager extends CI_Model {
   }
   
   // function to return the file url
-  function getFileURL($file_id) {
-    $file_info = $this->getFileInfo($file_id);
+  function get_file_url($file_id) {
+    $file_info = $this->get_file_info($file_id);
     $file_url = '';
     if($file_info['type'] == 'url') {
       $file_url = $file_info['url'];
@@ -220,7 +220,7 @@ class Filemanager extends CI_Model {
   }
   
   // fuction to return a file info from the files table
-  function getFileInfo($file_id) {
+  function get_file_info($file_id) {
     $lisdb = $this->load->database('lisdb',TRUE);
     $sql = "SELECT * FROM $this->table WHERE file_id=$file_id";
     $lisdb->where('file_id',$file_id);
@@ -230,7 +230,7 @@ class Filemanager extends CI_Model {
   }
   
   // function to get the file extention aka file type
-  function getFileType($filename) {
+  function get_file_type($filename) {
     $filetype = "txt"; // default is just .txt
     $sp = strrpos($filename, ".");
     if($sp !== false) {
@@ -240,7 +240,7 @@ class Filemanager extends CI_Model {
   }
   
   // function to return space usage
-  function getFileSpaceUsage() {
+  function get_file_space_usage() {
     
     $lisdb = $this->load->database('lisdb',TRUE);
     $sql = "SELECT size, SUM(size) AS Total FROM $this->table";
@@ -250,9 +250,9 @@ class Filemanager extends CI_Model {
   }
   
   // function to check to see if there is more file storage space
-  function hasSpace() {
+  function has_space() {
     $quota = $this->properties['storage.quota']*1048576; // convert to bytes
-    $usage = $this->getFileSpaceUsage();
+    $usage = $this->get_file_space_usage();
     if($usage < $quota) {
       return true;
     }
@@ -262,17 +262,17 @@ class Filemanager extends CI_Model {
   }
   
   // function to return the quota usage text
-  function getStorageQuotaText() {
+  function get_storage_quota_text() {
     // now dislay the file usage information
-    $usage = round($this->getFileSpaceUsage()/1048576, 2);
+    $usage = round($this->get_file_space_usage()/1048576, 2);
     $quota = $this->properties['storage.quota'];
     $per = round(($usage/$quota)*100);
     
     return 'Using '.$usage.'MB ('.$per.'%) of '.$quota.'MB file storage space ...';
   }
   
-  function getQuotaUsage(){
-    $usage = round($this->getFileSpaceUsage()/1048576, 2);
+  function get_quota_usage(){
+    $usage = round($this->get_file_space_usage()/1048576, 2);
     $total = $this->properties['storage.quota'];
     $quota['used'] = $usage;
     $quota['total'] = $total;
@@ -280,7 +280,7 @@ class Filemanager extends CI_Model {
   }
   
   // function to update the initiation file
-  function modifyInitiationFile($new_props) {
+  function modify_initiation_file($new_props) {
     foreach ($this->properties as $key => $value) {
       if(isset($new_props[$key])) {
         $this->properties[$key] = $new_props[$key];
@@ -290,13 +290,13 @@ class Filemanager extends CI_Model {
   }
   
   // function to write out the initiation file
-  function writeInitiationFile($newProperties) {
+  function write_initiation_file($newProperties) {
     $init_file = $this->home_dir.'conf/lis.ini';
     
     $fp = fopen($init_file, "w") or die("Couldn't open $init_file");
     
     foreach ($newProperties as $key => $value) {
-      if(!empty($key) && $this->saveKey($key)) {
+      if(!empty($key) && $this->save_key($key)) {
         $text = $key.'='."$value\n";
         fwrite($fp, $text);
       }
@@ -306,7 +306,7 @@ class Filemanager extends CI_Model {
   }
   
   // function to see if to save a certain key
-  function saveKey($key) {
+  function save_key($key) {
     $savekey = true;
     
     if(strstr($key, 'database')) { // don't save any database info
@@ -326,7 +326,7 @@ class Filemanager extends CI_Model {
   }
   
   // function to get the files in the pulgin directory
-  function loadPluginFiles() {
+  function load_plugin_files() {
     if(!is_dir($this->plugin_directory)) {  // no plugin directory so just return
       return;
     }

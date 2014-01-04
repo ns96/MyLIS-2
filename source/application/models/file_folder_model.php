@@ -13,7 +13,7 @@ class File_folder_model extends CI_Model {
         $this->c_table = $this->session->userdata('group').'_categories';
     }
     
-    public function getCategories($type){
+    public function get_categories($type){
         $categories = array();
 
         if($type == 'filing') { // add a filing category
@@ -34,13 +34,13 @@ class File_folder_model extends CI_Model {
     }
     
     // function to add a new category to the category db
-    function addCategory($type, $category, $userid) {
+    function add_category($type, $category, $userid) {
       $sql = "INSERT INTO $this->c_table VALUES('', '$this->table','$type', '$category', '$userid')";
       $this->lisdb->query($sql);
       return $this->lisdb->insert_id();
     }
     
-    public function getLinks($cat_id,$myfiles=null,$userid=null){
+    public function get_links($cat_id,$myfiles=null,$userid=null){
         if($myfiles == 'yes') {
           $sql = "SELECT * FROM $this->table WHERE (category_id='$cat_id' AND userid='$userid')";
         }
@@ -52,23 +52,23 @@ class File_folder_model extends CI_Model {
     }
     
     // function to get a file
-    public function getFile($file_id) {
+    public function get_file($file_id) {
       $sql = "SELECT * FROM $this->table WHERE file_id='$file_id'";
       $records = $this->lisdb->query($sql)->result_array();
       return $records[0];
     }
     
-    public function deleteFile($file_id){
+    public function delete_file($file_id){
         $sql = "DELETE FROM $this->table WHERE file_id = '$file_id'";
         $this->lisdb->query($sql);
     }
     
-    public function addFile($data){
+    public function add_file($data){
         $sql = "INSERT INTO $this->table VALUES('$data[file_id]', '$data[title]', '$data[cat_id]', '$data[userid]')";
         $this->lisdb->query($sql);
     }
     
-    public function updateFile($title,$cat_id,$file_id){
+    public function update_file($title,$cat_id,$file_id){
         $sql = "UPDATE $this->table SET title = '$title', category_id = '$cat_id' WHERE file_id = '$file_id'";
         $this->lisdb->query($sql);
     }

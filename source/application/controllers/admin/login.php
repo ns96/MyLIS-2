@@ -21,10 +21,10 @@ class Login extends Admin_Controller {
 	}
 	
 	// Validates the user's credentials
-	private function validateUser($userid, $password) {
+	private function validate_user($userid, $password) {
 	    
 	    // Load the array with administrators
-	    $users = $this->loadUsers();
+	    $users = $this->load_users();
 
 	    // Check if this userid is in the array
 	    if((isset($users[$userid]))&&($users[$userid]->password == $password)) {
@@ -49,9 +49,9 @@ class Login extends Admin_Controller {
 		
 		// If username and password are not empty
 		if(!empty($userid) && !empty($password)) {
-		    $user = $this->validateUser($userid, $password);
+		    $user = $this->validate_user($userid, $password);
 		    if(empty($user)) {
-			$this->load_view('errors/admin_login_failed');
+			$this->load->view('errors/admin_login_failed');
 		    } else {
 			// If credentials are valid set the session variables
 			// and redirect to main admin page
@@ -66,9 +66,9 @@ class Login extends Admin_Controller {
 		    }
 		} else { // if the 'logintry' field has been posted then someone entered empty username/password
 		    if(!empty($logintry)) {
-			$this->load_view('errors/admin_login_failed');
+			$this->load->view('errors/admin_login_failed');
 		    } else { // else the session has been timed out
-			$this->load_view('errors/session_timeout');
+			$this->load->view('errors/session_timeout');
 		    }
 		}
 	    } else {

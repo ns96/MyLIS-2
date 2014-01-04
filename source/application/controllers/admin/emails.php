@@ -40,14 +40,14 @@ class Emails extends Admin_Controller {
 		    $total += $email_count;
 		    //echo "Found $email_count Emails on line $lc for $institution<br>";
 
-		    $this->getEmails($institution, $people);
+		    $this->get_emails($institution, $people);
 		}
 	    }
 
 	    fclose($fp); // close the file now
 	    //
 	    // save the emails to the file
-	    $text = $this->writeEmailsToFile();
+	    $text = $this->write_emails_to_file();
 	    
 	    $data['page_title'] = 'Imported E-mail List';
 	    $data['total'] = $total;
@@ -62,7 +62,7 @@ class Emails extends Admin_Controller {
     }
     
     // function to get the emails for an institution
-    function getEmails($institution, $people) {
+    function get_emails($institution, $people) {
 	$sa  = explode(";", $people);
 	$emails = array();
 
@@ -94,7 +94,7 @@ class Emails extends Admin_Controller {
     }
     
     // function to print our results
-    function writeEmailsToFile() {
+    function write_emails_to_file() {
 	$text = '';
 	$fh = fopen($this->filename, 'w') or die("can't open file");
 

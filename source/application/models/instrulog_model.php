@@ -13,19 +13,19 @@ class Instrulog_model extends CI_Model {
 	$this->r_table = $this->session->userdata('group')."_reservations";
     }
 
-    public function getInstruments(){
+    public function get_instruments(){
 	$sql = "SELECT * FROM $this->table";
 	$records = $this->lisdb->query($sql)->result_array();
 	return $records;
     }
     
-    public function getInstrument($id){
+    public function get_instrument($id){
 	$sql = "SELECT * FROM $this->table WHERE instrulog_id = $id";
 	$records = $this->lisdb->query($sql)->result_array();
 	return $records[0];
     }
     
-    public function getReservations($s_date,$instrument_id){
+    public function get_reservations($s_date,$instrument_id){
     
 	$reservations = array();
 
@@ -44,22 +44,22 @@ class Instrulog_model extends CI_Model {
 	return $reservations;
     }
  
-    public function addReservation($data){
+    public function add_reservation($data){
 	$sql = "INSERT INTO $this->r_table VALUES('', 'instrument', '$data[instrument_id]', '$data[date]', '$data[i]', '0', '$data[note]','$data[userid]')";
 	$this->lisdb->query($sql);
     }
     
-    public function updateReservation($data){
+    public function update_reservation($data){
 	$sql = "UPDATE $this->r_table SET note = '$data[note]' WHERE reservation_id = '$data[reservation_id]'";
 	$this->lisdb->query($sql);
     }
     
-    public function deleteReservation($id){
+    public function delete_reservation($id){
 	$sql = "DELETE FROM $this->r_table WHERE reservation_id = '$id'";
 	$this->lisdb->query($sql);
     }
     
-    public function deleteInstrument($id){
+    public function delete_instrument($id){
 	$sql = "DELETE FROM $this->table WHERE instrulog_id = '$id'";
 	$this->lisdb->query($sql);
 
@@ -68,7 +68,7 @@ class Instrulog_model extends CI_Model {
 	$this->lisdb->query($sql);
     }
  
-    public function addInstrument($data){
+    public function add_instrument($data){
 	$sql = "INSERT INTO $this->table VALUES('', '$data[instrument]', '$data[manager_id]', '$data[file_ids]', '$data[notes]', '$data[userid]')";
 	$this->lisdb->query($sql);
 	return $this->lisdb->insert_id();

@@ -41,7 +41,7 @@ class Managedb_model extends CI_Model {
     }
     
     public function create_lisdb_tables($db){
-	$this->initializeTableNames();
+	$this->initialize_table_names();
 	$aname = 'test_';  // account name that is appended to the table
 	foreach ($this->lis_tables as $key => $value) {
 	    if($key != 'lismessages') {
@@ -53,21 +53,21 @@ class Managedb_model extends CI_Model {
     }
     
     public function create_lismdb_tables($db){
-	$this->initializeTableNames();
+	$this->initialize_table_names();
 	foreach ($this->lism_tables as $key => $value) {
 	    $this->create_table(1,$db,$key,$value);
 	}
     }
     
     public function create_lispdb_tables($db){
-	$this->initializeTableNames();
+	$this->initialize_table_names();
 	foreach ($this->lisp_tables as $key => $value) {
 	    $this->create_table(1,$db,$key,$value);
 	}
     }
     
     public function create_lissdb_tables($db){
-	$this->initializeTableNames();
+	$this->initialize_table_names();
 	foreach ($this->liss_tables as $key => $value) {
 	    $this->create_table(1,$db,$key,$value);
 	}
@@ -108,7 +108,7 @@ class Managedb_model extends CI_Model {
     }
     
     // function to return a property for a particular account. usefull for getting a variable before account is deleted
-    function getMyLISProperty($account_id, $key_id) {
+    function get_MyLIS_property($account_id, $key_id) {
 	$table = $account_id.'_properties';
 	$sql = "SELECT value FROM $table WHERE key_id = '$key_id'";
 	$records = $this->lisdb->query($sql)->result_array();
@@ -117,8 +117,8 @@ class Managedb_model extends CI_Model {
     }
     
     // function to create the tables for a particular account
-    function createMyLISTables($account_id) {
-	$this->initializeTableNames();
+    function create_MyLIS_tables($account_id) {
+	$this->initialize_table_names();
 
 	foreach ($this->lis_tables as $key => $value) {
 	    if($key != 'lismessages') {
@@ -129,7 +129,7 @@ class Managedb_model extends CI_Model {
     }
     
     // function to initialize the table names
-    function initializeTableNames() {
+    function initialize_table_names() {
 	// the lis administrator tables
 	$this->lism_tables = array(
 	'accounts' =>

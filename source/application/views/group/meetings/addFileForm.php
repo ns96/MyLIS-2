@@ -1,6 +1,6 @@
 <?php
 $cancel_link = base_url()."group/meetings";
-$target_link = base_url()."group/meetings/addFile";
+$target_link = base_url()."group/meetings/add_file";
 ?>
 
 <div class="formWrapper">

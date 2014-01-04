@@ -14,7 +14,7 @@ class Weblinks_model extends CI_Model {
     }
     
     // Retrieve info about a weblink
-    public function getWeblink($link_id){
+    public function get_weblink($link_id){
 	$sql = "SELECT * FROM $this->web_table WHERE link_id='$link_id'";
 	$records = $this->lisdb->query($sql)->result_array();
 
@@ -22,21 +22,21 @@ class Weblinks_model extends CI_Model {
     }
     
     // Get all the group's weblinks that belong to a certain category
-    public function getCategoryWeblinks($cat_id){
+    public function get_category_weblinks($cat_id){
 	$sql = "SELECT * FROM $this->web_table WHERE category_id='$cat_id'";
 	$records = $this->lisdb->query($sql)->result_array();
 	return $records;
     }
     
     // Get all the PI's weblinks that belong to a certain category
-    public function getCategoryMyWeblinks($cat_id,$userid){
+    public function get_category_my_weblinks($cat_id,$userid){
 	$sql = "SELECT * FROM $this->web_table WHERE (category_id='$cat_id' AND userid='$userid')";
 	$records = $this->lisdb->query($sql)->result_array();
 	return $records;
     }
     
     // Get a list of all the weblink categories of the group
-    public function getCategories(){
+    public function get_categories(){
 	$categories = array();
 	$categories['cat_-1'] = 'Unfiled';
 
@@ -61,7 +61,7 @@ class Weblinks_model extends CI_Model {
     }
     
     // Add a new weblink category for the group
-    public function addCategory($name,$userid){
+    public function add_category($name,$userid){
 	$userid = $this->user->userid;
     
 	$sql = "INSERT INTO $this->cat_table VALUES('', '$this->web_table','link', '$name', '$userid')";

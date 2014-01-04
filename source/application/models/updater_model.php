@@ -10,7 +10,7 @@ class Updater_model extends CI_Model {
     }
     
     // function to actually upgrade the 
-    function updateAccount($account_id) {
+    function update_account($account_id) {
 	$output = '';
 	$output .= "Updating <b>$account_id </b><br>";
 	//$this->upgradeTo_1_1($account_id);

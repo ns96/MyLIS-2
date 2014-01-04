@@ -16,16 +16,16 @@ class Managefiles extends Admin_Controller {
 	if(isset($_GET['message'])) {
 	    $data['message'] = $this->input->get('message');
 	}
-	$data['fileList'] = $this->admin_filemanager->getFileList();
-	$data['trashList'] = $this->admin_filemanager->getTrashFiles();
+	$data['fileList'] = $this->admin_filemanager->get_file_list();
+	$data['trashList'] = $this->admin_filemanager->get_trash_files();
 	
 	$this->load_view('admin/managefiles/main',$data);
     }
     
     public function view_log(){
 	$data['page_title'] = 'Code Manager Log';
-	$userList = $this->loadUsers();
-	$logs = $this->admin_filemanager->getLogs();
+	$userList = $this->load_users();
+	$logs = $this->admin_filemanager->get_logs();
 	foreach($logs as $key => $log) {
 	    $logs[$key]['manager'] = $userList[$log['manager_id']];
 	}
@@ -54,11 +54,11 @@ class Managefiles extends Admin_Controller {
 	$notes = $this->input->post('notes');
 
 	// get the accounts that should be update
-	$account_ids = $this->getAccountIDs();
+	$account_ids = $this->get_account_ids();
 
 	// get the modules that should be updated
 	if(!empty($all)) {
-	    $files = $this->getAllFiles();
+	    $files = $this->get_all_files();
 	} else if(count($files) == 0) {
 	    $data['page_title'] = 'Error!';
 	    $data['error'] = "Error, No Files Selected...";
@@ -84,7 +84,7 @@ class Managefiles extends Admin_Controller {
 	}
 	
 	$manager_id = $this->userobj->userid;
-	$this->admin_filemanager->addLog($account_ids, $files, 'files', $notes,$manager_id);
+	$this->admin_filemanager->add_log($account_ids, $files, 'files', $notes,$manager_id);
 
 	// redirect to the main page
 	$message = 'All Accounts Updated...';
@@ -97,7 +97,7 @@ class Managefiles extends Admin_Controller {
 	$files = $this->input->post('files');
 
 	if(!empty($all)) {
-	    $files = $this->getAllTrashFiles();
+	    $files = $this->get_all_trash_files();
 	}
 	else if(count($files) == 0) {
 	    $data['page_title'] = 'Error!';
@@ -110,7 +110,7 @@ class Managefiles extends Admin_Controller {
 	    $full_name = $this->trash_dir.$file;
 
 	    if(is_dir($full_name)) {
-		$this->admin_filemanager->delDir($full_name);
+		$this->admin_filemanager->del_dir($full_name);
 	    }
 	    else {
 		unlink($full_name);
@@ -121,12 +121,12 @@ class Managefiles extends Admin_Controller {
     }
    
     // get the accounts that should be updated
-    function getAccountIDs() {
+    function get_account_ids() {
 	$accounts = $this->input->post('accounts');
 	$account_ids = array();
 
 	if($accounts == 'ALL') {
-	    $idList = $this->admin_filemanager->getAccountIDs();
+	    $idList = $this->admin_filemanager->get_account_ids();
 
 	    if(count($idList) > 0) {
 		foreach($idList as $array) {
@@ -145,8 +145,8 @@ class Managefiles extends Admin_Controller {
     
     // Method to get the names of the files
     /* Must figure what this does?*/
-    function getAllFiles() {
-	$f_list = $this->admin_filemanager->getFileList();
+    function get_all_files() {
+	$f_list = $this->admin_filemanager->get_file_list();
 	$files = array();
 	foreach($f_list as $file) {
 	    $sa  = explode(';', $file);
@@ -157,8 +157,8 @@ class Managefiles extends Admin_Controller {
     }
     
     // function to get all trash files
-    function getAllTrashFiles() {
-	$f_list = $this->admin_filemanager->getTrashFiles();
+    function get_all_trash_files() {
+	$f_list = $this->admin_filemanager->get_trash_files();
 
 	$files = array();
 	foreach($f_list as $file) {

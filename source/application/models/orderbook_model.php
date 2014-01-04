@@ -44,7 +44,7 @@ class Orderbook_model extends CI_Model {
         }
         
         $sql_result1 = $this->lisdb->query($sql1)->result_array();
-        $toReturn['ordersData'] = $this->getOrdersArray($sql_result1);
+        $toReturn['ordersData'] = $this->get_orders_array($sql_result1);
 
         $sql_result2 = $this->lisdb->query($sql2)->result_array();
         $toReturn['items'] = $this->getItemsArray($sql_result2);
@@ -52,26 +52,26 @@ class Orderbook_model extends CI_Model {
         return $toReturn;
     }
     
-    public function addOrder($data){
+    public function add_order($data){
         $sql = "INSERT INTO $this->o_table VALUES('', '$data[company]', '$data[ponum]', '$data[conum]', '$data[priority]', 
             '$data[account]', '$data[order_date]', '$data[status]', '$data[status_date]', '0.00', '0.00', '$data[s_expense]', '0.00', '$data[notes]', '$data[owner]', '$data[user_id]', '$data[maxitems]')";
         $this->lisdb->query($sql);
         return $this->lisdb->insert_id();
     }
     
-    public function addOrderItem($data){
+    public function add_order_item($data){
         $sql = "INSERT INTO $this->i_table VALUES('', '$data[order_id]', '$data[stock_id]', '$data[i]', '$data[type]', '$data[company]', '$data[product]', 
             '$data[description]', '$data[amount]', '$data[units]', '$data[price]', '$data[status]', '$data[status_date]', '$data[owner]', '$data[user_id]')";
         $this->lisdb->query($sql);
     }
     
-    public function updateOrderKeepUser($data){
+    public function update_order_keep_user($data){
         $sql = "UPDATE $this->o_table SET company='$data[company]', ponum='$data[ponum]', conum='$data[conum]', priority='$data[priority]', account='$data[account]', 
             status='$data[status]', status_date='$data[status_date]', s_expense='$data[s_expense]', notes='$data[notes]' WHERE order_id='$data[order_id]'";
         $this->lisdb->query($sql);
     }
     
-    public function updateOrderChangeUser($data){
+    public function update_order_change_user($data){
         $sql = "UPDATE $this->o_table SET company='$data[company]', ponum='$data[ponum]', conum='$data[conum]', priority='$data[priority]', account='$data[account]', 
           status='$data[status]', status_date='$data[status_date]', s_expense='$data[s_expense]', notes='$data[notes]', userid='$data[user_id]'";
         if (isset($data['maxitems'])){
@@ -81,55 +81,55 @@ class Orderbook_model extends CI_Model {
         $this->lisdb->query($sql);
     }
     
-    public function updateOrderItemKeepUser($data){
+    public function update_order_item_keep_user($data){
         $sql = "UPDATE $this->i_table SET type = '$data[type]', company='$data[company]', product_id='$data[product]', description='$data[description]', amount='$data[amount]', units='$data[units]', 
             price='$data[price]', status='$data[status]', status_date='$data[status_date]', owner='$data[owner]' WHERE (order_id='$data[order_id]' AND item_num='$data[i]')";
         $this->lisdb->query($sql);
     }
     
-    public function updateOrderItemChangeUser($data){
+    public function update_order_item_change_user($data){
         $sql = "UPDATE $this->i_table SET type = '$data[type]', company='$data[company]', product_id='$data[product]', description='$data[description]', amount='$data[amount]', units='$data[units]', 
             price='$data[price]', status='$data[status]', status_date='$data[status_date]', owner='$data[owner]', userid='$data[user_id]' WHERE (order_id='$data[order_id]' AND item_num='$data[i]')";
         $this->lisdb->query($sql);
     }
     
-    public function updateOrderTotals($g_expense,$p_expense,$order_id){
+    public function update_order_totals($g_expense,$p_expense,$order_id){
         $sql = "UPDATE $this->o_table SET g_expense='$g_expense', p_expense='$p_expense' WHERE order_id='$order_id'";
         $this->lisdb->query($sql);
     }
     
-    public function updateItemStatus($status,$status_date,$order_id,$i){
+    public function update_item_status($status,$status_date,$order_id,$i){
         $sql = "UPDATE $this->i_table SET status='$status', status_date='$status_date' WHERE (order_id='$order_id' AND item_num='$i')";
         $this->lisdb->query($sql);
     }
     
-    public function removeOrder($order_id){
+    public function remove_order($order_id){
         $sql = "DELETE FROM $this->o_table WHERE order_id='$order_id'";
         $this->lisdb->query($sql);
     }
     
-    public function removeOrderItems($order_id){
+    public function remove_order_items($order_id){
         $sql = "DELETE FROM $this->i_table WHERE order_id='$order_id'";
         $this->lisdb->query($sql);
     }
     
-    public function removeItem($item_id){
+    public function remove_item($item_id){
         $sql = "DELETE FROM $this->i_table WHERE item_id='$item_id'";
         $this->lisdb->query($sql);
     }
     
-    public function getTotalExpense($order_id){
+    public function get_total_expense($order_id){
         $sql = "SELECT * FROM $this->o_table WHERE order_id='$order_id'";
         $record = $this->lisdb->query($sql)->result_array();
         return $record[0];
     }
     
-    public function updateTotalExpense($g_expense,$p_expense,$order_id){
+    public function update_total_expense($g_expense,$p_expense,$order_id){
         $sql = "UPDATE $this->o_table SET g_expense='$g_expense', p_expense='$p_expense' WHERE order_id='$order_id'";
         $this->lisdb->query($sql);
     }
     
-    public function getOrder($order_id){
+    public function get_order($order_id){
 	$sql = "SELECT * FROM $this->o_table WHERE order_id='$order_id'";
 	$records = $this->lisdb->query($sql)->result_array();
 	$order = $records[0];
@@ -150,26 +150,26 @@ class Orderbook_model extends CI_Model {
 	return $order;
     }
     
-    public function getItem($order_id,$i){
+    public function get_item($order_id,$i){
         $sql = "SELECT * FROM $this->i_table WHERE (order_id='$order_id' AND item_num='$i')";
         $record = $this->lisdb->query($sql)->result_array();
         return $record[0];
     }
     
-    public function getCompanies(){
+    public function get_companies(){
 	$sql = "SELECT * FROM $this->ct_table WHERE (table_name='$this->o_table' AND type='company') ORDER BY category_id";
 	$records = $this->lisdb->query($sql)->result_array();
 	return $records;
     }
     
-    public function getAccounts(){
+    public function get_accounts(){
 	$sql = "SELECT * FROM $this->ct_table WHERE (table_name='$this->o_table' AND type='account') ORDER BY category_id";
 	$records = $this->lisdb->query($sql)->result_array();
 	return $records;
     }
     
     // function to return account which have need to be tallied when producing the order report
-    public function getTallyAccounts() {
+    public function get_tally_accounts() {
       $tally_accounts = array();
 
       $sql = "SELECT * FROM $this->ct_table WHERE (table_name='$this->o_table' AND type='tally') ORDER BY category_id";
@@ -182,14 +182,14 @@ class Orderbook_model extends CI_Model {
       return $tally_accounts;
     }
     
-    public function getOrderVisibility(){
+    public function get_order_visibility(){
 	$sql = "SELECT * FROM $this->p_table WHERE key_id='orders.private'";
 	$records = $this->lisdb->query($sql)->result_array();
 	return $records;
     }
     
     // function to return any pending orders
-    public function getPendingItems($users,$my_userid,$my_role) {
+    public function get_pending_items($users,$my_userid,$my_role) {
       $items = array();
 
       $sql = "SELECT * FROM $this->o_table WHERE (status='requested' OR status='ordered') ORDER BY order_id";
@@ -204,7 +204,7 @@ class Orderbook_model extends CI_Model {
           $user = $users[$owner];
           $name = $user->name;
 
-          if(!$this->areOrdersPrivate($my_role) || $owner == $my_userid) {
+          if(!$this->are_orders_private($my_role) || $owner == $my_userid) {
             $sql = "SELECT * FROM  $this->i_table WHERE (order_id='$order_id' AND status='pending')";
             $orderItems = $this->lisdb->query($sql)->result_array();
 
@@ -223,7 +223,7 @@ class Orderbook_model extends CI_Model {
     }
    
     // function to return the items which have been ordered
-    public function getOrderedItems($users,$my_userid,$my_role) {
+    public function get_ordered_items($users,$my_userid,$my_role) {
       $items = array();
 
       $sql = "SELECT * FROM $this->i_table WHERE (status='ordered' OR status='back ordered')";
@@ -237,7 +237,7 @@ class Orderbook_model extends CI_Model {
           $name = $user->name;
           $owner = $singleItem['owner'];
 
-          if(!$this->areOrdersPrivate($my_role) || $owner == $my_userid) {
+          if(!$this->are_orders_private($my_role) || $owner == $my_userid) {
             $info = "$singleItem[order_id] \t$singleItem[item_id] \t $name \t $singleItem[company] \t 
             $singleItem[product_id] \t $singleItem[description] \t $singleItem[amount] \t $singleItem[units] \t 
             $singleItem[price] \t $singleItem[status_date] \t $singleItem[owner] \t $singleItem[type] \t $singleItem[item_num]";
@@ -251,7 +251,7 @@ class Orderbook_model extends CI_Model {
     }
     
     // function to retrive any saved orders
-    public function getSavedOrders($my_userid) {
+    public function get_saved_orders($my_userid) {
       $saved_orders = array();
 
       $sql = "SELECT * FROM $this->o_table WHERE (owner='$my_userid' AND status='saved') ORDER BY order_id DESC LIMIT 2";
@@ -270,7 +270,7 @@ class Orderbook_model extends CI_Model {
     }
     
     // function to return a list of recent orders
-    public function getRecentOrders($my_userid) {
+    public function get_recent_orders($my_userid) {
       $recent_orders = array();
 
       $sql = "SELECT * FROM $this->o_table WHERE 
@@ -290,7 +290,7 @@ class Orderbook_model extends CI_Model {
     }
     
     // function to actually view the orders
-    public function getOrders($ordered_by, $year, $month) {
+    public function get_orders($ordered_by, $year, $month) {
       $orders = array();
 
       // based on the vales of the parameters generate the search strings
@@ -323,11 +323,11 @@ class Orderbook_model extends CI_Model {
       // now search the database
       $records = $this->lisdb->query($sql)->result_array();
       
-      return $this->getOrdersArray($records);
+      return $this->get_orders_array($records);
     }
     
     // function to return a all the items list
-    public function getItemLists($company) {
+    public function get_itemlists($company) {
       $itemlists = array();
       $user_id = $this->userobj->userid;
 
@@ -335,28 +335,28 @@ class Orderbook_model extends CI_Model {
         $sql = "SELECT * FROM $this->o_table WHERE status = 'itemlist'";
       }
       else { // need to also see if this is viewable by every one or just the person who created it
-        $company_sql = $this->getCompanySQLString($company);
+        $company_sql = $this->get_company_sql_string($company);
         $sql = "SELECT * FROM $this->o_table WHERE (status = 'itemlist' AND $company_sql AND (priority='High' OR owner='$user_id'))";
       }
       $records = $this->lisdb->query($sql)->result_array();
-      $itemlists = $this->getOrdersArray($records);
+      $itemlists = $this->get_orders_array($records);
 
       return $itemlists;
     }
     
-    public function saveCompanyName($company){
+    public function save_company_name($company){
         $sql = "INSERT INTO $this->ct_table VALUES('', '$this->o_table', 'company', '$company', 'myadmin')";
         $this->lisdb->query($sql);
     }
     
     // function to save a company in the category database
-    public function saveAccount($account) {
+    public function save_account($account) {
       $sql = "INSERT INTO $this->ct_table VALUES('', '$this->o_table', 'account', '$account', 'myadmin')";
       $this->lisdb->query($sql);
     }
     
     // function to return to see if orders are private or not. Private orders can only be viewed by the owner or admin, or buyer
-    protected function areOrdersPrivate($role) {
+    protected function are_orders_private($role) {
      if($role == 'admin' || $role == 'buyer') {  // user with these roles have the right to view all orders
        return false;
      } else { // return that the orders are private
@@ -365,13 +365,13 @@ class Orderbook_model extends CI_Model {
    }
    
    // function to return an array containing order information
-    public function getOrdersArray($sql_result) {
+    public function get_orders_array($sql_result) {
       $orders = array();
       $all_total = 0;
       $count = count($sql_result);
 
       // load the accounts for which tallies should be computed for
-      $tally_accounts = $this->getTallyAccounts();
+      $tally_accounts = $this->get_tally_accounts();
       $tally_totals = array();
 
       if($count > 0) {
@@ -406,7 +406,7 @@ class Orderbook_model extends CI_Model {
     }
     
     // function to add search results for ordered items to the results 2
-    function getItemsArray($sql_result) {
+    function get_items_array($sql_result) {
       $items = array();
       $count = count($sql_result);
 
@@ -431,7 +431,7 @@ class Orderbook_model extends CI_Model {
     }
    
     // function to return the maximum number of items allow for this order
-    public function getMaxItemsValue($order_id) {
+    public function get_max_items_value($order_id) {
       global $conn;
 
       // get the maximum number of items for this order
@@ -441,12 +441,12 @@ class Orderbook_model extends CI_Model {
       return $record['maxitems'];
     }
     
-    public function setMaxItemsValue($order_id,$new_value){
+    public function set_max_items_value($order_id,$new_value){
          $sql = "UPDATE $this->o_table SET maxitems='$new_value' WHERE order_id='$order_id'";
          $this->lisdb->query($sql);
     }
     
-    public function checkItemExistence($order_id,$i){
+    public function check_item_existence($order_id,$i){
         $sql = "SELECT * FROM $this->i_table WHERE (order_id='$order_id' AND item_num='$i')";
         $records = $this->lisdb->query($sql)->result_array();
         $count = count($records);
@@ -454,7 +454,7 @@ class Orderbook_model extends CI_Model {
     }
     
     // function to either add or update the database
-    function updateInventoryDB($user_id, $order_id, $item_num) {
+    function update_inventory_db($user_id, $order_id, $item_num) {
 
       $sql = "SELECT * FROM $this->i_table WHERE (order_id='$order_id' AND item_num='$item_num')";
       $record = $this->lisdb->query($sql)->result_array();
@@ -532,7 +532,7 @@ class Orderbook_model extends CI_Model {
     
     // function to return the order_id based on the company name for an item. If more than one
     // order exist return the fisrt one
-    function getOrderIDFromCompany($company,$user_id) {
+    function get_order_id_from_company($company,$user_id) {
       $info = array();
 
       $sql = "SELECT * FROM $this->o_table WHERE (status = 'itemlist' AND company LIKE '%$company%' AND owner = '$user_id')";
@@ -553,7 +553,7 @@ class Orderbook_model extends CI_Model {
 
     // function to break apart company names seperated by / character
     // and create a sql search string
-    function getCompanySQLString($company) {
+    function get_company_sql_string($company) {
       if(strstr($company, '/')) {
         $sql = '';
         $companies = split('/', $company);

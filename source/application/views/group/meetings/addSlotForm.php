@@ -1,9 +1,9 @@
 <?php
 if(!empty($slot_id)) {
-    $form_link = base_url()."group/meetings/editSlot";
+    $form_link = base_url()."group/meetings/edit_slot";
     $form_name = 'add_slot_form';
 } else {
-    $form_link = base_url()."group/meetings/addSlot";
+    $form_link = base_url()."group/meetings/add_slot";
     $form_name = 'edit_slot_form';
 }
 
@@ -85,14 +85,14 @@ echo '<a name="add_slot"></a>'; // target for link from top
 			<?
 			// link to delete slot
 			if(!empty($slot_id)) {
-			    $delete_link = base_url()."group/meetings/deleteSlot?slot_id=".$slot_id;
+			    $delete_link = base_url()."group/meetings/delete_slot?slot_id=".$slot_id;
 			    echo '<a href="'.$delete_link.'" class="btn btn-danger btn-small">delete slot</a>';
 			}
 
 			// see if to print the links to edit or remove any attach files
 			if(!empty($slot_info['file_id'])) {
 			    $file_id = $slot_info['file_id'];
-			    $delete_file_link = base_url()."group/meetings/deleteFile?slot_id=$slot_id&file_id=$file_id";
+			    $delete_file_link = base_url()."group/meetings/delete_file?slot_id=$slot_id&file_id=$file_id";
 			    echo '[ <a href="'.$delete_file_link.'">delete file</a> ] ';
 			}
 			?>

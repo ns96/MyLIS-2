@@ -17,7 +17,7 @@ $default_link = base_url()."group/meetings?default_semester=$semester_id";
 foreach ($dates as $gmdate_id => $gd) {
     if($semester_id == $gd->semester_id) {
 	$edit_link = base_url()."group/meetings?gmdate_id=$gmdate_id";
-	$delete_link = base_url()."group/meetings/deleteDate?gmdate_id=$gmdate_id";
+	$delete_link = base_url()."group/meetings/delete_date?gmdate_id=$gmdate_id";
 
 	echo "<table class='semester_table'>";
         echo '<tr>';
@@ -47,7 +47,7 @@ foreach ($dates as $gmdate_id => $gd) {
 		$file_id = $singleSlot['file_id'];
 
 		$edit_link = base_url()."group/meetings?slot_id=$slot_id";
-		$upload_link = base_url()."group/meetings/addfile?slot_id=$slot_id&file_id=$file_id";
+		$upload_link = base_url()."group/meetings/add_file?slot_id=$slot_id&file_id=$file_id";
 		$upload_name = 'upload file';
 
 		echo '<table cellpadding="2" cellspacing="2" border="0" width="100%"><tbody>';

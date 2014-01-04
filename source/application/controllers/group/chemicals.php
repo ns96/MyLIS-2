@@ -17,17 +17,17 @@ class Chemicals extends Group_Controller {
 	$data['message'] = $this->input->get('message');
 	
 	$data['user'] = $this->userobj;
-	$data['users'] = $this->getCurrentUsers();
+	$data['users'] = $this->get_current_users();
 	
-	$data['locations'] = $this->chemicals_model->getLocations();
-	$data['categories'] = $this->chemicals_model->getCategories();
+	$data['locations'] = $this->chemicals_model->get_locations();
+	$data['categories'] = $this->chemicals_model->get_categories();
 	
 	$data['page_title'] = 'Search Chemical Inventory';
 	$this->load_view('group/chemicals/main',$data);
     }
     
     // Handles the 'ownership transfer' or 'view info' of multiple chemical items
-    public function bulkActions(){
+    public function bulk_actions(){
 	if (isset($_POST['listing_form'])){
 	    $this->load->model('chemicals_model');
 	    $userid = $this->userobj->userid;
@@ -50,7 +50,7 @@ class Chemicals extends Group_Controller {
 		    foreach($chem_ids as $chem_id) {
 			$data2['chem_id'] = $chem_id;
 			$data2['userid'] = $userid;
-			$this->chemicals_model->transferSingleOwnership($data2);
+			$this->chemicals_model->transfer_single_ownership($data2);
 			   $message .= '<small>Transferred Ownership of Chemical With ID <b>'.$chem_id.'</b></small><br>';
 		    }
 		}
@@ -65,16 +65,16 @@ class Chemicals extends Group_Controller {
 		$data['page_title'] = 'Chemical Information';
 		$data['infoHTML'] = '';
 
-		$data2['users'] = $this->getCurrentUsers();
+		$data2['users'] = $this->get_current_users();
 		$data2['userid'] = $this->userobj->userid;
 		$data2['role'] = $this->userobj->role;
 		
 		if(!empty($chem_ids)) {
 		    foreach($chem_ids as $chem_id) {
-			$data2['chemInfo'] = $this->chemicals_model->getInfo($chem_id);
-			$data2['locationInfo'] = $this->chemicals_model->getFullLocation($data2['chemInfo']['location_id']);
+			$data2['chemInfo'] = $this->chemicals_model->get_info($chem_id);
+			$data2['locationInfo'] = $this->chemicals_model->get_full_location($data2['chemInfo']['location_id']);
 			$data['infoHTML'] .= $this->load->view('group/chemicals/infoTable',$data2,TRUE);
-			$data['infoHTML'] .= "<br>";
+			$data['infoHTML'] .= "<br><br>";
 		    }
 		}
 		$this->load_view('group/chemicals/info',$data);
@@ -84,7 +84,7 @@ class Chemicals extends Group_Controller {
 	}
     }
     
-    public function changeStatus($newStatus){
+    public function change_status($newStatus){
 	if (isset($_GET['chem_id'])){
 	    $this->load->model('chemicals_model');
 	    
@@ -116,7 +116,7 @@ class Chemicals extends Group_Controller {
 	    $data['status'] = $newStatus;
 	    $data['statusText'] = $statusText;
 
-	    $this->chemicals_model->changeStatus($data);
+	    $this->chemicals_model->change_status($data);
 	    redirect('group/chemicals/view?chem_id='.$data['chem_id']);
 	    
 	} else {
@@ -132,7 +132,7 @@ class Chemicals extends Group_Controller {
     
 	switch ($type) {
 	    case 'mine': 
-		$data2['items'] = $this->chemicals_model->getMine($user_id);
+		$data2['items'] = $this->chemicals_model->get_mine($user_id);
 		$data['sub_listing_HTML'] = $this->load->view('group/chemicals/sub_listing',$data2,TRUE); 
 		$data['title'] = 'My Chemicals';
 		$data['page_title'] = 'My Chemicals';
@@ -140,7 +140,7 @@ class Chemicals extends Group_Controller {
 		$this->load_view('group/chemicals/listing',$data);
 		break;
 	    case 'all':
-		$data2['items'] = $this->chemicals_model->getAll();
+		$data2['items'] = $this->chemicals_model->get_all();
 		$data['sub_listing_HTML'] = $this->load->view('group/chemicals/sub_listing',$data2,TRUE); 
 		$data['title'] = 'All Chemicals';
 		$data['page_title'] = 'All Chemicals';
@@ -151,10 +151,10 @@ class Chemicals extends Group_Controller {
 		$data['title'] = 'Chemicals By Category';
 		$data['page_title'] = 'Chemicals By Category';
 		$data['sub_listing_HTML'] = '';
-		$categories = $this->chemicals_model->getCategories();
+		$categories = $this->chemicals_model->get_categories();
 		foreach($categories as $category) {
 		    $data2 = array();
-		    $data2['items'] = $this->chemicals_model->getByCategory($category);
+		    $data2['items'] = $this->chemicals_model->get_by_category($category);
 		    $count = count($data2['items']);
 		    if($count > 0) {
 			$data['sub_listing_HTML'] .= "<small><span style=\"color: rgb(225, 0, 0);\"><b>$count</b>
@@ -168,10 +168,10 @@ class Chemicals extends Group_Controller {
 		$data['title'] = 'Chemicals By Location';
 		$data['page_title'] = 'Chemicals By Location';
 		$data['sub_listing_HTML'] = '';
-		$locations = $this->chemicals_model->getLocations();
+		$locations = $this->chemicals_model->get_locations();
 		foreach($locations as $location) {
 		    $data2 = array();
-		    $data2['items'] = $this->chemicals_model->getByLocation($location);
+		    $data2['items'] = $this->chemicals_model->get_by_location($location);
 		    $count = count($data2['items']);
 		    if($count > 0) {
 			$data['sub_listing_HTML'] .= "<small><span style=\"color: rgb(225, 0, 0);\"><b>$count</b>
@@ -201,7 +201,7 @@ class Chemicals extends Group_Controller {
 	    $searchterm = $this->input->post("searchterm");
 
 	    if($searchby == 'id' && !empty($searchterm)) {
-		$where_clause = $this->getWhereClause('id', $searchterm); // construct the where clause
+		$where_clause = $this->get_where_clause('id', $searchterm); // construct the where clause
 		$results = $this->chemicals_model->search($where_clause);
 	    }
 	    elseif($searchby == 'name' && !empty($searchterm)) {
@@ -262,7 +262,7 @@ class Chemicals extends Group_Controller {
 	    
 	    if(!empty($other_category)) {
 		$category = $other_category;
-		$this->chemicals_model->addCategory($other_category, $userid); // add this category to DB
+		$this->chemicals_model->add_category($other_category, $userid); // add this category to DB
 	    }
 	    
 	    // check to see if to add a new location
@@ -281,7 +281,7 @@ class Chemicals extends Group_Controller {
 		}
 
 		$location = $location_info[0];
-		$this->chemicals_model->addLocation($location_info, $this->userobj); // add this location to DB
+		$this->chemicals_model->add_location($location_info, $this->userobj); // add this location to DB
 	    }
 	    
 	    if(empty($cas)) {
@@ -319,7 +319,7 @@ class Chemicals extends Group_Controller {
 	    $data['notes'] = $notes;
 	    $data['owner'] = $owner;
 	    $data['userid'] = $userid;
-	    $chem_id = $this->chemicals_model->addChemical($data);
+	    $chem_id = $this->chemicals_model->add_chemical($data);
 	    redirect('group/chemicals/view?chem_id='.$chem_id);
 	    
 	} else {
@@ -359,7 +359,7 @@ class Chemicals extends Group_Controller {
 
 	    if(!empty($other_category)) {
 		$category = $other_category;
-		$this->chemicals_model->addCategory($other_category, $userid); 
+		$this->chemicals_model->add_category($other_category, $userid); 
 	    } else {
 		$categories = $this->input->post("categories");
 		$category = $categories[0];
@@ -381,7 +381,7 @@ class Chemicals extends Group_Controller {
 		}
 
 		$location = $location_info[0];
-		$this->chemicals_model->addLocation($location_info, $userid); // add this location to DB
+		$this->chemicals_model->add_location($location_info, $userid); // add this location to DB
 	    }
 
 	    if(empty($company)) {
@@ -416,7 +416,7 @@ class Chemicals extends Group_Controller {
 	    $data['userid'] = $userid;
 	    $data['chem_id'] = $chem_id;
 	    
-	    $this->chemicals_model->updateChemical($data);
+	    $this->chemicals_model->update_chemical($data);
 	
 
 	    redirect('group/chemicals/view?chem_id='.$chem_id);
@@ -424,7 +424,7 @@ class Chemicals extends Group_Controller {
 	    $chem_id = $_GET["chem_id"];
 	    $userid = $this->userobj->userid;
 
-	    $chemInfo = $this->chemicals_model->getInfo($chem_id);
+	    $chemInfo = $this->chemicals_model->get_info($chem_id);
 
 	    $chem_id = $chemInfo['chem_id'];
 	    $cas = $chemInfo['cas'];
@@ -453,8 +453,8 @@ class Chemicals extends Group_Controller {
 	    $data['name'] = $name;
 	    $data['company'] = $company;
 	    $data['userid'] = $userid;
-	    $data['locations'] = $this->chemicals_model->getLocations();
-	    $data['categories'] = $this->chemicals_model->getCategories();
+	    $data['locations'] = $this->chemicals_model->get_locations();
+	    $data['categories'] = $this->chemicals_model->get_categories();
 
 	    $data['chem_id'] = $chem_id;
 	    $data['userid'] = $userid;
@@ -468,7 +468,7 @@ class Chemicals extends Group_Controller {
 	$this->load->model('chemicals_model');
 	$chem_id = $this->input->get("chem_id");
     
-	$this->chemicals_model->deleteChemical($chem_id);
+	$this->chemicals_model->delete_chemical($chem_id);
 
 	redirect('group/chemicals');
     }
@@ -483,11 +483,11 @@ class Chemicals extends Group_Controller {
 	    $data['title'] = 'Chemical Info';
 	    $data['page_title'] = 'Chemical Information';
 	    
-	    $data2['users'] = $this->getCurrentUsers();
+	    $data2['users'] = $this->get_current_users();
 	    $data2['userid'] = $this->userobj->userid;
 	    $data2['role'] = $this->userobj->role;
-	    $data2['chemInfo'] = $this->chemicals_model->getInfo($chem_id);
-	    $data2['locationInfo'] = $this->chemicals_model->getFullLocation($data2['chemInfo']['location_id']);
+	    $data2['chemInfo'] = $this->chemicals_model->get_info($chem_id);
+	    $data2['locationInfo'] = $this->chemicals_model->get_full_location($data2['chemInfo']['location_id']);
 	    $data['infoHTML'] = $this->load->view('group/chemicals/infoTable',$data2,TRUE);
 	    
 	    $this->load_view('group/chemicals/info',$data);
@@ -498,7 +498,7 @@ class Chemicals extends Group_Controller {
     
     public function transfer(){
 	
-	$users = $this->getCurrentUsers();
+	$users = $this->get_current_users();
 	$this->load->model('chemicals_model');
 	
 	// The case of 'make selected mine' of chemicals listing page
@@ -518,7 +518,7 @@ class Chemicals extends Group_Controller {
 	    $data['to_user'] = $to_user;
 	    $data['from_user'] = $from_user;
 	    $data['userid'] = $userid;
-	    $this->chemicals_model->transferFullOwnership($data);
+	    $this->chemicals_model->transfer_full_ownership($data);
 
 	    $message = 'Chemicals transferred from '.$users[$from_user]->name.' to '.$to_name;
 	    showModal('Ownership transfer',$message);
@@ -530,7 +530,7 @@ class Chemicals extends Group_Controller {
 	   
 	    $data['chem_id'] = $chem_id;
 	    $data['userid'] = $userid;
-	    $this->chemicals_model->transferSingleOwnership($data);
+	    $this->chemicals_model->transfer_single_ownership($data);
 
 	    $message = "Chemical with id =$chem_id transferred to ".$users[$userid]->name;
 	    $destination = base_url().'group/chemicals/view?chem_id='.$chem_id;
@@ -542,16 +542,16 @@ class Chemicals extends Group_Controller {
 	}
     }
     
-    public function listLocations(){
+    public function list_locations(){
 	$this->load->model('chemicals_model');
-	$users = $this->getCurrentUsers();
-	$locations = $this->chemicals_model->getLocations();
+	$users = $this->get_current_users();
+	$locations = $this->chemicals_model->get_locations();
 	$home = base_url()."group/chemicals";
 	displayLocationList($locations,$users,$home);
     }
     
     // function to return the search terms
-    protected function getWhereClause($searchby, $searchterm) {
+    protected function get_where_clause($searchby, $searchterm) {
 	$where_clause = '';
 
 	if($searchby == 'id') {

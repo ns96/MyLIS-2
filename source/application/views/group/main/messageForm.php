@@ -18,7 +18,7 @@ if(!empty($message_id)) {
 	<?
 	if(!empty($messageItem['file_id'])) {
 	    $file_id = $messageItem['file_id'];
-	    $delete_link = base_url()."group/messages/deleteMessageFile/".$file_id;
+	    $delete_link = base_url()."group/messages/delete_message_file/".$file_id;
 	    echo "[ <a href=\"$delete_link\">delete file</a> ]";
 	}
 
@@ -51,7 +51,7 @@ if(!empty($message_id)) {
       <label for="fileupload_1" class="control-label">Attach file:</label>
       <div align="left" class="controls">
 	<input id="fileupload_1" name="fileupload_1" class="filestyle" type="file" data-icon="false" style="position: fixed; left: -500px;">  
-      <span style="color:grey; margin-left: 5px; margin-right: 10px">(maximum filesize: 2MB)</span>
+      <span style="color:grey; margin-left: 5px; margin-right: 10px">(max file size: 2MB)</span>
       Select Type :
 	<select name="filetype_1" class="input-medium">
 	    <option value="none">No File</option>

@@ -11,7 +11,7 @@ $list_bycategory = base_url()."group/chemicals/listing/by_category"; // list all
 $list_bylocation = base_url()."group/chemicals/listing/by_location"; // list all by categories
 $list_locations = base_url()."group/chemicals/list_locations"; // displays the list of locations
 $search_target = base_url()."group/chemicals/search";
-$location_link = base_url()."group/chemicals/listLocations";
+$location_link = base_url()."group/chemicals/list_locations";
 $home_link = base_url()."group/chemicals";
 
 echo '[ <a href="'.$list_mine.'">My Chemicals</a> ] ';
@@ -57,14 +57,14 @@ echo '[ <a href="'.$list_bylocation.'">List All By Location</a> ] ';
                             </label>
                             <br>
                             <div id="location_list_option" style="margin-top:5px; display:none">
-                                <select name="location" size="1">';
+                                <select name="location">';
                                     <?
                                     foreach($locations as $location) {
-                                        echo '<option value="'.$location.'">'.$location.'</option>';
+                                        echo '<option value="'.$location.'">'.$location['location_id'].'</option>';
                                     }
                                     ?>
                                 </select>
-                                <input type="button" value="Location List" class="btn btn-info" onClick="window.open(\''.$location_link.'\',\'locations\',\'width=500,height=600,location=no,resizable=yes,scrollbars=yes\')">
+                                <input type="button" value="Location List" class="btn btn-info" onClick="window.open('<?=$location_link?>','locations','width=500,height=600,location=no,resizable=yes,scrollbars=yes')">
                             </div>
                         </td>
                         <td rowspan="2">

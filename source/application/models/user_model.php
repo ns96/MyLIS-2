@@ -13,7 +13,7 @@ class User_model extends CI_Model {
         $this->table = $this->session->userdata('group')."_users";
     }
     
-    public function getUser($userid){
+    public function get_user($userid){
 	$sql = "SELECT * FROM $this->table WHERE userid = '$userid'";
 	$records = $this->lisdb->query($sql)->result_array();
 	
@@ -34,7 +34,7 @@ class User_model extends CI_Model {
 	return $user;
     }
     
-    public function getUserPassword($userid){
+    public function get_user_password($userid){
 	$this->lisdb->where('userid',$userid);
 	$record = $this->lisdb->get($this->table)->result_array();
 	
@@ -46,7 +46,7 @@ class User_model extends CI_Model {
 	return $password;
     }
     
-    public function addUser($data){
+    public function add_user($data){
         $sql = "INSERT INTO $this->table VALUES('$data[userid]', '$data[password]','$data[role]', '$data[name]', '$data[email]', '$data[status]', '$data[info]')";
         $this->lisdb->query($sql);
     }
@@ -63,12 +63,12 @@ class User_model extends CI_Model {
         $this->lismdb->query($sql);
     }
     
-    public function deleteUser($userid){
+    public function delete_user($userid){
         $sql = "DELETE FROM $this->table WHERE userid='$userid'";
         $this->lisdb->query($sql);
     }
     
-    public function completeUserRemoval($userid){
+    public function complete_user_removal($userid){
         // change status to past so that user is not displayed
         $sql = "UPDATE $this->table SET status = 'past' WHERE userid = '$userid'";
         $this->lisdb->query($sql);
@@ -78,7 +78,7 @@ class User_model extends CI_Model {
         $this->lismdb->query($sql);
     }
     
-    public function getGroupUsers($groupname){
+    public function get_group_users($groupname){
 	$table = $groupname.'_users';
 	$userList = $this->lisdb->get($table)->result_array();
 	return $userList;

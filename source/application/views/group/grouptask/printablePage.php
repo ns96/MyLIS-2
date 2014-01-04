@@ -34,7 +34,7 @@ foreach($items as $array) {
 
     echo '<tr>';
     if($type == 'monthly') {
-      echo '<td style="vertical-align: top;"><small>'.$months['$item_month'].'<small></td>';
+      echo '<td style="vertical-align: top;"><small>'.$months[$item_month].'<small></td>';
     }
     else if ($type == 'list') {
       echo '<td style="vertical-align: top;"><small>'.$item_num.'</small></td>';

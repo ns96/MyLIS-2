@@ -17,17 +17,17 @@ class Supplies extends Group_Controller {
 	$data['message'] = $this->input->get('message');
 	
 	$data['user'] = $this->userobj;
-	$data['users'] = $this->getCurrentUsers();
+	$data['users'] = $this->get_current_users();
 	
-	$data['locations'] = $this->supplies_model->getLocations();
-	$data['categories'] = $this->supplies_model->getCategories();
+	$data['locations'] = $this->supplies_model->get_locations();
+	$data['categories'] = $this->supplies_model->get_categories();
 	
 	$data['page_title'] = 'Search Supplies Inventory';
 	$this->load_view('group/supplies/main',$data);
     }
     
     // Handles the 'ownership transfer' or 'view info' of multiple items
-    public function bulkActions(){
+    public function bulk_actions(){
 	if (isset($_POST['listing_form'])){
 	    $this->load->model('supplies_model');
 	    $userid = $this->userobj->userid;
@@ -50,7 +50,7 @@ class Supplies extends Group_Controller {
 		    foreach($item_ids as $item_id) {
 			$data2['item_id'] = $item_id;
 			$data2['userid'] = $userid;
-			$this->supplies_model->transferSingleOwnership($data2);
+			$this->supplies_model->transfer_single_ownership($data2);
 			   $message .= '<small>Transferred Ownership of supply With ID <b>'.$item_id.'</b></small><br>';
 		    }
 		}
@@ -65,16 +65,16 @@ class Supplies extends Group_Controller {
 		$data['page_title'] = 'Supply Information';
 		$data['infoHTML'] = '';
 
-		$data2['users'] = $this->getCurrentUsers();
+		$data2['users'] = $this->get_current_users();
 		$data2['userid'] = $this->userobj->userid;
 		$data2['role'] = $this->userobj->role;
 		
 		if(!empty($item_ids)) {
 		    foreach($item_ids as $item_id) {
-			$data2['itemInfo'] = $this->supplies_model->getInfo($item_id);
-			$data2['locationInfo'] = $this->supplies_model->getFullLocation($data2['itemInfo']['location_id']);
+			$data2['itemInfo'] = $this->supplies_model->get_info($item_id);
+			$data2['locationInfo'] = $this->supplies_model->get_full_location($data2['itemInfo']['location_id']);
 			$data['infoHTML'] .= $this->load->view('group/supplies/infoTable',$data2,TRUE);
-			$data['infoHTML'] .= "<br>";
+			$data['infoHTML'] .= "<br><br>";
 		    }
 		}
 		$this->load_view('group/supplies/info',$data);
@@ -84,7 +84,7 @@ class Supplies extends Group_Controller {
 	}
     }
     
-    public function changeStatus($newStatus){
+    public function change_status($newStatus){
 	if (isset($_GET['item_id'])){
 	    $this->load->model('supplies_model');
 	    
@@ -116,7 +116,7 @@ class Supplies extends Group_Controller {
 	    $data['status'] = $newStatus;
 	    $data['statusText'] = $statusText;
 
-	    $this->supplies_model->changeStatus($data);
+	    $this->supplies_model->change_status($data);
 	    redirect('group/supplies/view?item_id='.$data['item_id']);
 	    
 	} else {
@@ -132,7 +132,7 @@ class Supplies extends Group_Controller {
     
 	switch ($type) {
 	    case 'mine': 
-		$data2['items'] = $this->supplies_model->getMine($user_id);
+		$data2['items'] = $this->supplies_model->get_mine($user_id);
 		$count = count($data2['items']);
 		$data['sub_listing_HTML'] = $this->load->view('group/supplies/sub_listing',$data2,TRUE); 
 		$data['title'] = 'My Supplies';
@@ -141,7 +141,7 @@ class Supplies extends Group_Controller {
 		$this->load_view('group/supplies/listing',$data);
 		break;
 	    case 'all':
-		$data2['items'] = $this->supplies_model->getAll();
+		$data2['items'] = $this->supplies_model->get_all();
 		$data['sub_listing_HTML'] = $this->load->view('group/supplies/sub_listing',$data2,TRUE); 
 		$data['title'] = 'All supplies';
 		$data['page_title'] = 'All supplies';
@@ -152,10 +152,10 @@ class Supplies extends Group_Controller {
 		$data['title'] = 'Supplies By Category';
 		$data['page_title'] = 'Supplies By Category';
 		$data['sub_listing_HTML'] = '';
-		$categories = $this->supplies_model->getCategories();
+		$categories = $this->supplies_model->get_categories();
 		foreach($categories as $category) {
 		    $data2 = array();
-		    $data2['items'] = $this->supplies_model->getByCategory($category);
+		    $data2['items'] = $this->supplies_model->get_by_category($category);
 		    $count = count($data2['items']);
 		    if($count > 0) {
 			$data['sub_listing_HTML'] .= "<small><span style=\"color: rgb(225, 0, 0);\"><b>$count</b>
@@ -169,10 +169,10 @@ class Supplies extends Group_Controller {
 		$data['title'] = 'Supplies By Location';
 		$data['page_title'] = 'Supplies By Location';
 		$data['sub_listing_HTML'] = '';
-		$locations = $this->supplies_model->getLocations();
+		$locations = $this->supplies_model->get_locations();
 		foreach($locations as $location) {
 		    $data2 = array();
-		    $data2['items'] = $this->supplies_model->getByLocation($location);
+		    $data2['items'] = $this->supplies_model->get_by_location($location);
 		    $count = count($data2['items']);
 		    if($count > 0) {
 			$data['sub_listing_HTML'] .= "<small><span style=\"color: rgb(225, 0, 0);\"><b>$count</b>
@@ -202,7 +202,7 @@ class Supplies extends Group_Controller {
 	    $searchterm = $this->input->post("searchterm");
 
 	    if($searchby == 'id' && !empty($searchterm)) {
-		$where_clause = $this->getWhereClause('id', $searchterm); // construct the where clause
+		$where_clause = $this->get_where_clause('id', $searchterm); // construct the where clause
 		$results = $this->supplies_model->search($where_clause);
 	    }
 	    elseif($searchby == 'name' && !empty($searchterm)) {
@@ -263,13 +263,12 @@ class Supplies extends Group_Controller {
 	    
 	    if(!empty($other_category)) {
 		$category = $other_category;
-		$this->supplies_model->addCategory($other_category, $userid); // add this category to DB
+		$this->supplies_model->add_category($other_category, $userid); // add this category to DB
 	    }
 	    
 	    // check to see if to add a new location
 	    if(!empty($other_location) && !strstr($other_location, 'Location ID,')) {
 		$location_info = preg_split("/,/", $other_location);
-		//echo 'Size of array '.count($locations).'<br>';
 
 		if(count($location_info) < 3 || count($location_info) > 4) {
 		    $data0['page_title'] = 'Error';
@@ -282,7 +281,7 @@ class Supplies extends Group_Controller {
 		}
 
 		$location = $location_info[0];
-		$this->supplies_model->addLocation($location_info, $this->userobj); // add this location to DB
+		$this->supplies_model->add_location($location_info, $this->userobj); // add this location to DB
 	    }
 	    
 	    if(empty($model)) {
@@ -320,7 +319,7 @@ class Supplies extends Group_Controller {
 	    $data['notes'] = $notes;
 	    $data['owner'] = $owner;
 	    $data['userid'] = $userid;
-	    $item_id = $this->supplies_model->addSupply($data);
+	    $item_id = $this->supplies_model->add_supply($data);
 	    redirect('group/supplies/view?item_id='.$item_id);
 	    
 	} else {
@@ -360,7 +359,7 @@ class Supplies extends Group_Controller {
 	    
 	    if(!empty($other_category)) {
 		$category = $other_category;
-		$this->supplies_model->addCategory($other_category, $userid); 
+		$this->supplies_model->add_category($other_category, $userid); 
 	    } else {
 		$categories = $this->input->post("categories");
 		$category = $categories[0];
@@ -382,7 +381,7 @@ class Supplies extends Group_Controller {
 		}
 
 		$location = $location_info[0];
-		$this->supplies_model->addLocation($location_info, $userid); // add this location to DB
+		$this->supplies_model->add_location($location_info, $userid); // add this location to DB
 	    }
 
 	    if(empty($company)) {
@@ -417,7 +416,7 @@ class Supplies extends Group_Controller {
 	    $data['userid'] = $userid;
 	    $data['item_id'] = $item_id;
 	    
-	    $this->supplies_model->updateSupply($data);
+	    $this->supplies_model->update_supply($data);
 	
 
 	    redirect('group/supplies/view?item_id='.$item_id);
@@ -425,7 +424,7 @@ class Supplies extends Group_Controller {
 	    $item_id = $_GET["item_id"];
 	    $userid = $this->userobj->userid;
 
-	    $itemInfo = $this->supplies_model->getInfo($item_id);
+	    $itemInfo = $this->supplies_model->get_info($item_id);
 
 	    $item_id = $itemInfo['item_id'];
 	    $model = $itemInfo['model'];
@@ -454,8 +453,8 @@ class Supplies extends Group_Controller {
 	    $data['name'] = $name;
 	    $data['company'] = $company;
 	    $data['userid'] = $userid;
-	    $data['locations'] = $this->supplies_model->getLocations();
-	    $data['categories'] = $this->supplies_model->getCategories();
+	    $data['locations'] = $this->supplies_model->get_locations();
+	    $data['categories'] = $this->supplies_model->get_categories();
 
 	    $data['item_id'] = $item_id;
 	    $data['userid'] = $userid;
@@ -469,7 +468,7 @@ class Supplies extends Group_Controller {
 	$this->load->model('supplies_model');
 	$item_id = $this->input->get("item_id");
     
-	$this->supplies_model->deleteSupply($item_id);
+	$this->supplies_model->delete_supply($item_id);
 
 	redirect('group/supplies');
     }
@@ -484,11 +483,11 @@ class Supplies extends Group_Controller {
 	    $data['title'] = 'Supply Info';
 	    $data['page_title'] = 'Supply Information';
 	    
-	    $data2['users'] = $this->getCurrentUsers();
+	    $data2['users'] = $this->get_current_users();
 	    $data2['userid'] = $this->userobj->userid;
 	    $data2['role'] = $this->userobj->role;
-	    $data2['itemInfo'] = $this->supplies_model->getInfo($item_id);
-	    $data2['locationInfo'] = $this->supplies_model->getFullLocation($data2['itemInfo']['location_id']);
+	    $data2['itemInfo'] = $this->supplies_model->get_info($item_id);
+	    $data2['locationInfo'] = $this->supplies_model->get_full_location($data2['itemInfo']['location_id']);
 	    $data['infoHTML'] = $this->load->view('group/supplies/infoTable',$data2,TRUE);
 	    
 	    $this->load_view('group/supplies/info',$data);
@@ -499,7 +498,7 @@ class Supplies extends Group_Controller {
     
     public function transfer(){
 	
-	$users = $this->getCurrentUsers();
+	$users = $this->get_current_users();
 	$this->load->model('supplies_model');
 	
 	// The case of 'make selected mine' of supplies listing page
@@ -519,7 +518,7 @@ class Supplies extends Group_Controller {
 	    $data['to_user'] = $to_user;
 	    $data['from_user'] = $from_user;
 	    $data['userid'] = $userid;
-	    $this->supplies_model->transferFullOwnership($data);
+	    $this->supplies_model->transfer_full_ownership($data);
 
 	    $message = 'Supplies transferred from '.$users[$from_user]->name.' to '.$to_name;
 	    showModal('Ownership transfer',$message);
@@ -531,7 +530,7 @@ class Supplies extends Group_Controller {
 	   
 	    $data['item_id'] = $item_id;
 	    $data['userid'] = $userid;
-	    $this->supplies_model->transferSingleOwnership($data);
+	    $this->supplies_model->transfer_single_ownership($data);
 
 	    $message = "Supply with id =$item_id transferred to ".$users[$userid]->name;
 	    $destination = base_url().'group/supplies/view?item_id='.$item_id;
@@ -542,16 +541,16 @@ class Supplies extends Group_Controller {
 	}
     }
     
-    public function listLocations(){
+    public function list_locations(){
 	$this->load->model('supplies_model');
-	$users = $this->getCurrentUsers();
-	$locations = $this->supplies_model->getLocations();
+	$users = $this->get_current_users();
+	$locations = $this->supplies_model->get_locations();
 	$home = base_url()."group/supplies";
 	displayLocationList($locations,$users,$home);
     }
     
     // function to return the search terms
-    protected function getWhereClause($searchby, $searchterm) {
+    protected function get_where_clause($searchby, $searchterm) {
 	$where_clause = '';
 
 	if($searchby == 'id') {

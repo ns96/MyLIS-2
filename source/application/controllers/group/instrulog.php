@@ -25,11 +25,11 @@ class Instrulog extends Group_Controller {
 	$data['m'] = $month;
 	
 	// Loading data for hoursTable subview
-	$selected_date = $this->getSelectedDate();
+	$selected_date = $this->get_selected_date();
 	$date = "$selected_date[1]/$selected_date[0]/$selected_date[2]";
 	
 	$this->load->model('instrulog_model');
-	$reservations = $this->instrulog_model->getReservations($date,$instrument_id);
+	$reservations = $this->instrulog_model->get_reservations($date,$instrument_id);
 	$data['s_date'] = $selected_date;
 
 	$fieldsHTML1 = '';
@@ -39,7 +39,7 @@ class Instrulog extends Group_Controller {
 	    if($i == 0) {
 		$hour = '12:00 AM';
 	    }
-	    $fieldsHTML1 .= $this->getReserveField($i, $hour, $reservations);
+	    $fieldsHTML1 .= $this->get_reserve_field($i, $hour, $reservations);
 	}
 
 	$fieldsHTML2 = '';
@@ -49,25 +49,25 @@ class Instrulog extends Group_Controller {
 		$hour -= 12;
 	    }
 	    $hour = $hour.':00 PM';
-	    $fieldsHTML2 .= $this->getReserveField($i, $hour, $reservations);
+	    $fieldsHTML2 .= $this->get_reserve_field($i, $hour, $reservations);
 	}
 	$data['fieldsHTML1'] = $fieldsHTML1;
 	$data['fieldsHTML2'] = $fieldsHTML2;
 	$data['instrument_id'] = $instrument_id;
 
 	if (!empty($instrument_id)){
-	    $instrument = $this->instrulog_model->getInstrument($instrument_id);
+	    $instrument = $this->instrulog_model->get_instrument($instrument_id);
 	    $instrument_name = $instrument['instrument'];
 	} else {
 	    $instrument_name = 'No Instrument Selected';
 	}
 	
 	// Loading data for 'Add new Instrument' form
-	$users = $this->getCurrentUsers();
-	$data['users'] = $this->getCurrentUsers();
+	$users = $this->get_current_users();
+	$data['users'] = $users;
 	
 	// Loading data for Instrument List
-	$instrumentList = $this->instrulog_model->getInstruments();
+	$instrumentList = $this->instrulog_model->get_instruments();
 	$this->load->model('user_model');
 	
 	$instrumentsHTML = '';
@@ -91,7 +91,7 @@ class Instrulog extends Group_Controller {
     
     // If a day was selected (from calendar), get the selected date from URL.
     // Otherwise return the current date.
-    function getSelectedDate() {
+    function get_selected_date() {
 
 	$sd = $this->input->get('sd');
 	$sm = $this->input->get('sm');
@@ -108,7 +108,7 @@ class Instrulog extends Group_Controller {
     
     // function to get reserve check box and text input. i = hour in 24 hour clock, display hour with am/pm
     // reservations array. If the user has no right to change the reservations, the checkboxes will be disabled.
-    function getReserveField($i, $hour, $reservations) {
+    function get_reserve_field($i, $hour, $reservations) {
 	$userid = $this->userobj->userid;
 	$role = $this->userobj->role;
 
@@ -119,7 +119,7 @@ class Instrulog extends Group_Controller {
 	    $reservation = $reservations[$i];
 	    $ruserid = $reservation->userid;
 	    $note = $reservation->note;
-	    $ruser = $this->user_model->getUser($ruserid);
+	    $ruser = $this->user_model->get_user($ruserid);
 	    $name = "( <b>$ruser->name</b> )";
 
 	    if($ruserid == $userid || $role == 'admin') {
@@ -145,7 +145,7 @@ class Instrulog extends Group_Controller {
     public function delete($instrument_id){
 
 	$this->load->model('instrulog_model');
-	$this->instrulog_model->deleteInstrument($instrument_id);
+	$this->instrulog_model->delete_instrument($instrument_id);
 
 	redirect('group/instrulog');
     }
@@ -163,7 +163,7 @@ class Instrulog extends Group_Controller {
 	    
 	    if(!empty($data['instrument'])) {
 		$this->load->model('instrulog_model');
-		$this->instrulog_model->addInstrument($data);
+		$this->instrulog_model->add_instrument($data);
 		$instrulog_id = mysql_insert_id();
 		redirect('group/instrulog/index?instrument_id='.$instrulog_id);
 	    } else {
@@ -183,7 +183,7 @@ class Instrulog extends Group_Controller {
 	    $userid = $this->userobj->userid;
 
 	    $this->load->model('instrulog_model');
-	    $reservations = $this->instrulog_model->getReservations($date,$instrument_id);
+	    $reservations = $this->instrulog_model->get_reservations($date,$instrument_id);
 	    
 	    // check to see if to reserve all free time slots
 	    if($this->input->post('alltimes') == 'yes') {
@@ -196,7 +196,7 @@ class Instrulog extends Group_Controller {
 			$data['i'] = $i;
 			$data['userid'] = $userid;
 			$data['note'] = $note;
-			$this->instrulog_model->addReservation($data);
+			$this->instrulog_model->add_reservation($data);
 		    }
 		}
 	    } else {
@@ -205,18 +205,18 @@ class Instrulog extends Group_Controller {
 		    $note = $this->input->post("note_$i");
 		    $data = array();
 		    if(isset($reservations[$i]) && $res != 'yes') { // remove reservation
-			$this->instrulog_model->deleteReservation($reservations[$i]->reservation_id);
+			$this->instrulog_model->delete_reservation($reservations[$i]->reservation_id);
 		    } elseif (isset($reservations[$i]) && $res == 'yes') { // update an entry that's already there
 			$data['reservation_id'] = $reservations[$i]->reservation_id;
 			$data['note'] = $note;
-			$this->instrulog_model->updateReservation($data);
+			$this->instrulog_model->update_reservation($data);
 		    } elseif (!isset($reservations[$i]) && $res == 'yes') { // add reservation
 			$data['instrument_id'] = $instrument_id;
 			$data['i'] = $i;
 			$data['note'] = $note;
 			$data['userid'] = $userid;
 			$data['date'] = $date;
-			$this->instrulog_model->addReservation($data);
+			$this->instrulog_model->add_reservation($data);
 		    }
 		}
 	    }

@@ -23,16 +23,16 @@ class Publications extends Group_Controller {
     public function index(){
 	$this->load->model('user_model');
 	
-	$status = $this->publication_model->getTableStatus();
+	$status = $this->publication_model->get_table_status();
 	$status_text = '&nbsp;&nbsp;<span style="font-size:14px; font-weight:normal">( Total: '.$status[0].' - Last Updated: '.$status[1].' )</span>';
     
 	$pubsHTML = '';
-	$posters = $this->publication_model->getPosters();
+	$posters = $this->publication_model->get_posters();
 	
 	$pubsHTML = '';
 	foreach ($posters as $poster){
-	    $user = $this->user_model->getUser($poster);
-	    $publications = $this->publication_model->getUserPublications($poster);
+	    $user = $this->user_model->get_user($poster);
+	    $publications = $this->publication_model->get_user_publications($poster);
 	    $data2['poster'] = $user;
 	    $data2['publications'] = $publications;
 	    $data2['session_userid'] = $this->userobj->userid;
@@ -46,9 +46,9 @@ class Publications extends Group_Controller {
     
     public function show($pub_id){
 	
-	$pub = $this->publication_model->getPublication($pub_id);
+	$pub = $this->publication_model->get_publication($pub_id);
 	
-	$fileIDs = $this->getFileIDs($pub['file_ids']);
+	$fileIDs = $this->get_file_ids($pub['file_ids']);
 	$count = count($fileIDs);
 
 	$fileData = array();
@@ -56,8 +56,8 @@ class Publications extends Group_Controller {
 	    $i = 0;
 	    foreach ($fileIDs as $file_id) {
 		$fileData[$i]['id'] = $file_id;
-		$fileData[$i]['link'] = $this->filemanager->getFileURL($file_id);
-		$fileData[$i]['info'] = $file_info = $this->filemanager->getFileInfo($file_id);
+		$fileData[$i]['link'] = $this->filemanager->get_file_url($file_id);
+		$fileData[$i]['info'] = $file_info = $this->filemanager->get_file_info($file_id);
 		$i++;
 	    }
 	}
@@ -76,7 +76,7 @@ class Publications extends Group_Controller {
 	
 	if (isset($_POST['add_publication_form'])){
 
-	    if(!$this->checkFormInput()) { // something missing so just return
+	    if(!$this->check_form_input()) { // something missing so just return
 		$data['page_title'] = 'Add Publication';
 		$data['error'] = $this->error;
 		$this->load_view('group/publications/addPublicationError',$data);
@@ -94,7 +94,7 @@ class Publications extends Group_Controller {
 	    $data['comments']	= $this->input->post('comments');
 	    $data['file_ids']	= ''; // left blank on purpose
 
-	    $pub_id = $this->publication_model->addPublication($data);
+	    $pub_id = $this->publication_model->add_publication($data);
 
 	    redirect('group/publications/edit/'.$pub_id);
 	} else {
@@ -110,7 +110,7 @@ class Publications extends Group_Controller {
 	
 	if (isset($_POST['publication_edit_form'])){
 
-	    if(!$this->checkFormInput()) { // something missing so just return
+	    if(!$this->check_form_input()) { // something missing so just return
 		return;
 	    }
 
@@ -125,12 +125,12 @@ class Publications extends Group_Controller {
 	    $data['abstract']	= $this->input->post('abstract');
 	    $data['comments']	= $this->input->post('comments');
 
-	    $this->publication_model->updatePublication($data);
+	    $this->publication_model->update_publication($data);
 
 	    redirect('group/publications/show/'.$pub_id);
 	} else {
-	    $publication = $this->publication_model->getPublication($pub_id);
-	    $fileIDs = $this->getFileIDs($publication['file_ids']);
+	    $publication = $this->publication_model->get_publication($pub_id);
+	    $fileIDs = $this->get_file_ids($publication['file_ids']);
 	    $count = count($fileIDs);
 
 	    $fileData = array();
@@ -138,8 +138,8 @@ class Publications extends Group_Controller {
 		$i = 0;
 		foreach ($fileIDs as $file_id) {
 		    $fileData[$i]['id'] = $file_id;
-		    $fileData[$i]['link'] = $this->filemanager->getFileURL($file_id);
-		    $fileData[$i]['info'] = $file_info = $this->filemanager->getFileInfo($file_id);
+		    $fileData[$i]['link'] = $this->filemanager->get_file_url($file_id);
+		    $fileData[$i]['info'] = $file_info = $this->filemanager->get_file_info($file_id);
 		    $i++;
 		}
 	    }
@@ -154,39 +154,39 @@ class Publications extends Group_Controller {
     }
     
     public function delete($pub_id){
-	$pub = $this->publication_model->getPublication($pub_id);
+	$pub = $this->publication_model->get_publication($pub_id);
 
-	$this->publication_model->deletePublication($pub_id);
+	$this->publication_model->delete_publication($pub_id);
 
 	// delete any files
-	$files = $this->getFileIDs($pub['file_ids']);
+	$files = $this->get_file_ids($pub['file_ids']);
 	$count = count($files);
 	if($count > 0) {
 	    foreach ($files as $file_id) {
-		$this->filemanager->deleteFile($file_id);
+		$this->filemanager->delete_file($file_id);
 	    }
 	}
 
 	redirect('group/publications');
     }
     
-    public function addFile(){
+    public function add_file(){
 	
 	if (isset($_POST['add_publication_file_form'])){
 	    
 	    $pub_id = $this->input->post('publication_id');
-	    $pub = $this->publication_model->getPublication($pub_id);
+	    $pub = $this->publication_model->get_publication($pub_id);
 
 	    // copy new files
 	    $table = $this->session->userdata('group')."_publications";
-	    $file_id = $this->filemanager->uploadFile(1, $table, $pub_id);
+	    $file_id = $this->filemanager->upload_file(1, $table, $pub_id);
 	    
 	    $data['modify_date'] = getLISDate();
 	    $data['file_ids'] = $pub['file_ids'].' '.$file_id.',';
 	    $data['pub_id'] = $pub_id;
 	    
 	    // add file entry to the database
-	    $this->publication_model->addFile($data);
+	    $this->publication_model->add_file($data);
 
 	    redirect('group/publications/show/'.$pub_id);
 	} else {
@@ -195,15 +195,15 @@ class Publications extends Group_Controller {
 	
     }
     
-    public function deleteFile(){
+    public function delete_file(){
 	
 	$pub_id	    = $this->input->post('publication_id');
 	$file_id    = $this->input->post('file_id');
 	
-	$pub = $this->publication_model->getPublication($pub_id);
+	$pub = $this->publication_model->get_publication($pub_id);
 
 	// delete the file
-	$this->filemanager->deleteFile($file_id);
+	$this->filemanager->delete_file($file_id);
 
 	// get the file_id string and delete the only that file_id
 	$file_ids = $pub['file_ids'];
@@ -212,13 +212,13 @@ class Publications extends Group_Controller {
 
 	$data['pub_id'] = $pub_id;
 	$data['modify_date'] = getLISDate();
-	$this->publication_model->deleteFile($data);
+	$this->publication_model->delete_file($data);
 
 	redirect('group/publications/show/'.$pub_id);
     }
     
     // function to check the form input
-    function checkFormInput() {
+    function check_form_input() {
 	
 	$this->error = '';
 	$title = $_POST['title']; // Users name
@@ -239,7 +239,7 @@ class Publications extends Group_Controller {
 	}
     }
     
-    function getFileIDs($file_ids) {
+    function get_file_ids($file_ids) {
 	$files = array();
 	$file_ids = trim($file_ids, ",");
 	if(!empty($file_ids)) {

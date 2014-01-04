@@ -8,7 +8,7 @@
   
   // initialize some links
   //$backup_link = $base."backup";
-  $message_link = $base."/main/displayMessages";
+  $message_link = $base."/main/display_messages";
   $upgrade_link =  $base."/accounts/upgrade";
   ?>
 

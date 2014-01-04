@@ -13,21 +13,21 @@ class Grouptask_model extends CI_Model {
         $this->i_table = $this->session->userdata('group').'_grouptask_item';
     }
     
-    public function getYearTasks($y_min,$y_max){
+    public function get_year_tasks($y_min,$y_max){
         $sql = "SELECT * FROM $this->table WHERE (year >= $y_min AND year <= $y_max)";
         $records = $this->lisdb->query($sql)->result_array();
         return $records;
     }
     
     // function to return a group task informattion based on the current group task
-    public function getGroupTaskInformation($grouptask_id){
+    public function get_group_task_information($grouptask_id){
         $sql = "SELECT * FROM $this->table WHERE grouptask_id='$grouptask_id'";
         $records = $this->lisdb->query($sql)->result_array();
         return $records[0];
     }
     
     // function to get the grouptask information
-    function getTaskItemInformation($type, $item_value) {
+    function get_task_item_information($type, $item_value) {
       if($type == 'monthly') {
         $sql = "SELECT * FROM $this->i_table WHERE (grouptask_id='$this->grouptask_id' AND item_month='$item_value')";
       }
@@ -43,56 +43,56 @@ class Grouptask_model extends CI_Model {
     }
     
     // function to get the number of items for a grouptask
-    public function getGroupTaskItems($grouptask_id=null) {
+    public function get_group_task_items($grouptask_id=null) {
       $sql = "SELECT * FROM $this->i_table WHERE grouptask_id='$grouptask_id' ORDER BY item_num";
       $records = $this->lisdb->query($sql)->result_array();
       return $records;
     }
     
-    public function getItemByMonth($grouptask_id){
+    public function get_item_by_month($grouptask_id){
         $sql = "SELECT * FROM $this->i_table WHERE grouptask_id='$grouptask_id' ORDER BY item_month";
         $records = $this->lisdb->query($sql)->result_array();
         return $records;
     }
     
-    public function addTask($data){
+    public function add_task($data){
         $sql = "INSERT INTO $this->table VALUES('', '$data[task_name]', '$data[type]', '$data[year]', '$data[manager_id]', '$data[notes]', '$data[userid]')";
         $this->lisdb->query($sql);
         return $this->lisdb->insert_id();
     }
     
-    public function addTaskItem($data){
+    public function add_task_item($data){
         $sql = "INSERT INTO $this->i_table VALUES('', '$data[grouptask_id]', '$data[item_num]', '$data[item_week]', '$data[item_month]', '$data[completed]', '$data[note]', '$data[userid]')";
         $this->lisdb->query($sql);
         return $this->lisdb->insert_id();
     }
     
-    public function resetTaskItem($item_id){
+    public function reset_task_item($item_id){
         $sql = "UPDATE $this->i_table SET completed= 'NO' WHERE item_id = '$item_id'";
         $this->lisdb->query($sql);
     }
     
-    public function updateTaskItem($note,$person,$item_id){
+    public function update_task_item($note,$person,$item_id){
         $sql = "UPDATE $this->i_table SET note = '$note', userid='$person' WHERE item_id = '$item_id'";
         $this->lisdb->query($sql);
     }
     
-    public function updateTaskNotes($grouptask_id,$notes){
+    public function update_task_notes($grouptask_id,$notes){
         $sql = "UPDATE $this->table SET notes = '$notes' WHERE grouptask_id = '$grouptask_id'";
         $this->lisdb->query($sql);
     }
     
-    public function updateTask($data){
+    public function update_task($data){
         $sql = "UPDATE $this->table SET task_name= '$data[task_name]', manager_id = '$data[manager_id]', notes = '$data[notes]' WHERE grouptask_id = '$data[grouptask_id]'";
         $this->lisdb->query($sql);
     }
     
-    public function setTaskItemCompleted($item_id){
+    public function set_task_item_completed($item_id){
         $sql = "UPDATE $this->i_table SET completed= 'YES' WHERE item_id = '$item_id'";
         $this->lisdb->query($sql);
     }
     
-    public function deleteTask($grouptask_id){
+    public function delete_task($grouptask_id){
         // remove the entry from instrulog table
         $sql = "DELETE FROM $this->table WHERE grouptask_id = '$grouptask_id'";
         $this->lisdb->query($sql);
@@ -102,12 +102,12 @@ class Grouptask_model extends CI_Model {
         $this->lisdb->query($sql);
     }
     
-    public function deleteTaskItem($item_id){
+    public function delete_task_item($item_id){
         $sql = "DELETE FROM $this->i_table WHERE item_id = '$item_id'";
         $this->lisdb->query($sql);
     }
     
-    public function copyTask($mode,$year,$grouptask_id){
+    public function copy_task($mode,$year,$grouptask_id){
         $sql = "INSERT INTO $this->table (task_name, type, year, manager_id, notes, userid) 
             (SELECT task_name, type, year, manager_id, notes, userid FROM $this->table WHERE grouptask_id=$grouptask_id)";
         $this->lisdb->query($sql);
@@ -123,7 +123,7 @@ class Grouptask_model extends CI_Model {
     }
     
     // function to copy grouptask items
-    public function copyGroupTaskItems($grouptask_id, $new_grouptask_id) {
+    public function copy_group_task_items($grouptask_id, $new_grouptask_id) {
       // get all the old values
       $sql = "SELECT * FROM $this->i_table WHERE grouptask_id='$grouptask_id'";
       $records = $this->lisdb->query($sql)->result_array();

@@ -2,16 +2,23 @@
 
 class Manage extends Group_Controller {
     
-    var $userobj = null;
-    var $u_table = null;
-    var $main_error = '';
-    var $home_dir = '';
+    private $userobj = null;
+    private $u_table = null;
+    private $main_error = '';
+    private $home_dir = '';
+    private $gtypes = null;
+    private $disciplines = null;
     
     public function __construct() {
 	parent::__construct();
 	$this->userobj = $this->session->userdata('user');
         $this->u_table = $this->properties['lis.account'].'_users';
         $this->home_dir = CIPATH."/accounts/mylis_".$this->properties['lis.account']."/";
+	$this->gtypes = array('Select One', 'Academia', 'Government', 'Research Instititue', 'Company');
+	$this->disciplines = array('Select One', 'Astronomy', 'Atmospheric Science', 
+	'Biochemistry', 'Biological Sciences', 'Biotechnology', 'Chemistry', 
+	'Computer Science', 'Electrical Engineering', 'Material Science', 'Mathematics', 
+	'Mechanical Engineering', 'Nanotechology', 'Pharmacology', 'Physics');
     }
    
     public function index(){
@@ -30,7 +37,7 @@ class Manage extends Group_Controller {
         $data['page_title'] = "Group user management";
         $data['menuHTML'] = $menuHTML;
         $data['importForm'] = $importForm;
-        $data['users'] = $this->loadUsers();
+        $data['users'] = $this->load_users();
         $data['um_error'] = $this->session->userdata('um_error');
         $this->load_view('group/manage/users_main',$data);
     }
@@ -78,14 +85,14 @@ class Manage extends Group_Controller {
 
                   // check to make sure this user id is not already in the system if it is then just delete it
                   $this->load->model('user_model');
-                  $this->user_model->deleteUser($userid);
+                  $this->user_model->delete_user($userid);
 
                   // add this entry to the database now
                   $data['userid'] = $userid;         $data['password'] = $password;
                   $data['role'] = $role;             $data['name'] = $name;
                   $data['email'] = $email;           $data['status'] = $status;
                   $data['info'] = $info;
-                  $this->user_model->addUser($data);
+                  $this->user_model->add_user($data);
 
                   $ec++; // increment the entry count
                 }
@@ -113,7 +120,7 @@ class Manage extends Group_Controller {
     
     public function users_add(){
         if (isset($_POST['user_add_form'])){
-            if($this->checkFormInput()) {
+            if($this->check_form_input()) {
                 $data['userid'] = $this->input->post('userid'); 
                 $data['password'] = $this->input->post('password');
                 $data['name'] = $this->input->post('name');
@@ -123,7 +130,7 @@ class Manage extends Group_Controller {
                 $data['status'] = 'present';
 
                 $this->load->model('user_model');
-                $this->user_model->addUser($data);
+                $this->user_model->add_user($data);
             } else {
                 $data['error_message'] = $this->error_message;
                 $this->load_view('error/error_and_back',$data);
@@ -147,7 +154,7 @@ class Manage extends Group_Controller {
                   if($modify_task == 'update') {
                       $userid2 = cleanUserID($userid); // repalces any @ or . with underscores
 
-                      if($this->checkFormInput2($userid2)) {
+                      if($this->check_form_input2($userid2)) {
                           $data['password'] = $this->input->post('password_'.$userid2);
                           $data['name'] = $this->input->post('name_'.$userid2);
                           $data['email'] = $this->input->post('email_'.$userid2);
@@ -164,7 +171,7 @@ class Manage extends Group_Controller {
                           return;
                       }
                   } else { // remove user
-                    $this->user_model->completeUserRemoval($userid);
+                    $this->user_model->complete_user_removal($userid);
                   }
                 }
             }
@@ -182,10 +189,10 @@ class Manage extends Group_Controller {
         
         $data['page_title'] = 'Group location manager';
         $data['menuHTML'] = $menuHTML;
-        $data['users'] = $this->loadUsers();
-        $data['currentUsers'] = $this->getCurrentUsers();
+        $data['users'] = $this->load_users();
+        $data['currentUsers'] = $this->get_current_users();
         $this->load->model('chemicals_model');
-        $data['locationList'] = $this->chemicals_model->simpleLocationList();
+        $data['locationList'] = $this->chemicals_model->simple_location_list();
         $data['lm_error'] = $this->session->userdata('lm_error');
         $this->session->unset_userdata('lm_error');
         $this->load_view('group/manage/locations_main',$data);
@@ -235,7 +242,7 @@ class Manage extends Group_Controller {
                 $locationInfo[3] = $owner;
                 
                 $this->load->model('chemicals_model');
-                $this->chemicals_model->addLocation($locationInfo,$this->userobj);
+                $this->chemicals_model->add_location($locationInfo,$this->userobj);
           }
         }
 
@@ -266,12 +273,12 @@ class Manage extends Group_Controller {
                     $data['owner'] = $owner;
                     $data['userid'] = $userid;
                     $data['location_id'] = $location_id;
-                    $this->chemicals_model->updateLocation($data);
+                    $this->chemicals_model->update_location($data);
                 } else {
                   $error .= 'Errors found modifying '.$location_id.'<br>';
                 }
             } else { // remove the location
-              $this->chemicals_model->deleteLocation($location_id);
+              $this->chemicals_model->delete_location($location_id);
             }
           }
         }
@@ -294,13 +301,13 @@ class Manage extends Group_Controller {
         $this->load->model('chemicals_model');
         
         $data2['type'] = 'Chemical';
-        $data2['categories'] = $this->chemicals_model->getCategoriesByType('Chemical');
+        $data2['categories'] = $this->chemicals_model->get_categories_by_type('Chemical');
         $chemicalsImportForm = $this->load->view('group/manage/inventoryImportForm',$data2,TRUE);
         $addChemicalCategories = $this->load->view('group/manage/inventoryAddForm',$data2,TRUE);
         $editChemicalCategories = $this->load->view('group/manage/inventoryEditForm',$data2,TRUE);
         
         $data2['type'] = 'Supply';
-        $data2['categories'] = $this->chemicals_model->getCategoriesByType('Supply');
+        $data2['categories'] = $this->chemicals_model->get_categories_by_type('Supply');
         $suppliesImportForm = $this->load->view('group/manage/inventoryImportForm',$data2,TRUE);
         $addSupplyCategories = $this->load->view('group/manage/inventoryAddForm',$data2,TRUE);
         $editSupplyCategories = $this->load->view('group/manage/inventoryEditForm',$data2,TRUE);
@@ -323,13 +330,13 @@ class Manage extends Group_Controller {
         
         if(is_uploaded_file($tmp_name)) {
           $date = getLISDate(); // get todays date
-          $categories = $this->chemicals_model->getCategoriesByType('Chemical');
+          $categories = $this->chemicals_model->get_categories_by_type('Chemical');
           $lc = 2; // keep tracks of the current line
           $ec = 0; // keep tracks of the entries add to the database
 
           // see if to reset the database table
           if($_POST['action'] == 'overwrite') {
-            $this->chemicals_model->resetChemicalsTable();
+            $this->chemicals_model->reset_chemicals_table();
           }
 
           $fp = fopen($tmp_name, "r") or die("Couldn't open $tmp_name");
@@ -390,10 +397,10 @@ class Manage extends Group_Controller {
                     $data['notes'] = $notes;
                     $data['owner'] = $owner;
                     $data['userid'] = $userid;
-                    $this->chemicals_model->addChemical($data);
+                    $this->chemicals_model->add_chemical($data);
 
                     if(!in_array($category, $categories)) {
-                      $this->chemicals_model->addCategory($category,$this->userobj->userid);
+                      $this->chemicals_model->add_category($category,$this->userobj->userid);
                     }
                     $ec++; // increment the entry count
                 } else {
@@ -422,13 +429,13 @@ class Manage extends Group_Controller {
         
         if(is_uploaded_file($tmp_name)) {
           $date = getLISDate(); // get todays date
-          $categories = $this->chemicals_model->getCategoriesByType('Supply');
+          $categories = $this->chemicals_model->get_categories_by_type('Supply');
           $lc = 2; // keep tracks of the current line
           $ec = 0; // keep tracks of the entries add to the database
 
           // see if to reset the database table
           if($_POST['action'] == 'overwrite') {
-            $this->supplies_model->resetSuppliesTable();
+            $this->supplies_model->reset_supplies_table();
           }
 
           $fp = fopen($tmp_name, "r") or die("Couldn't open $tmp_name");
@@ -489,10 +496,10 @@ class Manage extends Group_Controller {
                     $data['notes'] = $notes;
                     $data['owner'] = $owner;
                     $data['userid'] = $userid;
-                    $this->supplies_model->addSupply($data);
+                    $this->supplies_model->add_supply($data);
 
                     if(!in_array($category, $categories)) {
-                      $this->supplies_model->addCategory($category,$this->userobj->userid);
+                      $this->supplies_model->add_category($category,$this->userobj->userid);
                     }
                     $ec++; // increment the entry count
                 } else {
@@ -523,7 +530,7 @@ class Manage extends Group_Controller {
         for($i = 0; $i < 7; $i++) {
             $category = $this->input->post('cat_'.$i);
             if(!empty($category)) 
-                $this->chemicals_model->addCategory($category,$userid);
+                $this->chemicals_model->add_category($category,$userid);
         }
 
         redirect('group/manage/inventory_main#chemical');
@@ -538,7 +545,7 @@ class Manage extends Group_Controller {
         for($i = 0; $i < 7; $i++) {
             $category = $this->input->post('cat_'.$i);
             if(!empty($category)) 
-                $this->supplies_model->addCategory($category,$userid);
+                $this->supplies_model->add_category($category,$userid);
         }
 
         redirect('group/manage/inventory_main#supply');
@@ -556,9 +563,9 @@ class Manage extends Group_Controller {
             $value = $this->input->post('cat_'.$category_id);
 
             if($modify_task == 'update' && !empty($value)) {
-              $this->chemicals_model->updateCategory($value,$category_id);
+              $this->chemicals_model->update_category($value,$category_id);
             } else { // remove category
-              $this->chemicals_model->deleteCategory($category_id);
+              $this->chemicals_model->delete_category($category_id);
             }
           }
         }
@@ -578,9 +585,9 @@ class Manage extends Group_Controller {
             $value = $this->input->post('cat_'.$category_id);
 
             if($modify_task == 'update' && !empty($value)) {
-              $this->chemicals_model->updateCategory($value,$category_id);
+              $this->chemicals_model->update_category($value,$category_id);
             } else { // remove category
-              $this->chemicals_model->deleteCategory($category_id);
+              $this->chemicals_model->delete_category($category_id);
             }
           }
         }
@@ -600,7 +607,7 @@ class Manage extends Group_Controller {
 	$params['properties'] = $this->properties;
         $this->proputil_model->initialize($params);
                 
-        $data['proputil'] = $this->proputil_model->getProperties();
+        $data['proputil'] = $this->proputil_model->get_properties();
         
         $data['page_title'] = "Group user management";
         $data['menuHTML'] = $menuHTML;
@@ -629,8 +636,8 @@ class Manage extends Group_Controller {
 
         if($this->input->post('chemical2') == 'yes') {
           $this->properties['show.chemical2'] = 'yes';
-          $this->proputil_model->storeProperty('chemical2.link', checkURL($this->input->post('url')));
-          $this->proputil_model->storeProperty('chemical2.sitename', $this->input->post('name')); 
+          $this->proputil_model->store_property('chemical2.link', checkURL($this->input->post('url')));
+          $this->proputil_model->store_property('chemical2.sitename', $this->input->post('name')); 
         } else {
           $this->properties['show.chemical2'] = 'no';
         }
@@ -696,7 +703,7 @@ class Manage extends Group_Controller {
         }
         
         // save the properties file now
-        $this->filemanager->writeInitiationFile($this->properties);
+        $this->filemanager->write_initiation_file($this->properties);
 
         redirect('group/manage/modules_main');
     }
@@ -712,21 +719,21 @@ class Manage extends Group_Controller {
         $this->proputil_model->initialize($params);
     
         if($this->input->post('orders_private') == 'yes') {
-          $this->proputil_model->storeProperty('orders.private', 'yes');
+          $this->proputil_model->store_property('orders.private', 'yes');
         } else {
-          $this->proputil_model->storeProperty('orders.private', 'no');
+          $this->proputil_model->store_property('orders.private', 'no');
         }
 
         if($this->input->post('orders_notifybuyer') == 'yes') {
-          $this->proputil_model->storeProperty('orders.notifybuyer', 'yes');
+          $this->proputil_model->store_property('orders.notifybuyer', 'yes');
         } else {
-          $this->proputil_model->storeProperty('orders.notifybuyer', 'no');
+          $this->proputil_model->store_property('orders.notifybuyer', 'no');
         }
 
         if($this->input->post('orders_notifyuser') == 'yes') {
-          $this->proputil_model->storeProperty('orders.notifyuser', 'yes');
+          $this->proputil_model->store_property('orders.notifyuser', 'yes');
         } else {
-          $this->proputil_model->storeProperty('orders.notifyuser', 'no');
+          $this->proputil_model->store_property('orders.notifyuser', 'no');
         }
 
         redirect('group/manage/modules_main');
@@ -735,7 +742,7 @@ class Manage extends Group_Controller {
     
     public function groupinfo_main(){
         if (isset($_POST['groupinfo_update_form'])){
-            if($this->checkFormInput()) {
+            if($this->check_form_input()) {
                 $account_id = $this->account_id;
                 $fname = trim($_POST['fname']); // PI first name
                 $mi = trim($_POST['mi']); // PI middle name
@@ -777,7 +784,7 @@ class Manage extends Group_Controller {
                 'site.manager.email' => $site_manager_email);
 
                 $fm = new filemanager($this->properties, $this->user);
-                $fm->modifyInitiationFile($props);
+                $fm->modify_initiation_file($props);
 
                 // redirect to main page
                 $script = $this->properties['script'];
@@ -793,15 +800,17 @@ class Manage extends Group_Controller {
 
             $data['page_title'] = "Group Information Management";
             $data['menuHTML'] = $menuHTML;
-            $data['users'] = $this->getCurrentUsers();
-            $data['info'] = $this->account_model->getAccountInfo($account_id);
+            $data['users'] = $this->get_current_users();
+            $data['info'] = $this->account_model->get_account_info($account_id);
             $data['account_id'] = $account_id;
+	    $data['disciplines'] = $this->disciplines;
+	    $data['gtypes'] = $this->gtypes;
             $this->load_view('group/manage/groupinfo_main',$data);
         }
     }
     
     // function to check form input
-    function checkFormInput() {
+    function check_form_input() {
       $error = '';
 
       $userid = $this->input->post('userid'); 
@@ -838,7 +847,7 @@ class Manage extends Group_Controller {
     }
     
     // second function to check form input when modifying user account information
-    function checkFormInput2($userid) {
+    function check_form_input2($userid) {
       $password = $this->input->post("password_$userid");
       $name = $this->input->post("name_$userid");
       $email = $this->input->post("email_$userid");

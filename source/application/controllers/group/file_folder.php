@@ -30,7 +30,7 @@ class File_folder extends Group_Controller {
         $userid = $this->userobj->userid;
         $role = $this->userobj->role;
         
-        $categories = $this->file_folder_model->getCategories('filing'); // get the filing categeries user defined
+        $categories = $this->file_folder_model->get_categories('filing'); // get the filing categeries user defined
         
         $linksHTML = '';
         // display links by categories
@@ -38,7 +38,7 @@ class File_folder extends Group_Controller {
             $cat_id = getCategoryID($key);
 
             // get file database and links
-            $categoryLinks = $this->file_folder_model->getLinks($cat_id,$this->myfiles,$userid);
+            $categoryLinks = $this->file_folder_model->get_links($cat_id,$this->myfiles,$userid);
 
             if(count($categoryLinks) >= 1) {
               $linksHTML .= '<div style="margin:0px 15px;"><table id="file_folder_table" class="table table-bordered table-condensed">';
@@ -49,11 +49,11 @@ class File_folder extends Group_Controller {
               foreach($categoryLinks as $array) {
 		$linksHTML .= "<tr>";
                 $file_id = $array['file_id'];
-                $file_info = $this->filemanager->getFileInfo($file_id);
+                $file_info = $this->filemanager->get_file_info($file_id);
 
                  $linksHTML .= '<td>'.$i.'</td><td>'.$array['title'].'</td><td>';
 
-                $download_link = $this->filemanager->getFileURL($array['file_id']);
+                $download_link = $this->filemanager->get_file_url($array['file_id']);
 		
                 if($file_info['type'] != 'url') {
                    $linksHTML .= "<a href='$download_link'><img src='".base_url()."images/icons/download2.png' class='icon' title='download'/></a>";
@@ -68,7 +68,7 @@ class File_folder extends Group_Controller {
                 }
 
                 if($userid == $array['userid'] || $role == 'admin') {
-                  $delete_link = base_url()."group/file_folder/deleteFile?file_id=$file_id";
+                  $delete_link = base_url()."group/file_folder/delete_file?file_id=$file_id";
                    $linksHTML .= "<a href='$delete_link'><img src='".base_url()."images/icons/delete.png' class='icon' title='delete'/></a>";
                 }
                 $i++;
@@ -85,14 +85,14 @@ class File_folder extends Group_Controller {
             $data1['title'] = 'Edit File';
             $data1['task'] = 'folder_edit';
             $data1['file_id'] = $file_id;
-            $data1['fileInfo'] = $this->file_folder_model->getFile($file_id);
+            $data1['fileInfo'] = $this->file_folder_model->get_file($file_id);
         } else {
             $data1['title'] = 'Add File';
             $data1['task'] = 'folder_add';
             $data1['file_id'] = '';
         }
         
-        $data1['urlUploadField'] = $this->filemanager->getURLFileUploadField(1);
+        $data1['urlUploadField'] = $this->filemanager->get_url_file_upload_field(1);
         $data['addForm'] = $this->load->view('group/file_folder/addForm',$data1,TRUE);
         
         $data['page_title'] = 'Group Files and Folders';
@@ -101,28 +101,28 @@ class File_folder extends Group_Controller {
 	$this->load_view('group/file_folder/main',$data);
     }
     
-    public function addfile(){
+    public function add_file(){
         $userid = $this->userobj->userid;
 	
-        if($this->checkFormInput()) {
+        if($this->check_form_input()) {
           $title = $this->input->post('title');
           $category = $this->input->post('category');
           $other_category = $this->input->post('other_category');
 
           $cat_id = getCategoryID($category);
           if(!empty($other_category)) {
-            $cat_id = $this->file_folder_model->addCategory('filing', $other_category,$userid);
+            $cat_id = $this->file_folder_model->add_category('filing', $other_category,$userid);
           }
 	  
           // add the file inorder to get the file ID
           $table_name = $this->session->userdata('group').'_folder_files';
-          $file_id = $this->filemanager->uploadFile(1, $table_name, 0);
+          $file_id = $this->filemanager->upload_file(1, $table_name, 0);
 
           $data['file_id'] = $file_id;
           $data['title'] = $title;
           $data['userid'] = $userid;
           $data['cat_id'] = $cat_id;
-          $this->file_folder_model->addFile($data);
+          $this->file_folder_model->add_file($data);
 
           redirect('group/file_folder');
         } else {
@@ -132,8 +132,8 @@ class File_folder extends Group_Controller {
         }
     }
     
-    public function editFile(){
-        if($this-> checkFormInput()) {
+    public function edit_file(){
+        if($this-> check_form_input()) {
           $file_id = $this->input->post('file_id');
           $title = $this->input->post('title');
           $category = $this->input->post('category');
@@ -141,11 +141,11 @@ class File_folder extends Group_Controller {
 
           $cat_id = getCategoryID($category);
           if(!empty($other_category)) {
-            $cat_id = $this->file_folder_model->addCategory('filing', $other_category,$userid);
+            $cat_id = $this->file_folder_model->add_category('filing', $other_category,$userid);
           }
 
-          $this->file_folder_model->updateFile($title,$cat_id,$file_id);
-          $this->filemanager->updateFile(1, $file_id);
+          $this->file_folder_model->update_file($title,$cat_id,$file_id);
+          $this->filemanager->update_file(1, $file_id);
 
           redirect('group/file_folder');
         } else {
@@ -155,16 +155,16 @@ class File_folder extends Group_Controller {
         }
     }
     
-    public function deleteFile(){
+    public function delete_file(){
         $file_id = $this->input->get('file_id');
-        $this->filemanager->deleteFile($file_id);  // delete the file
-        $this->file_folder_model->deleteFile($file_id);
+        $this->filemanager->delete_file($file_id);  // delete the file
+        $this->file_folder_model->delete_file($file_id);
 
         redirect('group/file_folder');
     }
     
     // function to check the form input
-    function checkFormInput() {
+    protected function check_form_input() {
       $error = '';
 
       $title = $this->input->post('title'); // Users name

@@ -52,11 +52,11 @@ else {
 }
 
 // put some links for modify the status of this item
-$cs_link0 = base_url()."group/supplies/changeStatus/in-stock?item_id=".$item_id; // change status to in stock
-$cs_link1 = base_url()."group/supplies/changeStatus/out-of-stock?item_id=".$item_id; // change status to out of stock
-$cs_link2 = base_url()."group/supplies/changeStatus/checked-out?item_id=".$item_id; // change status to checked out
-$cs_link3 = base_url()."group/supplies/changeStatus/returned?item_id=".$item_id; // change status to returned
-$cs_link4 = base_url()."group/supplies/changeStatus/ordered?item_id=".$item_id; // change status to ordered
+$cs_link0 = base_url()."group/supplies/change_status/in-stock?item_id=".$item_id; // change status to in stock
+$cs_link1 = base_url()."group/supplies/change_status/out-of-stock?item_id=".$item_id; // change status to out of stock
+$cs_link2 = base_url()."group/supplies/change_status/checked-out?item_id=".$item_id; // change status to checked out
+$cs_link3 = base_url()."group/supplies/change_status/returned?item_id=".$item_id; // change status to returned
+$cs_link4 = base_url()."group/supplies/change_status/ordered?item_id=".$item_id; // change status to ordered
 $mine_link = base_url()."group/supplies/transfer?item_id=".$item_id; // used to transfer this make to current user
 $edit_link = base_url()."group/supplies/edit?item_id=".$item_id; // used to edit the information about this supply
 $delete_link = base_url()."group/supplies/delete?item_id=".$item_id; // used to remove this supply

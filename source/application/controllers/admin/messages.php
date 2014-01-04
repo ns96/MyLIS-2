@@ -24,7 +24,7 @@ class Messages extends Admin_Controller {
 	// If a new message has been posted
 	if (isset($_POST['message_poster_form'])){
 	    // If the posted message is valid
-	    if($this->checkFormInput()) {
+	    if($this->check_form_input()) {
 		// Get posted message data
 		$account_ids = $this->input->post('accounts');
 		$now	     = $this->input->post('now');
@@ -54,7 +54,7 @@ class Messages extends Admin_Controller {
 		$data['url'] = $url;
 		// Save the message
 		$this->load->model('message_model');
-		$messageList = $this->message_model->addSystemMessage($data);
+		$messageList = $this->message_model->add_system_message($data);
 	    }
 	    // If the message has been saved or the message data were not valid
 	    // redirect to main page
@@ -62,15 +62,15 @@ class Messages extends Admin_Controller {
 	} else { // If no form has been posted load an empty form
 	    //
 	    $this->load->model('message_model');
-	    $messageList = $this->message_model->getAllSystemMessages();
+	    $messageList = $this->message_model->get_all_system_messages();
 	    
 	    $data['post_start'] = getLISDate();
 	    $data['post_end'] = addDaysToDate($data['post_start'], 7);
 	    $data['messageList'] = $messageList;
-	    $data['accounts'] = $this->loadUsers();
+	    $data['accounts'] = $this->load_users();
 	    $data['page_title'] = 'Message Poster';
 	
-	    $this->load_view('admin/messagePoster',$data);
+	    $this->load_view('admin/messages/messagePoster',$data);
 	}
     }
     
@@ -80,7 +80,7 @@ class Messages extends Admin_Controller {
 	// If the edited message has been posted
 	if (isset($_POST['edit_message_form'])){
 	    // If the edited message contains valid data
-	    if($this->checkFormInput()) {
+	    if($this->check_form_input()) {
 		// Get posted message data
 		$data['account_ids'] = $this->input->post('accounts');
 		$data['now'] = $this->input->post('now');
@@ -97,7 +97,7 @@ class Messages extends Admin_Controller {
 		$data['url'] = $url;
 		// Save the edited message
 		$this->load->model('message_model');
-		$message = $this->message_model->updateSystemMessage($data);
+		$message = $this->message_model->update_message($data);
 	    }
 	    
 	    redirect('admin/messages');
@@ -105,7 +105,7 @@ class Messages extends Admin_Controller {
 	} else { // Loads a message for editing
 	    // Retrieve the message data from database
 	    $this->load->model('message_model');
-	    $message = $this->message_model->getSystemMessage($message_id);
+	    $message = $this->message_model->get_system_message($message_id);
 	    // Load the message editing form
 	    $data['page_title'] = "Edit Message";
 	    $data['message_id'] = $message_id;
@@ -113,7 +113,7 @@ class Messages extends Admin_Controller {
 	    $data['back_link'] = encodeUrl(base_url()."admin/messages");
 	    $data['messageItem'] = $message;
 	    
-	    $this->load_view('admin/editMessageForm',$data);
+	    $this->load_view('admin/messages/editMessageForm',$data);
 	}
 	
     }
@@ -121,14 +121,14 @@ class Messages extends Admin_Controller {
     // Deletes a message
     public function delete($id){
 	$this->load->model('message_model');
-	$this->message_model->deleteSystemMessage($id);
+	$this->message_model->delete_system_message($id);
 
 	// Go to main page
 	redirect('admin/messages');
    }
     
     // Checks the validity of posted data when editing a message or posting a new message
-    private function checkFormInput() {
+    private function check_form_input() {
 	$error;
 	$account_ids	= $this->input->post('accounts');
 	$now		= $this->input->post('now');

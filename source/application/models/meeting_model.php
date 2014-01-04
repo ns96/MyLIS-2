@@ -12,7 +12,7 @@ class Meeting_model extends CI_Model {
 	$this->s_table = $this->session->userdata('group')."_gmslots";
     }
     
-    public function getGMDates($year){
+    public function get_gm_dates($year){
 
 	$sql = "SELECT * FROM $this->table WHERE gmdate LIKE '$year%' ORDER BY gmdate";
 	$records = $this->lisdb->query($sql)->result_array();
@@ -29,53 +29,53 @@ class Meeting_model extends CI_Model {
 	return $gmdates;
     }
     
-    public function getGMDate($gmdate_id){
+    public function get_gm_date($gmdate_id){
         $sql = "SELECT * FROM $this->table WHERE gmdate_id = '$gmdate_id'";
         $records = $this->lisdb->query($sql)->result_array();
         return $records[0];
     }
     
-    public function getDateSlots($gmdate_id){
+    public function get_date_slots($gmdate_id){
 	$sql = "SELECT * FROM $this->s_table WHERE gmdate_id ='$gmdate_id'";
 	$records = $this->lisdb->query($sql)->result_array();
 	return $records;
     }
     
-    public function getSlotInfo($slot_id){
+    public function get_slot_info($slot_id){
 	$slot_info = array();
 	$sql = "SELECT * FROM $this->s_table WHERE slot_id = '$slot_id'";
 	$records = $this->lisdb->query($sql)->result_array();
 	return $records[0];
     }
 
-    public function addSlot($data){
+    public function add_slot($data){
 	$sql = "INSERT INTO $this->s_table VALUES('', '$data[gmdate_id]','$data[type]', '$data[presenter]', '$data[title]', '$data[file_id]', '$data[modify_date]', '$data[userid]')";
 	$this->lisdb->query($sql);
     }
     
-    public function updateSlot($data){
+    public function update_slot($data){
 	$sql = "UPDATE $this->s_table SET gmdate_id = '$data[gmdate_id]', type = '$data[type]', 
 	    presenter = '$data[presenter]', title = '$data[title]', modify_date = '$data[modify_date]' WHERE slot_id = '$data[slot_id]'";
 	$this->lisdb->query($sql);
     }
     
-    public function deleteSlot($slot_id){
+    public function delete_slot($slot_id){
 	 $sql = "DELETE FROM $this->s_table WHERE slot_id = '$slot_id'";
 	 $this->lisdb->query($sql);
     }
 
-    public function addDate($data){
+    public function add_date($data){
 	$sql = "INSERT INTO $this->table VALUES('', '$data[semester_id]','$data[gmdate]', '$data[gmtime]', '$data[userid]')";
 	$this->lisdb->query($sql);
     }
     
-    public function updateDate($data){
+    public function update_date($data){
 	$sql = "UPDATE $this->table SET semester_id = '$data[semester_id]', gmdate = '$data[gmdate]', 
 	    gmtime = '$data[gmtime]', userid = '$data[userid]' WHERE gmdate_id = '$data[gmdate_id]'";
 	$this->lisdb->query($sql);
     }
     
-    public function deleteDate($gmdate_id){
+    public function delete_date($gmdate_id){
 	$sql = "SELECT * FROM $this->s_table WHERE gmdate_id = '$gmdate_id'";
 	$records = $this->lisdb->query($sql)->result_array();
 	foreach ($records as $dateItem){
@@ -85,12 +85,12 @@ class Meeting_model extends CI_Model {
 	$this->lisdb->query($sql);
     }
     
-    public function updateSlotFile($data){
+    public function update_slot_file($data){
 	$sql = "UPDATE $this->s_table SET modify_date = '$data[modify_date]',file_id = '$data[file_id]' WHERE slot_id = '$data[slot_id]'";
 	$this->lisdb->query($sql);
     }
     
-    public function deleteSlotFile($data){
+    public function delete_slot_file($data){
 	$sql = "UPDATE $this->s_table SET modify_date = '$data[modify_date]', file_id = '' WHERE slot_id = '$data[slot_id]'";
 	$this->lisdb->query($sql);
     }

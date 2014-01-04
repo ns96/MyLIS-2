@@ -119,7 +119,7 @@ $comments = htmlentities($pub['comments']);
 		echo '<td>'.$i.'</td>';
 		echo '<td>'.$fileItem['info']['description'].'</td>';
 		echo '<td style="text-align:center"><a href="'.$fileItem['link'].'">Get '.strtoupper($fileItem['info']['type']).'</a> ';
-		echo '<form method="post" action="'.base_url().'group/publications/deleteFile" style="display:inline">
+		echo '<form method="post" action="'.base_url().'group/publications/delete_file" style="display:inline">
 		    <input type="hidden" name="publication_id" value="'.$pub['publication_id'].'" >
 		    <input type="hidden" name="file_id" value="'.$fileItem['id'].'" >
 		    <input type="submit" value="Delete" class="btn btn-danger btn-small" ></form>';
@@ -139,7 +139,7 @@ $comments = htmlentities($pub['comments']);
 </div>
     
 <?
-    $add_link = base_url().'group/publications/addFile';
+    $add_link = base_url().'group/publications/add_file';
 ?>
 <div class="formWrapper">
     

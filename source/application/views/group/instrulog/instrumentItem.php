@@ -4,7 +4,7 @@ $instrulog_id	= $instrument['instrulog_id'];
 $manager_id	= $instrument['manager_id'];
 $instrumentName	= $instrument['instrument'];
 $userid		= $instrument['userid'];
-$manager	= $this->user_model->getUser($manager_id);
+$manager	= $this->user_model->get_user($manager_id);
 
 $link = base_url()."group/instrulog/index/".$instrulog_id;
 $delete_link = base_url()."group/instrulog/delete/".$instrulog_id;

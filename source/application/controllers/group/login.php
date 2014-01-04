@@ -35,7 +35,7 @@ class Login extends Group_Controller {
 		
 		// If the username or password were not empty
 		if(!empty($userid) && !empty($password)) {
-		    $user = $this->validateUser($userid, $password);
+		    $user = $this->validate_user($userid, $password);
                         
 		    // If the user credentials were not valid
 		    if(empty($user)) {
@@ -43,7 +43,7 @@ class Login extends Group_Controller {
 		    } else {  
 		    // If the credentials were valid
 			//  If the account has not been expired
-			if(!$this->isExpired()) {
+			if(!$this->is_expired()) {
 			    // If credentials are valid set the session variables
 			    // and redirect to main group page
 			    $user->password = ''; // strip out password from data that will be stored to session
@@ -76,8 +76,8 @@ class Login extends Group_Controller {
 	}
 	
 	// Validates the user's credentials
-	function validateUser($userid, $password) {
-	    $users = $this->getCurrentUsers(); // ony allow current users to login
+	function validate_user($userid, $password) {
+	    $users = $this->get_current_users(); // ony allow current users to login
 
 	    // see if this userid is in the database
 	    if((isset($users[$userid]))&&($users[$userid]->password == $password)) {
@@ -90,11 +90,11 @@ class Login extends Group_Controller {
 	
 	// function to check to see if the account has expired. 
 	// if it has then print out message
-	function isExpired() {
+	function is_expired() {
 	    $expired = false;
 	    $expire_date = $this->properties['lis.expire'];
 
-	    if($this->getDaysRemaining($expire_date) < 0) {
+	    if($this->get_days_remaining($expire_date) < 0) {
 		$expired = true;
 	    }
 
@@ -102,7 +102,7 @@ class Login extends Group_Controller {
 	}
 	
 	// function to return days remaining from todays date and the date variable
-	function getDaysRemaining($date) {
+	function get_days_remaining($date) {
 	    $days = 0;
 	    $sa  = explode('/', $date);
 	    $date_utc = mktime(0, 0, 0, $sa[0], $sa[1], $sa[2]);

@@ -22,7 +22,7 @@ class Lis_Controller extends CI_Controller {
     }
     
     // Reads configuration data (from ini file) for group or admin account
-    protected function loadProperties($conf_location) {
+    protected function load_properties($conf_location) {
 	    $propertiesFile = CIPATH.$conf_location;
 	    $properties = parse_ini_file($propertiesFile,false,INI_SCANNER_RAW); // INI_SCANNER_RAW is used in order not
 										// to convert 'true' and 'false' values to 1 and o
@@ -93,7 +93,7 @@ class Admin_Controller extends Lis_Controller {
 	    
 	    // Load some configuration from the ini file
 	    $conf_location= '/admin/conf/lisadmin.ini';
-	    $this->properties = $this->loadProperties($conf_location); 
+	    $this->properties = $this->load_properties($conf_location); 
 	    // Add some extra configuration data
 	    $this->properties['version_number'] = "1.31";
 	    $this->properties['version'] = $this->properties['version_number']." 01/30/2012";
@@ -102,7 +102,7 @@ class Admin_Controller extends Lis_Controller {
 	}
 	
 	// Returns an array which contains one data record for each administrator
-	protected function loadUsers() {
+	protected function load_users() {
 	    
 	    $users = array();
 	
@@ -160,7 +160,7 @@ class Group_Controller extends Lis_Controller {
 	    date_default_timezone_set('America/New_York');
 	    // Load some configuration from the ini file
 	    $conf_location = '/accounts/mylis_'.$groupname.'/conf/lis.ini';
-	    $this->properties = $this->loadProperties($conf_location);
+	    $this->properties = $this->load_properties($conf_location);
 	    // Add some extra configuration data
 	    $this->properties['version_number'] = "1.31";
 	    $this->properties['version'] = $this->properties['version_number']." 01/30/2012";
@@ -179,8 +179,8 @@ class Group_Controller extends Lis_Controller {
 	}
 	
 	// function to get a list of only current users, not past, of a group
-	function getCurrentUsers() {
-	   $users = $this->loadUsers();
+	function get_current_users() {
+	   $users = $this->load_users();
 	    $current_users = array();
 
 	    foreach($users as $user) {
@@ -195,7 +195,7 @@ class Group_Controller extends Lis_Controller {
 	}
 	
 	// load the default user
-	function getDefaultUser() {
+	function get_default_user() {
 	    $userdata = array(
 		    'userid'    =>	'myadmin', 
 		    'password'  =>	'change_password', 
@@ -210,16 +210,16 @@ class Group_Controller extends Lis_Controller {
 	}
 
 	// funtion to return an array of users
-	function loadUsers() {
+	function load_users() {
 	    $users = array();
 
 	    // get the default user account
-	    $du = $this->getDefaultUser();
+	    $du = $this->get_default_user();
 	    $users["$du->userid"] = $du;
 
 	    // Load users from the database
 	    $this->load->model('user_model');
-	    $userList = $this->user_model->getGroupUsers($this->properties['lis.account']);
+	    $userList = $this->user_model->get_group_users($this->properties['lis.account']);
 	    
 	    $total = count($userList);
 	    if($total>=1) {

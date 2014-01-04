@@ -59,11 +59,11 @@ $pubchem_url = 'http://www.ncbi.nlm.nih.gov/sites/entrez?db=pccompound&term='.$n
 $nist_url = 'http://webbook.nist.gov/cgi/cbook.cgi?Name='.$name.'&Units=SI';
 
 // put some links for modify the status of this item
-$cs_link0 = base_url()."group/chemicals/changeStatus/in-stock?chem_id=".$chem_id; // change status to in stock
-$cs_link1 = base_url()."group/chemicals/changeStatus/out-of-stock?chem_id=".$chem_id; // change status to out of stock
-$cs_link2 = base_url()."group/chemicals/changeStatus/checked-out?chem_id=".$chem_id; // change status to checked out
-$cs_link3 = base_url()."group/chemicals/changeStatus/returned?chem_id=".$chem_id; // change status to returned
-$cs_link4 = base_url()."group/chemicals/changeStatus/ordered?chem_id=".$chem_id; // change status to ordered
+$cs_link0 = base_url()."group/chemicals/change_status/in-stock?chem_id=".$chem_id; // change status to in stock
+$cs_link1 = base_url()."group/chemicals/change_status/out-of-stock?chem_id=".$chem_id; // change status to out of stock
+$cs_link2 = base_url()."group/chemicals/change_status/checked-out?chem_id=".$chem_id; // change status to checked out
+$cs_link3 = base_url()."group/chemicals/change_status/returned?chem_id=".$chem_id; // change status to returned
+$cs_link4 = base_url()."group/chemicals/change_status/ordered?chem_id=".$chem_id; // change status to ordered
 $mine_link = base_url()."group/chemicals/transfer?chem_id=".$chem_id; // used to transfer this make to current user
 $edit_link = base_url()."group/chemicals/edit?chem_id=".$chem_id; // used to edit the information about this chemical
 $delete_link = base_url()."group/chemicals/delete?chem_id=".$chem_id; // used to remove this chemical

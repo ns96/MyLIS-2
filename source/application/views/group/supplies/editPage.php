@@ -1,7 +1,7 @@
 <?php
 
 $edit_link = base_url().'group/supplies/edit';
-$location_link = base_url()."group/supplies/listLocations"; 
+$location_link = base_url()."group/supplies/list_locations"; 
 ?>
 
 <div class="formWrapper">

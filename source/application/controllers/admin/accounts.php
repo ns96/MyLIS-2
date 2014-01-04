@@ -30,7 +30,7 @@ class Accounts extends Admin_Controller {
     
     public function index(){
 	
-	$accountList = $this->account_model->getAllAccounts();
+	$accountList = $this->account_model->get_all_accounts();
 	
 	$data['page_title'] = 'MyLIS Accounts';
 	$data['accountList'] = $accountList;
@@ -44,19 +44,19 @@ class Accounts extends Admin_Controller {
     
     public function view($account_id){
 
-	if(!empty($account_id) && $this->account_model->accountExists($account_id)) {
+	if(!empty($account_id) && $this->account_model->account_exists($account_id)) {
 	    $data['page_title'] = "MyLIS Account ($account_id)";
 	    $data['account_id'] = $account_id;
-	    $accountInfo = $this->account_model->getAccountInfo($account_id);
+	    $accountInfo = $this->account_model->get_account_info($account_id);
 	    
 	    $manager_id = $accountInfo['manager_id'];
-	    $userList = $this->loadUsers();
+	    $userList = $this->load_users();
 	    $managerInfo = $userList[$manager_id];
 	    
 	    $data['accountInfo'] = $accountInfo;
-	    $data['accountUsers'] = $this->account_model->getAccountUsers($account_id);
+	    $data['accountUsers'] = $this->account_model->get_account_users($account_id);
 	    $data['managerInfo'] = $managerInfo;
-	    $data['accountProfile'] = $this->account_model->getAccountProfile($account_id);
+	    $data['accountProfile'] = $this->account_model->get_account_profile($account_id);
 	    $this->load_view('admin/accounts/account_info',$data);
 	} else {
 	    redirect('admin/accounts');
@@ -74,7 +74,7 @@ class Accounts extends Admin_Controller {
 	}
 	
 	if (isset($_POST['add_account_form'])){
-	    if($this->checkFormInput('add')) {
+	    if($this->check_form_input('add')) {
 		$fname = addslashes(trim($this->input->post('fname'))); // PI first name
 		$mi = trim($this->input->post('mi')); // PI middle name
 		$lname = addslashes(trim($this->input->post('lname'))); // PI last name
@@ -112,7 +112,7 @@ class Accounts extends Admin_Controller {
 		$department_id = ''; // blank on purpose
 		$network_ids = ''; // blank on purpose
 		$manager_id = $this->user->userid;
-		$activate_code = $this->getActivateCode();
+		$activate_code = $this->get_activation_code();
 
 		if(!empty($notes)) {
 		    $notes = $name.' ('.getLISDateTime().") >>Account Created\n$notes\n";
@@ -121,7 +121,7 @@ class Accounts extends Admin_Controller {
 		    $notes = $name.' ('.getLISDateTime().") >>Account Created\n";
 		}
 
-		$account_id = $this->getAccountID($lname); // get the account id
+		$account_id = $this->get_account_id($lname); // get the account id
 
 		$data['account_id'] = $account_id;
 		$data['fname'] = $fname;		    $data['term'] = $term;
@@ -144,16 +144,16 @@ class Accounts extends Admin_Controller {
 		
 		// create the tables associated wthis account
 		$this->load->model('managedb_model');
-		$this->managedb_model->createMyLISTables($account_id);
+		$this->managedb_model->create_MyLIS_tables($account_id);
 
 		// now add the username and password for login purposes
 		$this->account_model->add_account_admin($data);
 
 		// add default and location into account database categories
-		$this->account_model->setDefaultDatabaseEntries($account_id);
+		$this->account_model->set_default_database_entries($account_id);
 
 		// set the version number
-		$this->account_model->setVersionNumber($account_id,$this->version);
+		$this->account_model->set_version_number($account_id,$this->version);
 
 		// now create a directory for this account
 		$props = array(
@@ -168,13 +168,13 @@ class Accounts extends Admin_Controller {
 		    'site.manager.email' => $email
 		);
 
-		$this->admin_filemanager->createMyLISDirectory($account_id, $props);
+		$this->admin_filemanager->create_MyLIS_directory($account_id, $props);
 
 		// email the user that the account has been created
 		$login_url = getBaseURL().'accounts/mylis_'.$account_id.'/index.php';
 		$account_info = array($account_id, $group_pi, $email, $password1, 
 		$activate_code, $login_url);
-		$this->sendEmail($account_info);
+		$this->send_email($account_info);
 
 		// print the ok page account page
 		$data['page_title'] = 'System Message!';
@@ -222,8 +222,9 @@ class Accounts extends Admin_Controller {
 	$group_pi = "$fname $mi. $lname";
 	$name = $this->userobj->name;
 	$department_id = ''; // blank on purpose
+	$network_ids = '';   // blank on purpose
 	$manager_id = $this->userobj->userid;
-	$activate_code = $this->getActivateCode();
+	$activate_code = $this->get_activation_code();
 
 	if(!empty($notes)) {
 	    $notes = $name.' ('.getLISDateTime().") >>Account Created\n$notes\n";
@@ -236,11 +237,11 @@ class Accounts extends Admin_Controller {
 
 	// if this account already exist remove it
 	$account_id = strtolower($lname).'1';
-	if($this->account_model->accountExists($account_id)) {
-	    $dir = $this->admin_filemanager->moveToTrash($account_id);
+	if($this->account_model->account_exists($account_id)) {
+	    $dir = $this->admin_filemanager->move_to_trash($account_id);
 	    // dump and then remove tables from LISDB
-	    $this->managedb_model->removeMyLISTables($account_id);
-	    $this->managedb_model->removeMyLISUsers($account_id);
+	    $this->managedb_model->remove_MyLIS_tables($account_id);
+	    $this->managedb_model->remove_MyLIS_users($account_id);
 	}
 
 	$data['account_id'] = $account_id;
@@ -263,16 +264,16 @@ class Accounts extends Admin_Controller {
 	$this->account_model->add_account($data);
 
 	// create the tables associated wthis account
-	$this->managedb_model->createMyLISTables($account_id);
+	$this->managedb_model->create_MyLIS_tables($account_id);
 
 	// now add the username and password for login purposes
 	$this->account_model->add_account_admin($data);
 
 	// add default and location into account database categories
-	$this->account_model->setDefaultDatabaseEntries($account_id);
+	$this->account_model->set_default_database_entries($account_id);
 
 	// set the version number
-	$this->account_model->setVersionNumber($account_id,$this->version);
+	$this->account_model->set_version_number($account_id,$this->version);
 
 	// now create a directory for this account
 	$props = array(
@@ -287,7 +288,7 @@ class Accounts extends Admin_Controller {
 	    'site.manager.email' => $email
 	);
 
-	$this->admin_filemanager->createMyLISDirectory($account_id, $props);
+	$this->admin_filemanager->create_MyLIS_directory($account_id, $props);
 	
 	$title = 'New Account Created!';
 	$message = 'Test account has been created successfully!';
@@ -327,7 +328,7 @@ class Accounts extends Admin_Controller {
 	$name = $this->user->name;
 	$department_id = ''; // blank on purpose
 	$manager_id = $this->user->userid;
-	$activate_code = $this->getActivateCode();
+	$activate_code = $this->get_activation_code();
 	$login_count = 0;
 
 	if(!empty($notes)) {
@@ -341,12 +342,12 @@ class Accounts extends Admin_Controller {
 
 	// if this account already exist remove it
 	$account_id = strtolower($lname).'1';
-	if($this->account_model->accountExists($account_id)) {
-	    $dir = $this->admin_filemanager->moveToTrash($account_id);
-	    $login_count = $this->managedb_model->getMyLISProperty($account_id, 'login.count');
+	if($this->account_model->account_exists($account_id)) {
+	    $dir = $this->admin_filemanager->move_to_trash($account_id);
+	    $login_count = $this->managedb_model->get_MyLIS_property($account_id, 'login.count');
 	    // dump and then remove tables from LISDB
-	    $this->managedb_model->removeMyLISTables($account_id);
-	    $this->managedb_model->removeMyLISUsers($account_id);
+	    $this->managedb_model->remove_MyLIS_tables($account_id);
+	    $this->managedb_model->remove_MyLIS_users($account_id);
 	} else {
 	    $login_count = 0;
 	}
@@ -371,23 +372,23 @@ class Accounts extends Admin_Controller {
 	$this->account_model->add_account($data);
 
 	// create the tables associated wthis account
-	$this->managedb_model->createMyLISTables($account_id);
+	$this->managedb_model->create_MyLIS_tables($account_id);
 
 	// now add the username and password for login purposes
 	$this->account_model->add_account_admin($data);
 
 	// add default and location into account database categories
-	$this->account_model->setDefaultDatabaseEntries($account_id);
+	$this->account_model->set_default_database_entries($account_id);
 
 	// set the version number
-	$this->account_model->setVersionNumber($account_id,$this->version);
+	$this->account_model->set_version_number($account_id,$this->version);
 
 	// set the login count now
 	$this->account_model->set_login_count($account_id,$login_count);
 
 	// add the dummy information to this account
 	$this->load->model('datasource_model');
-	$this->datasource_model->addSandboxData($account_id);
+	$this->datasource_model->add_sandbox_data($account_id);
 
 	// now create a directory for this account
 	$props = array(
@@ -402,7 +403,7 @@ class Accounts extends Admin_Controller {
 	    'site.manager.email' => $email
 	);
 
-	$this->admin_filemanager->createMyLISDirectory($account_id, $props);
+	$this->admin_filemanager->create_MyLIS_directory($account_id, $props);
 
 	$title = 'New Account Created!';
 	$message = 'Sandbox account has been created successfully!';
@@ -412,7 +413,7 @@ class Accounts extends Admin_Controller {
     
     public function edit($account_id){
 	
-	if(!empty($account_id) && $this->account_model->accountExists($account_id)) {
+	if(!empty($account_id) && $this->account_model->account_exists($account_id)) {
 	    if (isset($_POST['account_edit_form'])){
 		// check that the user as the rights to edit this account
 		$userid = $this->userobj->userid;
@@ -427,7 +428,7 @@ class Accounts extends Admin_Controller {
 		}
 
 		// now make the 
-		if($this->checkFormInput('edit')) {
+		if($this->check_form_input('edit')) {
 		    $data['account_id'] = $this->input->post('account_id');
 		    $data['fname'] = addslashes(trim($this->input->post('fname'))); // PI first name
 		    $data['mi'] = trim($this->input->post('mi')); // PI middle name
@@ -482,7 +483,7 @@ class Accounts extends Admin_Controller {
 			'max.users' => $data['max_users'],
 		    );
 		    
-		    $this->admin_filemanager->modifyInitiationFile($data['account_id'], $props);
+		    $this->admin_filemanager->modify_initiation_file($data['account_id'], $props);
 
 		    redirect('admin/accounts/edit/'.$data['account_id']);
 		} else {
@@ -491,10 +492,10 @@ class Accounts extends Admin_Controller {
 		    $this->load_view('errors/error_and_back',$data);
 		}
 	    } else {
-		$accountInfo = $this->account_model->getAccountInfo($account_id);
+		$accountInfo = $this->account_model->get_account_info($account_id);
 
 		$manager_id = $accountInfo['manager_id'];
-		$userList = $this->loadUsers();
+		$userList = $this->load_users();
 		$managerInfo = $userList[$manager_id];
 		
 		$data['page_title'] = "Edit MyLIS Account  ($account_id)";
@@ -506,7 +507,7 @@ class Accounts extends Admin_Controller {
 		$data['disciplines'] = $this->disciplines;
 		$data['properties'] = $this->properties;
 		$data['lis_tz'] = $this->lis_tz;
-		$data['accountProfile'] = $this->account_model->getAccountProfile($account_id);
+		$data['accountProfile'] = $this->account_model->get_account_profile($account_id);
 		$this->load_view('admin/accounts/edit',$data);
 	    }
 	} else {
@@ -521,11 +522,11 @@ class Accounts extends Admin_Controller {
 
 	    if($code == $this->remove_code) {
 		// move the account directory to the trash directory
-		$dir = $this->admin_filemanager->moveToTrash($account_id);
+		$dir = $this->admin_filemanager->move_to_trash($account_id);
 
 		// remove tables from LISDB
-		$this->account_model->removeMyLISTables($account_id);
-		$this->account_model->removeMyLISUsers($account_id);
+		$this->account_model->remove_MyLIS_tables($account_id);
+		$this->account_model->remove_MyLIS_users($account_id);
 
 		redirect('admin/accounts?mtype=remove&message='.$account_id);
 	    } else {
@@ -559,7 +560,7 @@ class Accounts extends Admin_Controller {
 	}
 	
 	// set the new expire date based on the old one
-	$accountInfo = $this->account_model->getAccountInfo($account_id);
+	$accountInfo = $this->account_model->get_account_info($account_id);
 	$expire_date = $accountInfo['expire_date'];
 	$expire_date = getExpireDate($expire_date, '', $term);
 
@@ -570,7 +571,7 @@ class Accounts extends Admin_Controller {
 	$props = array(
 	    'lis.expire' => $expire_date,
 	);
-	$this->admin_filemanager->modifyInitiationFile($account_id, $props);
+	$this->admin_filemanager->modify_initiation_file($account_id, $props);
 
 	redirect('admin/accounts/edit'.$account_id);
     }
@@ -579,12 +580,12 @@ class Accounts extends Admin_Controller {
 	
 	$current_version = '1.2';
 	$new_version = '1.3';
-	$account_ids = $this->getAccountIDs();
+	$account_ids = $this->get_account_id();
 
 	$this->load->model('updater_model');
 	$update_logs = '';
 	foreach($account_ids as $account_id) {
-	    $update_logs .= $this->updater_model->updateAccount($account_id);
+	    $update_logs .= $this->updater_model->update_account($account_id);
 	}
 	
 	$data['page_title'] = 'MyLIS Account Updater';
@@ -599,15 +600,15 @@ class Accounts extends Admin_Controller {
 	} else {
 	    $account_id = '';
 	}
-	if(!empty($account_id) && $this->account_model->accountExists($account_id)) {
-	    $accountInfo = $this->account_model->getAccountInfo($account_id);
-	    $accountProfile = $this->account_model->getAccountProfile($account_id);
-	    $userList = $this->loadUsers();
+	if(!empty($account_id) && $this->account_model->account_exists($account_id)) {
+	    $accountInfo = $this->account_model->get_account_info($account_id);
+	    $accountProfile = $this->account_model->get_account_profile($account_id);
+	    $userList = $this->load_users();
 	    $managerInfo = $userList[$accountInfo['manager_id']];
 	    
 	    // get the userid and password from DB
 	    $userids_passwords = '';
-	    $accountUsers = $this->account_model->getAccountUsers($account_id);
+	    $accountUsers = $this->account_model->get_account_users($account_id);
 	    foreach($accountUsers as $user) {
 		$userids_passwords .=$user['email'].' : '.$user['password'].' ;';
 	    }
@@ -626,7 +627,7 @@ class Accounts extends Admin_Controller {
     }
     
     // function to check the input form data from add account and edit account page
-    function checkFormInput($page) {
+    protected function check_form_input($page) {
 	$error = '';
 
 	$fname = $this->input->post('fname'); // PI first name
@@ -703,12 +704,12 @@ class Accounts extends Admin_Controller {
     }
 
     // function to return the group name 
-    function getAccountID($lname) {
+    protected function get_account_id($lname) {
 	$account_id = $this->input->post('account_id');
 	if(empty($account_id) || strlen($account_id) < 3) {
 	    $i = 1;
 	    $account_id = strtolower($lname).$i;
-	    while($this->account_model->accountExists($account_id)) {
+	    while($this->account_model->account_exists($account_id)) {
 		$i++;
 		$account_id = $lname.$i;
 	    }
@@ -719,16 +720,16 @@ class Accounts extends Admin_Controller {
     }
  
     // function to get an activate code
-    function getActivateCode() {
+    protected function get_activation_code() {
 	$code = '';
 	for($i = 0; $i < 6; $i++) {
-	$code .= chr(mt_rand(65, 90));
+	    $code .= chr(mt_rand(65, 90));
 	}
 	return $code;
     }
     
     // function to send an email informing that the account has been created
-    function sendEmail($account_info) {
+    protected function send_email($account_info) {
 	$to  = $account_info[2];
 	$subject  = 'MyLIS Account Created';
 

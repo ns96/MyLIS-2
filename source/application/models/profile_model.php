@@ -31,7 +31,7 @@ class Profile_model extends CI_Model {
 
     }
     
-    public function getGroupProfile($group){
+    public function get_group_profile($group){
 	$array = null;
 	$sql = "SELECT * FROM profiles WHERE account_id = '$group'";
 	$records = $this->lispdb->query($sql)->result_array();

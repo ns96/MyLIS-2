@@ -29,75 +29,94 @@ $edit_link = base_url()."group/orderbook/itemlist?order_id=$order_id";
 $remove_link = base_url()."group/orderbook/itemlist_delete?order_id=$order_id";
 $back_link = base_url()."group/orderbook"; // go back to the orders
 
-echo '<table style="background-color: rgb(245, 245, 245); text-align: left; width: 100%;" border="1" cellpadding="2"
-cellspacing="2"><tbody>';
-
-echo '<tr>';
-echo '<td colspan="4" rowspan="1" style="vertical-align: top;">
-Current Item List ID : <b><span style="color: rgb(235, 0, 0);">'.$order_id.'</span></b>';
-
 $user = $users[$owner];
 $owner_name = $user->name;
-echo ' || Created By : <b><span style="color: rgb(0, 0, 235);">'.$owner_name.'</span></b>';
+?>
 
-if($owner == $user_id || $role == 'admin' || $role == 'buyer') {
-  echo ' [ <a href="'.$edit_link.'">Edit</a> ] ';
-  echo ' [ <a href="'.$remove_link.'">Delete Item List</a> ] ';
-}
+<div style="text-align: right">
+    <a href="<?=$back_link?>">Back to Orders</a>
+</div>
 
-echo ' [ <a href="'.$back_link.'">Back to Orders</a> ]</td></tr>';
+<div class="tabbable" id="info_navtab" style="margin-left: 15px; margin-right: 15px;"> <!-- Only required for left/right tabs -->
+  <ul class="nav nav-tabs">
+    <li class="active"><a href="#tab1" data-toggle="tab">Item List ID: <?=$order_id?></a></li>
+    <div style="text-align:left; vertical-align: middle; margin-top:5px;">
+	<?
+	if($owner == $user_id || $role == 'admin' || $role == 'buyer') {
+	    echo '<a href="'.$edit_link.'" class="btn btn-success btn-small" style="margin-left:15px">Edit</a>';
+	    echo '<a href="'.$remove_link.'" class="btn btn-danger btn-small" style="margin-left:10px">Delete Item List</a>';
+	}
+    ?>
+    </div>
+  </ul>
+</div>
 
-echo '<tr>';
-echo '<td style="vertical-align: top;">Company : <b>'.$company.'</b></td>';
-echo '<td style="vertical-align: top;">Max # of Items : <b>'.$maxitems.'</b></td>';
-echo '<td style="vertical-align: top;">Shared with Group : <b>'.$priority.'</b></td>';
-echo '<td style="vertical-align: top;">Date Last Modified: <b>'.$status_date.'</b></td>';
-echo '</tr>';
+<div class="formWrapper" style="margin-top: 0px">
+    <div style="margin:10px 10px;">
+	<span style="color:#0088CC; margin-bottom: 3px;">General Information</span>
+	<table class="order_table">
+	    <tr>
+		<td class="order_label">Created By :</td>
+		<td><span class="label label-info"><?=$owner_name?></span></td>
+		<td class="order_label">Company :</td>
+		<td><?=$company?></td>
+	    </tr>
+	    <tr>
+		<td class="order_label">Max # of Items :</td>
+		<td><?=$maxitems?></td>
+		<td class="order_label">Shared with Group :</td>
+		<td><?=$priority?></td>
+		<td class="order_label">Date Last Modified:</td>
+		<td><?=$status_date?></td>
+	    </tr>
+	    <tr>
+		<td class="order_label">Order Notes </td>
+		<td colspan="5"><?=$notes?></td>
+	    </tr>
+	</table>
+	<span style="color:#0088CC; margin-bottom: 3px;">Itemlist Items</span>
+	<table class="order_table">
+	    <thead>
+		<th>Item #</th>
+		<th>Type</th>
+		<th>Company</th>
+		<th>Product ID</th>
+		<th>Description</th>
+		<th>Units</th>
+		<th>Cost</th>
+	    </thead>
+	    <tbody>
+		<?
+		for($i = 1; $i <= $maxitems; $i++) {
+		    if(isset($order['item_'.$i])) {
+			$info = preg_split("/\t/", $order['item_'.$i]);
+			$type = trim($info[0]);
+			$company = trim($info[1]);
+			$product = trim($info[2]);
+			$description =trim($info[3]);
+			$units = trim($info[5]);
+			$price = '$'.sprintf("%01.2f", $info[6]);
+			$owner = trim($info[7]);
+			$item_id = trim($info[10]);
 
-echo '<td style="vertical-align: top;"><span style="color: rgb(235, 0, 0);"><b>Order Notes :</b></span></td>';
-echo '<td colspan="3" rowspan="1" style="vertical-align: top;">'.$notes.'</td>';
-echo '</tr>';
+			echo '<tr>';
+			echo '<td>'.$item_id.'</td>';
+			echo '<td>'.$type.'</td>';
+			echo '<td>'.$company.'</td>';
+			echo '<td>'.$product.'</td>';
+			echo '<td>'.$description.'</td>';
+			echo '<td>'.$units.'</td>';
+			echo '<td>'.$price.'</td>';
+			echo '</tr>';
+		    }
+		}
+		?>
+	    </tbody>
+	</table>
+    </div>
+</div>
 
-echo '</tbody></table>';
 
-// print out the items ordered in the next table
-echo '<table style="background-color: rgb(245, 245, 245); text-align: left; width: 100%;" border="1" cellpadding="2"
-cellspacing="2"><tbody>';
-
-echo '<tr>';
-echo '<td style="vertical-align: top;"><small><b>Item #</b></small></td>';
-echo '<td style="vertical-align: top;"><small><b>Type</b></small></td>';
-echo '<td style="vertical-align: top;"><small><b>Company</b></small></td>';
-echo '<td style="vertical-align: top;"><small><b>Product ID</b></small></td>';
-echo '<td style="vertical-align: top;"><small><b>Description</b></small></td>';
-echo '<td style="vertical-align: top;"><small><b>Units</b></small></td>';
-echo '<td style="vertical-align: top;"><small><b>Cost</b></small></td>';
-echo '</tr>';
-
-for($i = 1; $i <= $maxitems; $i++) {
-  if(isset($order['item_'.$i])) {
-    $info = preg_split("/\t/", $order['item_'.$i]);
-    $type = trim($info[0]);
-    $company = trim($info[1]);
-    $product = trim($info[2]);
-    $description =trim($info[3]);
-    $units = trim($info[5]);
-    $price = '$'.sprintf("%01.2f", $info[6]);
-    $owner = trim($info[7]);
-    $item_id = trim($info[10]);
-
-    echo '<tr>';
-    echo '<td style="vertical-align: top;"><small>'.$item_id.'</small></td>';
-    echo '<td style="vertical-align: top;"><small>'.$type.'</small></td>';
-    echo '<td style="vertical-align: top;"><small>'.$company.'</small></td>';
-    echo '<td style="vertical-align: top;"><small>'.$product.'</small></td>';
-    echo '<td style="vertical-align: top;"><small>'.$description.'</small></td>';
-    echo '<td style="vertical-align: top;"><small>'.$units.'</small></td>';
-    echo '<td style="vertical-align: top;"><small>'.$price.'</small></td>';
-  }
-}
-
-echo '</tbody></table>';
 
 
 

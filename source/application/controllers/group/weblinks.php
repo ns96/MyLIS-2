@@ -25,20 +25,20 @@ class Weblinks extends Group_Controller {
 
 	$this->load->model('weblinks_model');
 	// Load the weblink categories
-	$categories = $this->weblinks_model->getCategories();
+	$categories = $this->weblinks_model->get_categories();
 	
 	$linksHTML = '';
 	// Get the display view for each category
 	foreach($categories as $key => $category) {
-	    $cat_id = $this->getCategoryID($key);
-	    $linksHTML .= $this->displayByCategory($cat_id, $category, $mylinks);
+	    $cat_id = $this->get_category_id($key);
+	    $linksHTML .= $this->display_by_category($cat_id, $category, $mylinks);
 	}
 	$data['linksHTML'] = $linksHTML;
 	
 	$data2['categories'] = $categories;
 	if(!empty($link_id)) { // If we are editing a weblink load weblinks's data
 	    $data2['link_id'] = $link_id;
-	    $data2['weblinkItem'] = $this->weblinks_model->getWeblink($link_id);
+	    $data2['weblinkItem'] = $this->weblinks_model->get_weblink($link_id);
 	    $data2['target_link'] = base_url()."group/weblinks/update";
 	    $data['addForm'] = $this->load_view('group/weblinks/weblinkEditForm',$data2,TRUE);
 	} else { // otherzise, we are adding a new weblink
@@ -61,7 +61,7 @@ class Weblinks extends Group_Controller {
 	// Save the new weblink as long as the url is not empty
 	if(!empty($url)) {
 	    $data['userid'] = $this->userobj->userid;
-	    $data['cat_id'] = $this->getCategoryID($category);
+	    $data['cat_id'] = $this->get_category_id($category);
 	    $data['url'] = checkURL($url);
 	    if(empty($title)) {
 		$title = $url;
@@ -73,7 +73,7 @@ class Weblinks extends Group_Controller {
 	    // If the user posted the name of a new weblink category add the 
 	    // category to the database before saving the new weblink
 	    if(!empty($other_category)) {
-		$cat_id = $this->weblinks_model->addCategory($other_category,$this->userobj->userid);
+		$cat_id = $this->weblinks_model->add_category($other_category,$this->userobj->userid);
 		$data['category'] = $cat_id;
 	    } else {
 		$data['category'] = $category;
@@ -95,7 +95,7 @@ class Weblinks extends Group_Controller {
 	    $other_category = $this->input->post('other_category');
 
 	    if(!empty($url)) {
-		$cat_id = $this->getCategoryID($category);
+		$cat_id = $this->get_category_id($category);
 		$url = checkURL($url);
 
 		if(empty($title)) {
@@ -104,7 +104,7 @@ class Weblinks extends Group_Controller {
 		
 		$this->load->model('weblinks_model');
 		if(!empty($other_category)) {
-		    $cat_id = $this->weblinks_model->addCategory($other_category);
+		    $cat_id = $this->weblinks_model->add_category($other_category);
 		}
 		
 		$data['link_id'] = $link_id;
@@ -128,16 +128,16 @@ class Weblinks extends Group_Controller {
     }
     
     // Return the HTML the lists the weblinks of a category
-    private function displayByCategory($category_id,$category,$mylinks){
+    private function display_by_category($category_id,$category,$mylinks){
 	$userid = $this->userobj->userid;
 	$role = $this->userobj->role;
 
 	// The $mylinks parameter defines whether we are listing all the group's weblinks
 	// that belong to a category or just the PI's weblinks
 	if ($mylinks) {
-	    $weblinkList = $this->weblinks_model->getCategoryMyWeblinks($category_id,$userid);
+	    $weblinkList = $this->weblinks_model->get_category_my_weblinks($category_id,$userid);
 	} else {
-	    $weblinkList = $this->weblinks_model->getCategoryWeblinks($category_id);
+	    $weblinkList = $this->weblinks_model->get_category_weblinks($category_id);
 	}
 	
 	// For each category, we load the relevant HTML that lists its weblinks
@@ -153,7 +153,7 @@ class Weblinks extends Group_Controller {
 	return $output; 
     }
     
-    private function getCategoryID($cat_id) {
+    private function get_category_id($cat_id) {
 	$array = explode('_', $cat_id);
 	return $array[1];
     }

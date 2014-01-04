@@ -22,7 +22,7 @@ class Admin_filemanager extends CI_Model {
 	}
     }
 
-    public function getLogs(){
+    public function get_logs(){
 	$this->lismdb = $this->load->database('lismdb',TRUE);
 	$sql = "SELECT * FROM update_log WHERE type='file'";
 	$records = $this->lismdb->query($sql)->result_array();
@@ -52,7 +52,7 @@ class Admin_filemanager extends CI_Model {
     }
     
     // function to add a log entry
-    function addLog($account_ids, $files, $type, $notes,$manager_id) {
+    function add_log($account_ids, $files, $type, $notes,$manager_id) {
 	$ids;
 	foreach($account_ids as $id) {
 	    $ids .= $id.' ';
@@ -74,7 +74,7 @@ class Admin_filemanager extends CI_Model {
     }
     
   // function to modifiy the initiation file for a new account
-  function modifyInitiationFile($account_id, $new_props) {
+  function modify_initiation_file($account_id, $new_props) {
     $props = $this->readInitiationFile($account_id);
     
     foreach ($props as $key => $value) {
@@ -87,7 +87,7 @@ class Admin_filemanager extends CI_Model {
   }
   
   // function to read in the initiation file of an accounts
-  function readInitiationFile($account_id) {
+  function read_initiation_file($account_id) {
     $lis_dir = $this->accounts_dir.'mylis_'.$account_id.'/'; // the directory name
     $init_file = $lis_dir.'conf/lis.ini';
     
@@ -107,7 +107,7 @@ class Admin_filemanager extends CI_Model {
   }
   
   // function to write out the initiation file
-  function writeInitiationFile($account_id, $props) {
+  function write_initiation_file($account_id, $props) {
     $lis_dir = $this->accounts_dir.'mylis_'.$account_id.'/'; // the directory name
     $init_file = $lis_dir.'conf/lis.ini';
     
@@ -122,7 +122,7 @@ class Admin_filemanager extends CI_Model {
   }
 
     // function to delete or rather move the files of an account to the trash directory
-    function moveToTrash($account_id) {
+    function move_to_trash($account_id) {
 	$lis_dir = $this->accounts_dir.'mylis_'.$account_id; // the directory name
 
 	// copy this to the trah directory
@@ -140,7 +140,7 @@ class Admin_filemanager extends CI_Model {
     copies everything from directory $fromDir to directory $toDir
     and sets up files mode $chmod
     taken from http://us3.php.net/copy */
-    function copyDir($fromDir,$toDir,$chmod = 0757,$verbose = false) {
+    function copy_dir($fromDir,$toDir,$chmod = 0757,$verbose = false) {
 	//* Check for some errors
 	$errors=array();
 	$messages=array();
@@ -210,7 +210,7 @@ class Admin_filemanager extends CI_Model {
     }
 
     // function to completely del a directory
-    function delDir($dirName) {
+    function del_dir($dirName) {
 	if(empty($dirName)) {
 	return;
 	}
@@ -233,7 +233,7 @@ class Admin_filemanager extends CI_Model {
   
     /* function below this point can be considered static functions */
     // function to create a directory for a new account
-    function createMyLISDirectory($account_id, $props) {
+    function create_MyLIS_directory($account_id, $props) {
 	$lis_dir = $this->accounts_dir.'mylis_'.$account_id; // create the directory
 	if(!is_dir($lis_dir)) {
 	    mkdir($lis_dir, 0755);
@@ -246,7 +246,7 @@ class Admin_filemanager extends CI_Model {
     }
     
     // function to get the file list that can be updated
-    function getFileList() {
+    function get_file_list() {
 	$f_list = array();
 	$f_list[] = 'index.php;Web Page;Login Web Page';
 	$f_list[] = 'password.png;PNG Image;Image for login page';
@@ -254,7 +254,7 @@ class Admin_filemanager extends CI_Model {
     }
 
     // function to get the list of files or directories in the trash directory
-    function getTrashFiles() {
+    function get_trash_files() {
 	$files = array();
 
 	$handle = opendir($this->trash_dir);
@@ -290,7 +290,7 @@ class Admin_filemanager extends CI_Model {
 	return $files;
     }
 
-    public function getAccountIDs(){
+    public function get_account_ids(){
 	$sql = "SELECT account_id FROM accounts";
 	$records = $this->lismdb->query($sql)->result_array();
 	return $records;

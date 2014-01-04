@@ -43,7 +43,7 @@ class Messages extends Group_Controller {
 	
 	// If a file was attached, upload it and get the file id
 	if($file_type != 'none') {
-	    $file_id = $this->filemanager->uploadFile(1, $this->table, $message_id);
+	    $file_id = $this->filemanager->upload_file(1, $this->table, $message_id);
 	}
 
 	$data['url'] = $url;
@@ -54,7 +54,7 @@ class Messages extends Group_Controller {
 	
 	// Save the posted message
 	$this->load->model('message_model');
-	$this->message_model->addMessage($data);
+	$this->message_model->add_message($data);
 
 	// Go back to main page
 	redirect('group/main');
@@ -81,7 +81,7 @@ class Messages extends Group_Controller {
 
 	    // Get the originall message data
 	    $this->load->model('message_model');
-	    $old_message = $this->message_model->getMessage($data['message_id']);
+	    $old_message = $this->message_model->get_message($data['message_id']);
 
 	    // If a file has been posted with the message: if there wasn't any file
 	    // attached to the message originaly save the file and get the file id, otherwise
@@ -89,16 +89,16 @@ class Messages extends Group_Controller {
 	    if($data['file_type'] != 'none') {
 		$file_id = $old_message['file_id'];
 		if(empty($file_id)) {
-		    $file_id = $this->filemanager->uploadFile(1, $table, $data['message_id']);
+		    $file_id = $this->filemanager->upload_file(1, $table, $data['message_id']);
 		    echo "new file id = ".$file_id."<br>";
 		    $data['file_id'] = $file_id;
 		}
 		else {
-		    $this->filemanager->updateFile(1, $file_id);
+		    $this->filemanager->update_file(1, $file_id);
 		}
 	    }
 	    // Update the message data
-	    $this->message_model->updateMessage($data);
+	    $this->message_model->update_message($data);
 	}
       
 	redirect('group/main');
@@ -108,21 +108,21 @@ class Messages extends Group_Controller {
 	$this->load->model('message_model');
 	
 	// Retrieve the message data before delete it
-	$messageItem = $this->message_model->getMessage($id);
+	$messageItem = $this->message_model->get_message($id);
 	
 	// Delete the message
-	$this->message_model->deleteMessage($id);
+	$this->message_model->delete_message($id);
 	
 	// If there was a file attached to the message, delete the file.
 	if(!empty($messageItem['file_id'])) {
-	    $this->filemanager->deleteFile($messageItem['file_id']);
+	    $this->filemanager->delete_file($messageItem['file_id']);
 	}
 
 	// Go to main page
 	redirect('group/main');
    }
    
-   public function deleteMessageFile($id){
+   public function delete_message_file($id){
        // Not implemented yet!
    }
    
@@ -130,7 +130,7 @@ class Messages extends Group_Controller {
        // function to hide the welcome message
 	$userid = $this->userobj->userid;
 	$key = 'show.welcome.'.$userid;
-	$this->proputil_model->storeProperty($key, 'no');
+	$this->proputil_model->store_property($key, 'no');
 
 	// Go to main page
 	redirect('group/main');

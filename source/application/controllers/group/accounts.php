@@ -13,7 +13,7 @@ class Accounts extends Group_Controller {
         $this->load->model('account_model');
         
         if (isset($_POST['upgrade_form'])){
-            if($this->checkupgradeForm()) {
+            if($this->check_upgrade_form()) {
               
                 $data['name']         = $this->input->post('name'); // Users name
                 $data['pi_name']      = $this->input->post('pi_name'); // PI name
@@ -36,7 +36,7 @@ class Accounts extends Group_Controller {
                 $order_id = $this->account_model->update_sales($data) + 1000;  // get the sale ID and add 1000
 
                 // now update the accounts table
-                $data1['expire_date'] = $this->getExpireDate();
+                $data1['expire_date'] = $this->get_expire_date();
                 $data1['status'] = 'premium';
                 $data1['account_id'] = $this->properties['lis.account'];
                 $data1['storage'] = $storage;
@@ -56,11 +56,11 @@ class Accounts extends Group_Controller {
                 // Load a FileManager model
                 $this->load->model('filemanager');
                 $this->filemanager->initialize($params);
-                $this->filemanager->modifyInitiationFile($new_props);
+                $this->filemanager->modify_initiation_file($new_props);
 
                 // send email to confirm sale
                 $sale_info = array($data['email'], $data['pi_email'], $data['name'], $order_id, $data['date'], $storage, $data['cost']);
-                $this->sendConfirmEmail($sale_info);
+                $this->send_confirm_email($sale_info);
 
                 // display confirmation message now
                 $data2['page_title'] = 'Account upgraded!';
@@ -89,7 +89,7 @@ class Accounts extends Group_Controller {
 	
 	// If an updated profile has been posted
 	if ($this->input->post('profile_update_form')){
-	    if($this->checkFormInput()) {
+	    if($this->check_form_input()) {
 		$data['name'] = $this->input->post('name'); // users fullname
 		$data['password'] = $this->input->post('password'); // user password
 		$data['email'] = $this->input->post('email'); // email
@@ -101,7 +101,7 @@ class Accounts extends Group_Controller {
 
 		// update the session data
 		$this->load->model('user_model');
-		$user = $this->user_model->getUser($this->userobj->userid);
+		$user = $this->user_model->get_user($this->userobj->userid);
 		$this->session->set_userdata('user',$user);
 		
 		// now redirect group profile page
@@ -110,7 +110,7 @@ class Accounts extends Group_Controller {
 	} else {
 
 	    $this->load->model('user_model');
-	    $password = $this->user_model->getUserPassword($this->userobj->userid);
+	    $password = $this->user_model->get_user_password($this->userobj->userid);
 	    
 	    $data['page_title'] = "My Profile";
 	    $data['userid'] = $this->userobj->userid;
@@ -131,7 +131,7 @@ class Accounts extends Group_Controller {
 	if ($this->input->post('group_profile_update_form')){
 	    $userid = $this->userobj->userid;
 
-	    if($this->checkGroupFormInput()) {
+	    if($this->check_group_form_input()) {
 		$data['pi_name'] = $this->input->post('pi_name'); // PI first name
 		$data['pi_email'] = $this->input->post('pi_email'); // PI email
 		$data['url'] = checkURL($this->input->post('url')); // the group web page of the PI
@@ -151,12 +151,12 @@ class Accounts extends Group_Controller {
 	    $group = $this->session->userdata('group');
 
 	    $this->load->model('profile_model');
-	    $info = $this->profile_model->getGroupProfile($group);
+	    $info = $this->profile_model->get_group_profile($group);
 	    $edit_date = $info['edit_date'];
 	    $edit_user = $info['userid'];
 
 	    $this->load->model('user_model');
-	    $editor = $this->user_model->getUser($edit_user);
+	    $editor = $this->user_model->get_user($edit_user);
 	    
 	    $data['page_title'] = "Group Research Profile";
 	    $data['group'] = $group;
@@ -170,7 +170,7 @@ class Accounts extends Group_Controller {
     }
     
     // function to check the form input when editing a user information
-    private function checkFormInput() {
+    private function check_form_input() {
 	$error = '';
 
 	$name = $this->input->post('name'); // PI first name
@@ -202,7 +202,7 @@ class Accounts extends Group_Controller {
     }
     
     // function to check the form data
-    function checkUpgradeForm() {
+    function check_upgrade_form() {
       $error = '';
 
       $name         = $this->input->post('name'); // Users name
@@ -261,7 +261,7 @@ class Accounts extends Group_Controller {
     }
     
     // function to check the input form data
-    private function checkGroupFormInput() {
+    private function check_group_form_input() {
 	$error = '';
 
 	$pi_name     = $this->input->post('pi_name'); // PI first name
@@ -315,7 +315,7 @@ class Accounts extends Group_Controller {
     }
     
     // function to get the new expiration date
-    private function getExpireDate() {
+    private function get_expire_date() {
       $expire_date = '';
       $account_info = $this->account_model->getAccountInfo($this->properties['lis.account']);
 
@@ -338,7 +338,7 @@ class Accounts extends Group_Controller {
     
     
     // function to send a conformation email
-    function sendConfirmEmail($sale_info) {
+    function send_confirm_email($sale_info) {
       $subject  = 'MyLIS Account Upgraded';
       $headers = 'From: sales@mylis.net'."\r\n".
       'Reply-To: sales@mylis.net'."\r\n".

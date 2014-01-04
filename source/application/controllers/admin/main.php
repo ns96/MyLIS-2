@@ -27,13 +27,13 @@ class Main extends Admin_Controller {
 	$data['fullname']	    = $this->userobj->name;
 	$data['role']		    = $this->userobj->role;
 	$data['menu_image']	    = base_url()."images/".$this->properties['background.image'];
-	$data['messages_html'] = $this->displayMessages();
+	$data['messages_html'] = $this->display_messages();
 	$data['user'] = $this->userobj;
 	
-	$this->load_view('admin/main',$data);
+	$this->load_view('admin/main/main',$data);
     }
     
-     function displayMessages() {
+     function display_messages() {
 	$output = "<br><br>Sorry ".$this->userobj->name.", no messages for you<br>";
 	return $output;
     }
