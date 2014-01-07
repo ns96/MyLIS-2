@@ -27,7 +27,7 @@ class Grouptask_model extends CI_Model {
     }
     
     // function to get the grouptask information
-    function get_task_item_information($type, $item_value) {
+    public function get_task_item_information($type, $item_value) {
       if($type == 'monthly') {
         $sql = "SELECT * FROM $this->i_table WHERE (grouptask_id='$this->grouptask_id' AND item_month='$item_value')";
       }
@@ -119,11 +119,11 @@ class Grouptask_model extends CI_Model {
             $this->lisdb->query($sql);
         }
         
-        $this->copyGroupTaskItems($grouptask_id, $new_grouptask_id);
+        $this->copy_task_items($grouptask_id, $new_grouptask_id);
     }
     
     // function to copy grouptask items
-    public function copy_group_task_items($grouptask_id, $new_grouptask_id) {
+    protected function copy_task_items($grouptask_id, $new_grouptask_id) {
       // get all the old values
       $sql = "SELECT * FROM $this->i_table WHERE grouptask_id='$grouptask_id'";
       $records = $this->lisdb->query($sql)->result_array();

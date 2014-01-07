@@ -14,6 +14,8 @@ class Orderbook extends Group_Controller {
 	$this->userobj = $this->session->userdata('user');
 	$this->load->model('orderbook_model');
 	
+	$this->restrict_access();
+	
 	$this->set_company_names();
 	$this->set_accounts();
 	$this->set_configuration();
@@ -112,7 +114,7 @@ class Orderbook extends Group_Controller {
         $data['user_id'] = $user_id;
         $data['role'] = $role;
         $data['items'] = $this->orderbook_model->get_pending_items($userList,$user_id,$role);
-        $this->load_view('group/orderbook/pendingItems',$data);
+        $this->load_view('group/orderbook/pending_items',$data);
     }
     
     public function items_ordered(){
@@ -125,7 +127,7 @@ class Orderbook extends Group_Controller {
         $data['user_id'] = $user_id;
         $data['role'] = $role;
         $data['items'] = $this->orderbook_model->get_pending_items($userList,$user_id,$role);
-        $this->load_view('group/orderbook/pendingItems',$data);
+        $this->load_view('group/orderbook/ordered_items',$data);
     }
     
     public function orders_mine(){
@@ -172,7 +174,7 @@ class Orderbook extends Group_Controller {
         $data['orders'] = $orderData['orders'];
 	$data['order_page'] = 'mine';
         $data['tally_totals'] = $orderData['tally_totals'];
-        $this->load_view('group/orderbook/listOrders',$data);
+        $this->load_view('group/orderbook/list_orders',$data);
     }
     
     public function orders_all(){
@@ -220,7 +222,7 @@ class Orderbook extends Group_Controller {
 	$data['order_page'] = 'all';
         $data['tally_totals'] = $orderData['tally_totals'];
         //$this->load_view('group/orderbook/allOrders',$data);
-        $this->load_view('group/orderbook/listOrders',$data);
+        $this->load_view('group/orderbook/list_orders',$data);
 
         
     }
@@ -238,7 +240,7 @@ class Orderbook extends Group_Controller {
         $data['users'] = $userList;
         $data['order'] = $order;
         $data['order_id'] = $order_id;
-        $this->load_view('group/orderbook/orderInfo',$data);
+        $this->load_view('group/orderbook/order_info',$data);
     }
     
     public function order_multiple_info(){
@@ -259,14 +261,14 @@ class Orderbook extends Group_Controller {
             $order = $this->orderbook_model->get_order($order_id);
             $data1['order'] = $order;
             $data1['order_id'] = $order_id;
-            $multipleOrderHTML .= $this->load->view('group/orderbook/orderInfo',$data1,TRUE);
+            $multipleOrderHTML .= $this->load->view('group/orderbook/order_info',$data1,TRUE);
             $multipleOrderHTML .= '<br><br>';
           }
         }
         
         $data['page_title'] = 'Multiple order information';
         $data['multipleOrderHTML'] = $multipleOrderHTML;
-        $this->load_view('group/orderbook/multipleOrderView',$data);
+        $this->load_view('group/orderbook/multiple_order_view',$data);
     }
     
     public function order_delete(){
@@ -723,7 +725,7 @@ class Orderbook extends Group_Controller {
           }
         }
         $data0['logHTML'] = $logHTML;
-        $this->load_view('errors/generic_error',$data0);
+        $this->load_view('group/orderbook/saveItemToListLog',$data0);
     }
     
     public function itemlist(){
@@ -799,7 +801,7 @@ class Orderbook extends Group_Controller {
         $data['user_id'] = $user_id;
         $data['role'] = $role;
         $data['users'] = $userList;
-        $this->load_view('group/orderbook/itemlistInfo',$data);
+        $this->load_view('group/orderbook/itemlist_info',$data);
     }
    
     public function itemlist_multiple_info(){
@@ -813,7 +815,7 @@ class Orderbook extends Group_Controller {
           foreach($order_ids as $order_id) {
             $data1['order_id'] = $order_id;
             $data1['order'] = $this->orderbook_model->get_order($order_id);
-            $multiItemlistHTML .= $this->load->view('group/orderbook/itemlistInfo',$data1,TRUE);
+            $multiItemlistHTML .= $this->load->view('group/orderbook/itemlist_info',$data1,TRUE);
             $multiItemlistHTML .= '<br>';
           }
         } else { // just display all of them
@@ -824,14 +826,14 @@ class Orderbook extends Group_Controller {
             }
             $data1['order_id'] = $order_id;
             $data1['order'] = $order;
-            $multiItemlistHTML .= $this->load->view('group/orderbook/itemlistInfo',$data1,TRUE);
+            $multiItemlistHTML .= $this->load->view('group/orderbook/itemlist_info',$data1,TRUE);
             $multiItemlistHTML .= '<br>';
           }
         }
         
         $data['page_title'] = 'Multiple itemlist information';
         $data['multiItemlistHTML'] = $multiItemlistHTML;
-        $this->load_view('group/orderbook/multipleItemlistView',$data);
+        $this->load_view('group/orderbook/multiple_itemlist_view',$data);
     }
     
     public function itemlist_remove(){
@@ -925,6 +927,6 @@ class Orderbook extends Group_Controller {
         $data['role'] = $role;
         $data['users'] = $userList;
         $data['orders'] = $itemlists;
-        $this->load_view('group/orderbook/allItemlists',$data);
+        $this->load_view('group/orderbook/all_itemlists',$data);
     }
 }

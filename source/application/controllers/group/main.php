@@ -21,8 +21,6 @@ class Main extends Group_Controller {
 	// Load a FileManager model
 	$this->load->model('filemanager');
 	$this->filemanager->initialize($params);
-	// Load the Google Ads class
-	$this->load->library('google_ads',$params);
 	
 	//Load plugins
 	$this->load->library('plugin_loader',$params);
@@ -36,15 +34,14 @@ class Main extends Group_Controller {
 		$counter++;
 	    }
 	}
+	$this->restrict_access();
     }
     
-    public function index() {   
-	
-	$this->restrict_access();
+    public function index() {  
 
 	// Load necessery data for the view
 	$data = array();
-	$data['page_title'] = "Home Page";
+	$data['page_title'] = "Welcome to the ".$this->properties['group.name']." Group site!";
 	$data['fullname']	    = $this->userobj->name;
 	$data['role']		    = $this->userobj->role;
 	$data['group_name']	    = $this->session->userdata('group');
@@ -62,14 +59,13 @@ class Main extends Group_Controller {
 	if (isset($plugins))
 		$data['plugins'] = $plugins; 
 	
-	$data['ads_html'] = $this->google_ads->displayAds();
-	
 	$this->load_view('group/main/main',$data);
     }
 	
     // This function is a URL destination ( .../group/main/displayMessages ) and not
     // a helper function. This URL is used as an 'src' property for an iframe.
     public function display_messages() { 
+	
 	$userid = $this->userobj->userid;
 	$status = $this->userobj->status;
 	$expire = $this->properties['lis.expire'];
@@ -80,7 +76,7 @@ class Main extends Group_Controller {
 	// function) are being loaded inside an iFrame. So, we have a new
 	// <head> section where we need to load the necessery CSS and Javascript
 	$output = '';
-	$output .= $this->load_view('group/main/iFrameHeader',null,TRUE);
+	$output .= $this->load_view('group/main/iFrame_header',null,TRUE);
 	if($this->proputil_model->get_property('show.welcome.'.$userid) != 'no') {
 	    $output .= $this->load_welcome($status);
 	}
@@ -95,13 +91,13 @@ class Main extends Group_Controller {
 	}
 	$output .= $this->load_system_messages();
 	$output .= $this->load_user_messages();
-	$output .= $this->load_view('group/main/iFrameFooter',null,TRUE);
+	$output .= $this->load_view('group/main/iFrame_footer',null,TRUE);
 	echo $output;
 
     }
     
     // Display the Post/Edit message form
-    function load_message_form($message_id=null) {
+    protected function load_message_form($message_id=null) {
 	
 	// Setup the necessery data for the view
 	$data['base'] = base_url()."group/";
@@ -118,12 +114,12 @@ class Main extends Group_Controller {
 	    $data['messageItem'] = $messageItem;
 	}
 	// Return the view as a string
-	$output = $this->load_view('group/main/messageForm',$data,true);	
+	$output = $this->load_view('group/main/message_form',$data,true);	
 	return $output;
     }
     
     // Function to display the first time login message
-    function load_welcome($status) {
+    protected function load_welcome($status) {
 	$data['base'] = base_url()."group/";
 	$role = $this->session->userdata('user')->role;
 	$data['date'] = getLISDate();
@@ -148,32 +144,32 @@ class Main extends Group_Controller {
 	    $data['case'] = 'other';
 	}
 
-	$output = $this->load_view('group/main/welcomeMessage',$data,true);
+	$output = $this->load_view('group/main/welcome_message',$data,true);
 	return $output;
     }
     
-     // display message informing users that the file sotrage space quota has been used up
-    function load_quota_used_message() {
+    // display message informing users that the file sotrage space quota has been used up
+    protected function load_quota_used_message() {
 	$data['base'] = base_url()."group/";
 	$data['sales_link'] = $base."accounts/upgrade";
 	$data['quota'] = $this->properties['storage.quota'];
 
-	$message = $this->load_view('group/main/quotaUsedMessage',$data,true);
+	$message = $this->load_view('group/main/quota_used_message',$data,true);
 	return $message;
     }
 
     // function to display messages. Only gets called if account is in trial mode
-    function load_activate_form($expire, $activated) {
+    protected function load_activate_form($expire, $activated) {
 	$data['base'] = base_url()."group/";
 	$data['date'] = getLISDate();
 	$data['account_id'] = $this->properties['lis.account'];
 
-	$form = $this->load_view('group/main/activateForm',$data,true);
+	$form = $this->load_view('group/main/activate_form',$data,true);
 	return $form;
     }
     
     // Checks if the message should be posted
-    function should_be_posted($post_start, $post_end) {
+    protected function should_be_posted($post_start, $post_end) {
 	$decision = false;
 	$timediff = $this->lis_tz[$this->properties['lis.timezone']];
 	$days1 = getDaysRemaining($post_start,$timediff);
@@ -186,7 +182,7 @@ class Main extends Group_Controller {
     }
 
     // function to echo html code for a user's message 
-    function load_user_table($messageItem) {
+    protected function load_user_table($messageItem) {
 	//global $file_directory;
 	
 	$link = $messageItem['url'];
@@ -221,13 +217,13 @@ class Main extends Group_Controller {
 	    $data['delete_link'] = $base."messages/delete/".$message_id;
 	}
 	
-	$table = $this->load->view('group/main/userMessageTable',$data,true);
+	$table = $this->load->view('group/main/user_message_table',$data,true);
 
 	return $table;
     }
     
     // function to display user messages
-    function load_user_messages() {
+    protected function load_user_messages() {
 	$messageList = $this->message_model->get_user_messages();
 	$umessages = '';
 	if(count($messageList)>0) {
@@ -239,17 +235,17 @@ class Main extends Group_Controller {
     }
     
     // function to echo html code for a system message
-    function load_system_table($messageItem) {
+    protected function load_system_table($messageItem) {
 	$data['message'] = $messageItem['message'];
 	$data['message_date'] = $messageItem['message_date'];
 	$data['link'] = $messageItem['url'];
 
-	$table = $this->load_view('group/main/systemMessageTable',$data,true);
+	$table = $this->load_view('group/main/system_message_table',$data,true);
 	return $table;
     }
     
     // function to display system messages
-    function load_system_messages() {
+    protected function load_system_messages() {
 
 	$account_id = $this->session->userdata('group');
 	$messageList = $this->message_model->get_system_messages($account_id);
@@ -267,14 +263,14 @@ class Main extends Group_Controller {
     
     // function to display a message informing the user that the premium account
     // has expired
-    function load_expired_message() {
+    protected function load_expired_message() {
 	/*12/8/07 Code This function */
 	$output = '';
 	return $output;
     }
 
     // function to check if the premium account is about to expired and needs to be renewed
-    function is_premium_expired() {
+    protected function is_premium_expired() {
 	/* Code 2/2/08 */
     }
     

@@ -19,6 +19,8 @@ class Manage extends Group_Controller {
 	'Biochemistry', 'Biological Sciences', 'Biotechnology', 'Chemistry', 
 	'Computer Science', 'Electrical Engineering', 'Material Science', 'Mathematics', 
 	'Mechanical Engineering', 'Nanotechology', 'Pharmacology', 'Physics');
+	
+	$this->restrict_access();
     }
    
     public function index(){
@@ -27,7 +29,7 @@ class Manage extends Group_Controller {
     
     public function users_main(){
         $data1['page'] = 'user';
-        $menuHTML = $this->load->view('group/manage/menubar',$data1,TRUE);
+        $menuHTML = $this->load->view('group/manage/menu_bar',$data1,TRUE);
         
         $data2['home_dir'] = $this->home_dir;
         $data2['im_message'] = $this->session->userdata('im_message');
@@ -185,7 +187,7 @@ class Manage extends Group_Controller {
     public function locations_main(){
 
         $data1['page'] = 'location';
-        $menuHTML = $this->load->view('group/manage/menubar',$data1,TRUE);
+        $menuHTML = $this->load->view('group/manage/menu_bar',$data1,TRUE);
         
         $data['page_title'] = 'Group location manager';
         $data['menuHTML'] = $menuHTML;
@@ -290,7 +292,7 @@ class Manage extends Group_Controller {
     
     public function inventory_main(){
         $data1['page'] = 'inventory';
-        $menuHTML = $this->load->view('group/manage/menubar',$data1,TRUE);
+        $menuHTML = $this->load->view('group/manage/menu_bar',$data1,TRUE);
         
         $data2['home_dir'] = $this->home_dir;
         $data2['im_message1'] = $this->session->userdata('im_message1');
@@ -302,15 +304,15 @@ class Manage extends Group_Controller {
         
         $data2['type'] = 'Chemical';
         $data2['categories'] = $this->chemicals_model->get_categories_by_type('Chemical');
-        $chemicalsImportForm = $this->load->view('group/manage/inventoryImportForm',$data2,TRUE);
-        $addChemicalCategories = $this->load->view('group/manage/inventoryAddForm',$data2,TRUE);
-        $editChemicalCategories = $this->load->view('group/manage/inventoryEditForm',$data2,TRUE);
+        $chemicalsImportForm = $this->load->view('group/manage/inventory_import_form',$data2,TRUE);
+        $addChemicalCategories = $this->load->view('group/manage/inventory_add_form',$data2,TRUE);
+        $editChemicalCategories = $this->load->view('group/manage/inventory_edit_form',$data2,TRUE);
         
         $data2['type'] = 'Supply';
         $data2['categories'] = $this->chemicals_model->get_categories_by_type('Supply');
-        $suppliesImportForm = $this->load->view('group/manage/inventoryImportForm',$data2,TRUE);
-        $addSupplyCategories = $this->load->view('group/manage/inventoryAddForm',$data2,TRUE);
-        $editSupplyCategories = $this->load->view('group/manage/inventoryEditForm',$data2,TRUE);
+        $suppliesImportForm = $this->load->view('group/manage/inventory_import_form',$data2,TRUE);
+        $addSupplyCategories = $this->load->view('group/manage/inventory_add_form',$data2,TRUE);
+        $editSupplyCategories = $this->load->view('group/manage/inventory_edit_form',$data2,TRUE);
         
         $data['page_title'] = 'Group inventory manager';
         $data['menuHTML'] = $menuHTML;
@@ -598,7 +600,7 @@ class Manage extends Group_Controller {
     
     public function modules_main(){
         $data1['page'] = 'module';
-        $menuHTML = $this->load->view('group/manage/menubar',$data1,TRUE);
+        $menuHTML = $this->load->view('group/manage/menu_bar',$data1,TRUE);
         
         $this->load->model('proputil_model');
         // Setup paramaters for initializing models below
@@ -793,7 +795,7 @@ class Manage extends Group_Controller {
             }
         } else {
             $data1['page'] = 'group';
-            $menuHTML = $this->load->view('group/manage/menubar',$data1,TRUE);
+            $menuHTML = $this->load->view('group/manage/menu_bar',$data1,TRUE);
 
             $this->load->model('account_model');
             $account_id = $this->properties['lis.account'];
@@ -810,7 +812,7 @@ class Manage extends Group_Controller {
     }
     
     // function to check form input
-    function check_form_input() {
+    protected function check_form_input() {
       $error = '';
 
       $userid = $this->input->post('userid'); 
@@ -847,7 +849,7 @@ class Manage extends Group_Controller {
     }
     
     // second function to check form input when modifying user account information
-    function check_form_input2($userid) {
+    protected function check_form_input2($userid) {
       $password = $this->input->post("password_$userid");
       $name = $this->input->post("name_$userid");
       $email = $this->input->post("email_$userid");
@@ -872,7 +874,7 @@ class Manage extends Group_Controller {
     }
     
     // function to make sure userid is valid
-    function valid_userid($userid) {
+    protected function valid_userid($userid) {
       global $users;
 
       if(strlen($userid) < 3 || isset($users[$userid])) { // make sure userid is not empty or already in list
@@ -884,7 +886,7 @@ class Manage extends Group_Controller {
     }
 
     // function to check to see if the password is valid
-    function valid_password($password) {
+    protected function valid_password($password) {
       $valid = true;
       if(strlen($password) < 4) {
         return false;

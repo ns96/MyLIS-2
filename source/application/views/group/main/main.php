@@ -12,8 +12,6 @@
   $upgrade_link =  $base."/accounts/upgrade";
   ?>
 
-    <strong>Welcome to the <?=$properties['group.name']?> Group site!</strong>
-    <br>
     <!-- QUOTA AREA -->
     <div class="progress-wrapper">
 	<br>
@@ -40,5 +38,4 @@
     <div class="formWrapper">
 	<?=$messageForm ?>
     </div>
-    <br> <?=$ads_html ?>
     

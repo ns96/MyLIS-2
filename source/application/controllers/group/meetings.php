@@ -16,6 +16,8 @@ class Meetings extends Group_Controller {
 	// Load a FileManager model
 	$this->load->model('filemanager');
 	$this->filemanager->initialize($params);
+	
+	$this->restrict_access();
     }
     
     public function index(){
@@ -56,7 +58,7 @@ class Meetings extends Group_Controller {
 			$data2['name'] = $name;
 			$data2['userid'] = $this->userobj->userid;
 			$data2['role'] = $this->userobj->role;
-			$semesterHTML .= $this->load->view('group/meetings/semesterDates',$data2,TRUE);
+			$semesterHTML .= $this->load->view('group/meetings/semester_dates',$data2,TRUE);
 		    }
 		}
 	    } else { // list dates only for the sepecifies semester
@@ -66,7 +68,7 @@ class Meetings extends Group_Controller {
 		$data2['name'] = $semesters[$default_semester];;
 		$data2['userid'] = $this->userobj->userid;
 		$data2['role'] = $this->userobj->role;
-		$semesterHTML .= $this->load->view('group/meetings/semesterDates',$data2,TRUE);
+		$semesterHTML .= $this->load->view('group/meetings/semester_dates',$data2,TRUE);
 	    }
 	} else { // If there are not meeting dates 
 	    $semesterHTML = '<tr><td valign="top" width="10%"><br></td>'; // print a blank
@@ -94,7 +96,7 @@ class Meetings extends Group_Controller {
 	    $data3['title'] = $title;
 	    $data3['slot_id'] = $slot_id;
 	    $data3['gmdates'] = $dates;
-	    $addSlotHTML = $this->load->view('group/meetings/addSlotForm',$data3,TRUE);
+	    $addSlotHTML = $this->load->view('group/meetings/add_slot_form',$data3,TRUE);
 	} else {
 	    $addSlotHTML = '';
 	}
@@ -122,7 +124,7 @@ class Meetings extends Group_Controller {
 	$data4['gmdate_info'] = $gmdate_info;
 	$data4['semesters'] = $semesters;
 	$data4['target_link'] = $target_link;
-	$addDateHTML = $this->load->view('group/meetings/addDateForm',$data4,TRUE);
+	$addDateHTML = $this->load->view('group/meetings/add_date_form',$data4,TRUE);
 	
 	// Now that we have all the html sub-sections of the page
 	// we load the wrapper view
@@ -258,7 +260,7 @@ class Meetings extends Group_Controller {
 	    }
 	    
 	    $data['page_title'] = 'Add New Meeting File';
-	    $this->load_view('group/meetings/addFileForm',$data);
+	    $this->load_view('group/meetings/add_file_form',$data);
 	}
     }
     
@@ -277,7 +279,7 @@ class Meetings extends Group_Controller {
     }
     
     // functon to return a list of semesters
-    function get_semesters($year) {
+    protected function get_semesters($year) {
 	$semesters = array(
 	    '1' => 'Year '.$year,
 	    '2' => 'Winter Semester',
@@ -289,7 +291,7 @@ class Meetings extends Group_Controller {
   }
   
     // function to return the default semester ID
-    function get_default_semester() {
+    protected function get_default_semester() {
 	$semester_id = $this->input->get('semester_id');
 
 	$ds = $this->input->get('default_semester');
@@ -318,7 +320,7 @@ class Meetings extends Group_Controller {
     }
 
     // function to check if the list of dates contans the particular semester
-    function has_semester($dates, $semester_id) {
+    protected function has_semester($dates, $semester_id) {
 	$hasit = false;
 	foreach ($dates as $gmdate_id => $gd) {
 	    if($semester_id == $gd->semester_id) {
@@ -330,7 +332,7 @@ class Meetings extends Group_Controller {
     }
   
     // function to set the default semester
-    function set_default_semester() {
+    protected function set_default_semester() {
 	$semester_id = $this->input->get('default_semester');
 	
 	// Setup paramaters for initializing models below

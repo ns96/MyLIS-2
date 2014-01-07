@@ -7,6 +7,7 @@ class Supplies extends Group_Controller {
     public function __construct() {
 	parent::__construct();
 	$this->userobj = $this->session->userdata('user');
+	$this->restrict_access();
     }
     
     public function index(){
@@ -73,7 +74,7 @@ class Supplies extends Group_Controller {
 		    foreach($item_ids as $item_id) {
 			$data2['itemInfo'] = $this->supplies_model->get_info($item_id);
 			$data2['locationInfo'] = $this->supplies_model->get_full_location($data2['itemInfo']['location_id']);
-			$data['infoHTML'] .= $this->load->view('group/supplies/infoTable',$data2,TRUE);
+			$data['infoHTML'] .= $this->load->view('group/supplies/info_table',$data2,TRUE);
 			$data['infoHTML'] .= "<br><br>";
 		    }
 		}
@@ -459,7 +460,7 @@ class Supplies extends Group_Controller {
 	    $data['item_id'] = $item_id;
 	    $data['userid'] = $userid;
 	    $data['page_title'] = 'Edit supply info';
-	    $this->load_view('group/supplies/editPage',$data);
+	    $this->load_view('group/supplies/edit_page',$data);
 	}
 	
     }
@@ -488,7 +489,7 @@ class Supplies extends Group_Controller {
 	    $data2['role'] = $this->userobj->role;
 	    $data2['itemInfo'] = $this->supplies_model->get_info($item_id);
 	    $data2['locationInfo'] = $this->supplies_model->get_full_location($data2['itemInfo']['location_id']);
-	    $data['infoHTML'] = $this->load->view('group/supplies/infoTable',$data2,TRUE);
+	    $data['infoHTML'] = $this->load->view('group/supplies/info_table',$data2,TRUE);
 	    
 	    $this->load_view('group/supplies/info',$data);
 	} else {

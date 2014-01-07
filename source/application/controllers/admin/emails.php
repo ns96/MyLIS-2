@@ -62,7 +62,7 @@ class Emails extends Admin_Controller {
     }
     
     // function to get the emails for an institution
-    function get_emails($institution, $people) {
+    protected function get_emails($institution, $people) {
 	$sa  = explode(";", $people);
 	$emails = array();
 
@@ -94,7 +94,7 @@ class Emails extends Admin_Controller {
     }
     
     // function to print our results
-    function write_emails_to_file() {
+    protected function write_emails_to_file() {
 	$text = '';
 	$fh = fopen($this->filename, 'w') or die("can't open file");
 

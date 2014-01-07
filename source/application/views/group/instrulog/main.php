@@ -1,7 +1,7 @@
 <table id="instrulog_wrapper_table">
     <tr>
 	<td style="vertical-align: top; width:67%">
-	   <? include FCPATH."application/views/group/instrulog/hoursTable.php"; ?>
+	   <? include FCPATH."application/views/group/instrulog/hours_table.php"; ?>
 	</td>
 	<td style="vertical-align: top">
 	    <div style="margin:10px">
@@ -17,7 +17,7 @@
 		    </tr>
 		    </tbody>
 		</table>
-		<? include FCPATH."application/views/group/instrulog/addInstrumentForm.php"; ?>
+		<? include FCPATH."application/views/group/instrulog/add_instrument_form.php"; ?>
 	    </div>
 	    <div class="formWrapper">
 		<table class="formTopBar" style="width: 100%" cellpadding="4" cellspacing="2">

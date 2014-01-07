@@ -8,7 +8,8 @@ class File_folder extends Group_Controller {
     public function __construct() {
 	parent::__construct();
 	$this->userobj = $this->session->userdata('user');
-        
+        $this->restrict_access();
+	
         // Setup paramaters for initializing models below
 	$params['user'] = $this->userobj;
 	$params['account'] = $this->session->userdata('group');
@@ -93,7 +94,7 @@ class File_folder extends Group_Controller {
         }
         
         $data1['urlUploadField'] = $this->filemanager->get_url_file_upload_field(1);
-        $data['addForm'] = $this->load->view('group/file_folder/addForm',$data1,TRUE);
+        $data['addForm'] = $this->load->view('group/file_folder/add_form',$data1,TRUE);
         
         $data['page_title'] = 'Group Files and Folders';
         $data['categories'] = $categories;

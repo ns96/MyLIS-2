@@ -7,6 +7,7 @@ class Chemicals extends Group_Controller {
     public function __construct() {
 	parent::__construct();
 	$this->userobj = $this->session->userdata('user');
+	$this->restrict_access();
     }
     
     public function index(){
@@ -73,7 +74,7 @@ class Chemicals extends Group_Controller {
 		    foreach($chem_ids as $chem_id) {
 			$data2['chemInfo'] = $this->chemicals_model->get_info($chem_id);
 			$data2['locationInfo'] = $this->chemicals_model->get_full_location($data2['chemInfo']['location_id']);
-			$data['infoHTML'] .= $this->load->view('group/chemicals/infoTable',$data2,TRUE);
+			$data['infoHTML'] .= $this->load->view('group/chemicals/info_table',$data2,TRUE);
 			$data['infoHTML'] .= "<br><br>";
 		    }
 		}
@@ -459,7 +460,7 @@ class Chemicals extends Group_Controller {
 	    $data['chem_id'] = $chem_id;
 	    $data['userid'] = $userid;
 	    $data['page_title'] = 'Edit chemical info';
-	    $this->load_view('group/chemicals/editPage',$data);
+	    $this->load_view('group/chemicals/edit_page',$data);
 	}
 	
     }
@@ -488,7 +489,7 @@ class Chemicals extends Group_Controller {
 	    $data2['role'] = $this->userobj->role;
 	    $data2['chemInfo'] = $this->chemicals_model->get_info($chem_id);
 	    $data2['locationInfo'] = $this->chemicals_model->get_full_location($data2['chemInfo']['location_id']);
-	    $data['infoHTML'] = $this->load->view('group/chemicals/infoTable',$data2,TRUE);
+	    $data['infoHTML'] = $this->load->view('group/chemicals/info_table',$data2,TRUE);
 	    
 	    $this->load_view('group/chemicals/info',$data);
 	} else {

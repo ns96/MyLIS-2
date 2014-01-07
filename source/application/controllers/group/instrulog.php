@@ -7,6 +7,7 @@ class Instrulog extends Group_Controller {
     public function __construct() {
 	parent::__construct();
 	$this->userobj = $this->session->userdata('user');
+	$this->restrict_access();
     }
     
     // Loads the reservation page
@@ -24,7 +25,7 @@ class Instrulog extends Group_Controller {
 	}
 	$data['m'] = $month;
 	
-	// Loading data for hoursTable subview
+	// Loading data for hours Table subview
 	$selected_date = $this->get_selected_date();
 	$date = "$selected_date[1]/$selected_date[0]/$selected_date[2]";
 	
@@ -76,7 +77,7 @@ class Instrulog extends Group_Controller {
 		$data['instrument'] = $instrument;
 		$data['session_userid'] = $this->userobj->userid;
 		$data['session_role'] = $this->userobj->role;
-		$instrumentsHTML .= $this->load->view('group/instrulog/instrumentItem',$data,TRUE);
+		$instrumentsHTML .= $this->load->view('group/instrulog/instrument_item',$data,TRUE);
 	    }
 	} else {
 	    $instrumentsHTML .= '<span style="color: #cc0000;"><small>
@@ -91,7 +92,7 @@ class Instrulog extends Group_Controller {
     
     // If a day was selected (from calendar), get the selected date from URL.
     // Otherwise return the current date.
-    function get_selected_date() {
+    protected function get_selected_date() {
 
 	$sd = $this->input->get('sd');
 	$sm = $this->input->get('sm');
@@ -108,7 +109,7 @@ class Instrulog extends Group_Controller {
     
     // function to get reserve check box and text input. i = hour in 24 hour clock, display hour with am/pm
     // reservations array. If the user has no right to change the reservations, the checkboxes will be disabled.
-    function get_reserve_field($i, $hour, $reservations) {
+    protected function get_reserve_field($i, $hour, $reservations) {
 	$userid = $this->userobj->userid;
 	$role = $this->userobj->role;
 

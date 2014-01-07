@@ -7,9 +7,11 @@ class Accounts extends Group_Controller {
     public function __construct() {
 	parent::__construct();
 	$this->userobj = $this->session->userdata('user');
+	$this->restrict_access();
     }
     
     public function upgrade(){
+	
         $this->load->model('account_model');
         
         if (isset($_POST['upgrade_form'])){
@@ -78,12 +80,11 @@ class Accounts extends Group_Controller {
             $data['cost1'] = $this->properties['storage.cost.200MB'];
             $data['cost2'] = $this->properties['storage.cost.1000MB'];
             $data['cost3'] = $this->properties['storage.cost.5000MB'];
-            $this->load_view('group/account/upgradeForm',$data);
+            $this->load_view('group/account/upgrade_form',$data);
         }
     }
     
     public function user_profile(){
-	$this->restrict_access();
 	
 	$base = base_url()."group/";
 	
@@ -119,12 +120,11 @@ class Accounts extends Group_Controller {
 	    $data['info'] = $this->userobj->info;
 	    $data['password'] = $password;
 	    
-	    $this->load_view('group/account/myprofile',$data);
+	    $this->load_view('group/account/my_profile',$data);
 	}
     }
     
     public function group_profile(){
-	$this->restrict_access();
 	
 	$base = base_url()."group/";
 	
@@ -163,14 +163,14 @@ class Accounts extends Group_Controller {
 	    $data['info'] = $info;
 	    $data['editor'] = $editor;
 	    
-	    $this->load_view('group/account/groupProfile',$data);
+	    $this->load_view('group/account/group_profile',$data);
 
 	    
 	}
     }
     
     // function to check the form input when editing a user information
-    private function check_form_input() {
+    protected function check_form_input() {
 	$error = '';
 
 	$name = $this->input->post('name'); // PI first name
@@ -202,7 +202,7 @@ class Accounts extends Group_Controller {
     }
     
     // function to check the form data
-    function check_upgrade_form() {
+    protected function check_upgrade_form() {
       $error = '';
 
       $name         = $this->input->post('name'); // Users name
@@ -261,7 +261,7 @@ class Accounts extends Group_Controller {
     }
     
     // function to check the input form data
-    private function check_group_form_input() {
+    protected function check_group_form_input() {
 	$error = '';
 
 	$pi_name     = $this->input->post('pi_name'); // PI first name
@@ -306,7 +306,7 @@ class Accounts extends Group_Controller {
     }
     
     // function to check to see if the password is valid
-    private function valid_password($password) {
+    protected function valid_password($password) {
 	$valid = true;
 	if(strlen($password) < 6) {
 	    return false;
@@ -315,7 +315,7 @@ class Accounts extends Group_Controller {
     }
     
     // function to get the new expiration date
-    private function get_expire_date() {
+    protected function get_expire_date() {
       $expire_date = '';
       $account_info = $this->account_model->getAccountInfo($this->properties['lis.account']);
 
@@ -335,10 +335,8 @@ class Accounts extends Group_Controller {
       return $expire_date;
     }
     
-    
-    
     // function to send a conformation email
-    function send_confirm_email($sale_info) {
+    protected function send_confirm_email($sale_info) {
       $subject  = 'MyLIS Account Upgraded';
       $headers = 'From: sales@mylis.net'."\r\n".
       'Reply-To: sales@mylis.net'."\r\n".

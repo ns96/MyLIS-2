@@ -406,7 +406,7 @@ class Orderbook_model extends CI_Model {
     }
     
     // function to add search results for ordered items to the results 2
-    function get_items_array($sql_result) {
+    public function get_items_array($sql_result) {
       $items = array();
       $count = count($sql_result);
 
@@ -454,7 +454,7 @@ class Orderbook_model extends CI_Model {
     }
     
     // function to either add or update the database
-    function update_inventory_db($user_id, $order_id, $item_num) {
+    public function update_inventory_db($user_id, $order_id, $item_num) {
 
       $sql = "SELECT * FROM $this->i_table WHERE (order_id='$order_id' AND item_num='$item_num')";
       $record = $this->lisdb->query($sql)->result_array();
@@ -532,7 +532,7 @@ class Orderbook_model extends CI_Model {
     
     // function to return the order_id based on the company name for an item. If more than one
     // order exist return the fisrt one
-    function get_order_id_from_company($company,$user_id) {
+    public function get_order_id_from_company($company,$user_id) {
       $info = array();
 
       $sql = "SELECT * FROM $this->o_table WHERE (status = 'itemlist' AND company LIKE '%$company%' AND owner = '$user_id')";
@@ -553,7 +553,7 @@ class Orderbook_model extends CI_Model {
 
     // function to break apart company names seperated by / character
     // and create a sql search string
-    function get_company_sql_string($company) {
+    public function get_company_sql_string($company) {
       if(strstr($company, '/')) {
         $sql = '';
         $companies = split('/', $company);

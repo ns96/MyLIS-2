@@ -8,13 +8,6 @@ class Main extends Admin_Controller {
 	parent::__construct();
 	$this->userobj = $this->session->userdata('user');
 	
-	$params['user'] = $this->userobj;
-	$params['account'] = $this->session->userdata('group');
-	$params['properties'] = $this->properties;
-
-	// Load a Proputil model
-	$this->load->model('proputil_model');
-	$this->proputil_model->initialize($params);
 	$this->restrict_access();
     }
     
@@ -33,7 +26,7 @@ class Main extends Admin_Controller {
 	$this->load_view('admin/main/main',$data);
     }
     
-     function display_messages() {
+    protected function display_messages() {
 	$output = "<br><br>Sorry ".$this->userobj->name.", no messages for you<br>";
 	return $output;
     }

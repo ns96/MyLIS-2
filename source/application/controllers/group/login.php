@@ -76,7 +76,7 @@ class Login extends Group_Controller {
 	}
 	
 	// Validates the user's credentials
-	function validate_user($userid, $password) {
+	protected function validate_user($userid, $password) {
 	    $users = $this->get_current_users(); // ony allow current users to login
 
 	    // see if this userid is in the database
@@ -90,7 +90,7 @@ class Login extends Group_Controller {
 	
 	// function to check to see if the account has expired. 
 	// if it has then print out message
-	function is_expired() {
+	protected function is_expired() {
 	    $expired = false;
 	    $expire_date = $this->properties['lis.expire'];
 
@@ -102,7 +102,7 @@ class Login extends Group_Controller {
 	}
 	
 	// function to return days remaining from todays date and the date variable
-	function get_days_remaining($date) {
+	protected function get_days_remaining($date) {
 	    $days = 0;
 	    $sa  = explode('/', $date);
 	    $date_utc = mktime(0, 0, 0, $sa[0], $sa[1], $sa[2]);

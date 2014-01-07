@@ -24,8 +24,11 @@ class Lis_Controller extends CI_Controller {
     // Reads configuration data (from ini file) for group or admin account
     protected function load_properties($conf_location) {
 	    $propertiesFile = CIPATH.$conf_location;
-	    $properties = parse_ini_file($propertiesFile,false,INI_SCANNER_RAW); // INI_SCANNER_RAW is used in order not
-										// to convert 'true' and 'false' values to 1 and o
+	    if (file_exists($propertiesFile))
+		$properties = parse_ini_file($propertiesFile,false,INI_SCANNER_RAW); // INI_SCANNER_RAW is used in order not
+	    								// to convert 'true' and 'false' values to 1 and o
+	    else
+		echo "Error: Configuration file could not be found!";
             /**Storage Cost Per Year Information */
             $properties['storage.cost.200MB'] = 100.0;
             $properties['storage.cost.1000MB'] = 300.0;
@@ -123,11 +126,10 @@ class Admin_Controller extends Lis_Controller {
 	// This function should be called by every admin page or before
 	// any admin action to prevent unauathorized access
 	public function restrict_access(){
-            
 	    if ($this->session->userdata('user')) {
 		if (!($this->session->userdata('group') == 'admin')){
 		    // The user is logged in but is not an admin
-		    $this->load_view('errors/unauthorized'); 
+		    $this->load->view('errors/unauthorized'); 
 		    $this->output->_display(); die();
 		}
 	    } else {
@@ -175,11 +177,17 @@ class Group_Controller extends Lis_Controller {
 		// the user is not logged in
 		$this->load->view('group/login');
 		$this->output->_display(); die();
-	    } 
+	    } else {
+		if ($this->session->userdata('group') == 'admin'){
+		    // The user is logged in as admin but this is a group area
+		    $this->load->view('errors/unauthorized'); 
+		    $this->output->_display(); die();
+		}
+	    }
 	}
 	
 	// function to get a list of only current users, not past, of a group
-	function get_current_users() {
+	protected function get_current_users() {
 	   $users = $this->load_users();
 	    $current_users = array();
 
@@ -195,7 +203,7 @@ class Group_Controller extends Lis_Controller {
 	}
 	
 	// load the default user
-	function get_default_user() {
+	protected function get_default_user() {
 	    $userdata = array(
 		    'userid'    =>	'myadmin', 
 		    'password'  =>	'change_password', 
@@ -210,7 +218,7 @@ class Group_Controller extends Lis_Controller {
 	}
 
 	// funtion to return an array of users
-	function load_users() {
+	protected function load_users() {
 	    $users = array();
 
 	    // get the default user account

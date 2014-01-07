@@ -121,7 +121,7 @@ class Managefiles extends Admin_Controller {
     }
    
     // get the accounts that should be updated
-    function get_account_ids() {
+    protected function get_account_ids() {
 	$accounts = $this->input->post('accounts');
 	$account_ids = array();
 
@@ -145,7 +145,7 @@ class Managefiles extends Admin_Controller {
     
     // Method to get the names of the files
     /* Must figure what this does?*/
-    function get_all_files() {
+    protected function get_all_files() {
 	$f_list = $this->admin_filemanager->get_file_list();
 	$files = array();
 	foreach($f_list as $file) {
@@ -157,7 +157,7 @@ class Managefiles extends Admin_Controller {
     }
     
     // function to get all trash files
-    function get_all_trash_files() {
+    protected function get_all_trash_files() {
 	$f_list = $this->admin_filemanager->get_trash_files();
 
 	$files = array();

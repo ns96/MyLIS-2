@@ -7,19 +7,12 @@ class Messages extends Admin_Controller {
     public function __construct(){
 	parent::__construct();
 	
-	// Setup paramaters for initializing models below
-	$params['user'] = $this->session->userdata('user');
-	$params['account'] = $this->session->userdata('group');
-	
-	$this->load->model('proputil_model');
-	$this->proputil_model->initialize($params);
-	
 	$this->userobj = $this->session->userdata('user');
+	$this->restrict_access();
     }
     
     // Handles the posting of new messages 
     public function index(){
-	$this->restrict_access();
 
 	// If a new message has been posted
 	if (isset($_POST['message_poster_form'])){
@@ -70,7 +63,7 @@ class Messages extends Admin_Controller {
 	    $data['accounts'] = $this->load_users();
 	    $data['page_title'] = 'Message Poster';
 	
-	    $this->load_view('admin/messages/messagePoster',$data);
+	    $this->load_view('admin/messages/message_poster',$data);
 	}
     }
     
@@ -113,7 +106,7 @@ class Messages extends Admin_Controller {
 	    $data['back_link'] = encodeUrl(base_url()."admin/messages");
 	    $data['messageItem'] = $message;
 	    
-	    $this->load_view('admin/messages/editMessageForm',$data);
+	    $this->load_view('admin/messages/edit_message_form',$data);
 	}
 	
     }
@@ -128,7 +121,7 @@ class Messages extends Admin_Controller {
    }
     
     // Checks the validity of posted data when editing a message or posting a new message
-    private function check_form_input() {
+    protected function check_form_input() {
 	$error;
 	$account_ids	= $this->input->post('accounts');
 	$now		= $this->input->post('now');

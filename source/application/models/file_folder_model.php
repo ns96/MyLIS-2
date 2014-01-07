@@ -34,7 +34,7 @@ class File_folder_model extends CI_Model {
     }
     
     // function to add a new category to the category db
-    function add_category($type, $category, $userid) {
+    public function add_category($type, $category, $userid) {
       $sql = "INSERT INTO $this->c_table VALUES('', '$this->table','$type', '$category', '$userid')";
       $this->lisdb->query($sql);
       return $this->lisdb->insert_id();

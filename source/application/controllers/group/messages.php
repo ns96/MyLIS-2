@@ -17,8 +17,9 @@ class Messages extends Group_Controller {
 	
 	$this->load->model('proputil_model');
 	$this->proputil_model->initialize($params);
-	
 	$this->userobj = $this->session->userdata('user');
+	
+	$this->restrict_access();
     }
     
    // Handles the posting of new messages  

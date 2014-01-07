@@ -7,6 +7,7 @@ class Weblinks extends Group_Controller {
     public function __construct() {
 	parent::__construct();
 	$this->userobj = $this->session->userdata('user');
+	$this->restrict_access();
     }
     
     public function index($link_id=null){
@@ -40,15 +41,15 @@ class Weblinks extends Group_Controller {
 	    $data2['link_id'] = $link_id;
 	    $data2['weblinkItem'] = $this->weblinks_model->get_weblink($link_id);
 	    $data2['target_link'] = base_url()."group/weblinks/update";
-	    $data['addForm'] = $this->load_view('group/weblinks/weblinkEditForm',$data2,TRUE);
+	    $data['addForm'] = $this->load_view('group/weblinks/weblink_edit_form',$data2,TRUE);
 	} else { // otherzise, we are adding a new weblink
 	    $data2['target_link'] = base_url()."group/weblinks/add";
-	    $data['addForm'] = $this->load_view('group/weblinks/weblinkAddForm',$data2,TRUE);
+	    $data['addForm'] = $this->load_view('group/weblinks/weblink_add_form',$data2,TRUE);
 	}
 	
 	//
 	$data['page_title'] = 'Web Link Repository';
-	$this->load_view('group/weblinks/displayWeblinkCategories',$data);
+	$this->load_view('group/weblinks/display_weblink_categories',$data);
     }
     
     // Handles the posting of a new weblink
@@ -128,7 +129,7 @@ class Weblinks extends Group_Controller {
     }
     
     // Return the HTML the lists the weblinks of a category
-    private function display_by_category($category_id,$category,$mylinks){
+    protected function display_by_category($category_id,$category,$mylinks){
 	$userid = $this->userobj->userid;
 	$role = $this->userobj->role;
 
@@ -147,13 +148,13 @@ class Weblinks extends Group_Controller {
 	    $data['role'] = $role;
 	    $data['weblinkList'] = $weblinkList;
 	    $data['category'] = $category;
-	    $output .= $this->load_view('group/weblinks/categoryWeblinks',$data,TRUE);
+	    $output .= $this->load_view('group/weblinks/category_weblinks',$data,TRUE);
 	}
 	
 	return $output; 
     }
     
-    private function get_category_id($cat_id) {
+    protected function get_category_id($cat_id) {
 	$array = explode('_', $cat_id);
 	return $array[1];
     }

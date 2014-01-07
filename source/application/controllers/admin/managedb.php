@@ -61,7 +61,7 @@ class Managedb extends Admin_Controller {
     }
     
     // function to add tables to the database
-    function create_tables($db) {
+    public function create_tables($db) {
 	$this->initialize_table_names();
 
 	if(strstr($db, 'LISMDB')) {

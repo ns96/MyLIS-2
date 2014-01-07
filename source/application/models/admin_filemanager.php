@@ -52,7 +52,7 @@ class Admin_filemanager extends CI_Model {
     }
     
     // function to add a log entry
-    function add_log($account_ids, $files, $type, $notes,$manager_id) {
+    function add_log($account_ids, $files, $type, $notes, $manager_id) {
 	$ids;
 	foreach($account_ids as $id) {
 	    $ids .= $id.' ';
@@ -73,8 +73,8 @@ class Admin_filemanager extends CI_Model {
 	$this->lismdb->query($sql);
     }
     
-  // function to modifiy the initiation file for a new account
-  function modify_initiation_file($account_id, $new_props) {
+    // function to modifiy the initiation file for a new account
+    function modify_initiation_file($account_id, $new_props) {
     $props = $this->readInitiationFile($account_id);
     
     foreach ($props as $key => $value) {
@@ -86,8 +86,8 @@ class Admin_filemanager extends CI_Model {
     $this->writeInitiationFile($account_id, $props);
   }
   
-  // function to read in the initiation file of an accounts
-  function read_initiation_file($account_id) {
+    // function to read in the initiation file of an accounts
+    function read_initiation_file($account_id) {
     $lis_dir = $this->accounts_dir.'mylis_'.$account_id.'/'; // the directory name
     $init_file = $lis_dir.'conf/lis.ini';
     
@@ -106,8 +106,8 @@ class Admin_filemanager extends CI_Model {
     return $props;
   }
   
-  // function to write out the initiation file
-  function write_initiation_file($account_id, $props) {
+    // function to write out the initiation file
+    function write_initiation_file($account_id, $props) {
     $lis_dir = $this->accounts_dir.'mylis_'.$account_id.'/'; // the directory name
     $init_file = $lis_dir.'conf/lis.ini';
     
@@ -135,11 +135,10 @@ class Admin_filemanager extends CI_Model {
 
 	return $lis_newdir.'/';
     }
-  
+    
     /* function to copy a directory to a new directory
     copies everything from directory $fromDir to directory $toDir
-    and sets up files mode $chmod
-    taken from http://us3.php.net/copy */
+    and sets up files mode $chmod taken from http://us3.php.net/copy */
     function copy_dir($fromDir,$toDir,$chmod = 0757,$verbose = false) {
 	//* Check for some errors
 	$errors=array();

@@ -18,6 +18,8 @@ class Publications extends Group_Controller {
 	$this->filemanager->initialize($params);
 	
 	$this->load->model('publication_model');
+	
+	$this->restrict_access();
     }
     
     public function index(){
@@ -36,7 +38,7 @@ class Publications extends Group_Controller {
 	    $data2['poster'] = $user;
 	    $data2['publications'] = $publications;
 	    $data2['session_userid'] = $this->userobj->userid;
-	    $pubsHTML .= $this->load_view('group/publications/userPublications',$data2,TRUE);
+	    $pubsHTML .= $this->load_view('group/publications/user_publications',$data2,TRUE);
 	}
 	$data['page_title'] = "Group Publications $status_text";
 	$data['pubsHTML'] = $pubsHTML;
@@ -79,7 +81,7 @@ class Publications extends Group_Controller {
 	    if(!$this->check_form_input()) { // something missing so just return
 		$data['page_title'] = 'Add Publication';
 		$data['error'] = $this->error;
-		$this->load_view('group/publications/addPublicationError',$data);
+		$this->load_view('group/publications/add_publication_error',$data);
 		return;
 	    }
 	    $data['userid'] = $this->userobj->userid;
@@ -102,7 +104,7 @@ class Publications extends Group_Controller {
 	    $data['page_title'] = 'Add Publication';
 	    $data['user'] = $this->userobj;
 	    
-	    $this->load_view('group/publications/addPublicationForm',$data);
+	    $this->load_view('group/publications/add_publication_form',$data);
 	}
     }   
     
@@ -148,7 +150,7 @@ class Publications extends Group_Controller {
 	    $data['pub'] = $publication;
 	    $data['fileData'] = $fileData;
 	    
-	    $this->load_view('group/publications/editPublicationForm',$data);
+	    $this->load_view('group/publications/edit_publication_form',$data);
 	}
 	
     }
@@ -218,7 +220,7 @@ class Publications extends Group_Controller {
     }
     
     // function to check the form input
-    function check_form_input() {
+    protected function check_form_input() {
 	
 	$this->error = '';
 	$title = $_POST['title']; // Users name
@@ -239,7 +241,7 @@ class Publications extends Group_Controller {
 	}
     }
     
-    function get_file_ids($file_ids) {
+    protected function get_file_ids($file_ids) {
 	$files = array();
 	$file_ids = trim($file_ids, ",");
 	if(!empty($file_ids)) {
