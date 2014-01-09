@@ -207,6 +207,24 @@ function loadGroupTopArea(){
     <? }
 }
 
+function loadRestrictedGroupTopArea(){
+    $logout_link = base_url()."group/login/logout";
+    
+    if ('1' == '1') { ?>
+    <table width="100%">
+	<tr>
+	    <td style="text-align:left">
+		<a href='' id="restricted_logo"><img class="toparea_image" src='<?= base_url()."images/icons/mylis.png" ?>' />
+		My Laboratory Information System</a>
+	    </td>
+	    <td style="text-align:right">
+		<a href="<?=$logout_link ?>" style="margin-right: 15px">Logout</a>
+	    </td>
+	</tr>
+    </table>
+    <? }
+}
+
 function loadAdminTopArea(){
     $CI = & get_instance();
     $fullname = $CI->session->userdata('user')->name;

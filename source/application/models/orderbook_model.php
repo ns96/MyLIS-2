@@ -1,5 +1,13 @@
 <?php
 
+/**
+ * Manages the information related to a group's orders and item lists.
+ * 
+ * Used only by group controllers
+ * 
+ * @author Nathan Stevens
+ * @author Alexandros Gougousis 
+ */
 class Orderbook_model extends CI_Model {
     
     var $lisdb = null;

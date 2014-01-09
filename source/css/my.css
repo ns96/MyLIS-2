@@ -148,6 +148,16 @@ root {
     margin-top: 3px;
 }
 
+#restricted_logo {
+    text-decoration:none; 
+    font-weight: bold; 
+    color:#285E8E
+}
+
+#restricted_logo:hover {
+    cursor: default;
+}
+
 .progress {
     width: 300px;
     float: right;

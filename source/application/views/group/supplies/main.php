@@ -12,15 +12,12 @@ $list_bylocation = base_url()."group/supplies/listing/by_location"; // list all 
 $list_locations = base_url()."group/supplies/list_locations"; // displays the list of locations
 $search_target = base_url()."group/supplies/search";
 $location_link = base_url()."group/supplies/list_locations";
-$home_link = base_url()."group/supplies";
-
-echo '[ <a href="'.$list_mine.'">My Supplies</a> ] ';
-echo '[ <a href="'.$list_all.'">List All</a> ] ';
-echo '[ <a href="'.$list_bycategory.'">List All By Category</a> ] ';
-echo '[ <a href="'.$list_bylocation.'">List All By Location</a> ] ';
-
-// add the search form
 ?>
+[ <a href="<?=$list_mine?>">My Supplies</a> ] 
+[ <a href="<?=$list_all?>">List All</a> ] 
+[ <a href="<?=$list_bycategory?>">List All By Category</a> ] 
+[ <a href="<?=$list_bylocation?>">List All By Location</a> ] 
+<br>
 <div class="formWrapper-inline">
         <table class="formTopBar" style="width: 100%" cellpadding="4" cellspacing="2">
             <tbody>

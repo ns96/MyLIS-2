@@ -1,5 +1,11 @@
 <?php if ( ! defined('BASEPATH')) exit('No direct script access allowed');
 
+/**
+ * Handles the administration of a group's weblinks
+ * 
+ * @author Nathan Stevens
+ * @author Alexandros Gougousis
+ */
 class Weblinks extends Group_Controller {
     
     private $userobj;
@@ -10,6 +16,15 @@ class Weblinks extends Group_Controller {
 	$this->restrict_access();
     }
     
+    /**
+     * The main page of weblinks module
+     * 
+     * This page displays a list of all the group's web links separated by
+     * category and a form for adding a new web link. If a link id is passed
+     * as a parameter, the form is being used for editing this weblink.
+     * 
+     * @param type $link_id
+     */
     public function index($link_id=null){
     
 	if (isset($_GET['mylinks']) && ($_GET['mylinks'] == 'yes')){
@@ -52,7 +67,9 @@ class Weblinks extends Group_Controller {
 	$this->load_view('group/weblinks/display_weblink_categories',$data);
     }
     
-    // Handles the posting of a new weblink
+    /**
+     * Handles the posting of a new weblink
+     */
     public function add(){
 	$title		= $this->input->post('title');
 	$url		= $this->input->post('url');
@@ -86,7 +103,9 @@ class Weblinks extends Group_Controller {
 	redirect('group/weblinks');
     }
     
-    // Handles the posting of weblinks edited data
+    /**
+     * Handles the posting of weblinks edited data
+     */
     public function update(){
 	if (isset($_POST['weblink_edit_form'])){
 	    $link_id	    = $this->input->post('link_id');
@@ -120,7 +139,11 @@ class Weblinks extends Group_Controller {
 	}
     }
     
-    // Handles requests for deleting a weblink
+    /**
+     * Deletes a group weblink
+     * 
+     * @param int $link_id
+     */
     public function delete($link_id){
 	 $this->load->model('weblinks_model');
 	 $this->weblinks_model->delete($link_id);
@@ -128,7 +151,14 @@ class Weblinks extends Group_Controller {
 	 redirect('group/weblinks');
     }
     
-    // Return the HTML the lists the weblinks of a category
+    /**
+     * Returns the HTML that lists the group weblinks of a specific category
+     * 
+     * @param int $category_id
+     * @param string $category
+     * @param boolean $mylinks
+     * @return string
+     */
     protected function display_by_category($category_id,$category,$mylinks){
 	$userid = $this->userobj->userid;
 	$role = $this->userobj->role;
@@ -154,6 +184,12 @@ class Weblinks extends Group_Controller {
 	return $output; 
     }
     
+    /**
+     * Extracts the category id from a posted field's name
+     * 
+     * @param string $cat_id
+     * @return int
+     */
     protected function get_category_id($cat_id) {
 	$array = explode('_', $cat_id);
 	return $array[1];

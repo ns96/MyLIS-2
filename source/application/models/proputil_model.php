@@ -1,5 +1,13 @@
 <?php
 
+/**
+ * Handles the information update of account properties.
+ * 
+ * Used only by group controllers
+ * 
+ * @author Nathan Stevens
+ * @author Alexandros Gougousis 
+ */
 class Proputil_model extends CI_Model {
     var $user = null;
     var $table = '';

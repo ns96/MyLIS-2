@@ -1,5 +1,11 @@
 <?php if ( ! defined('BASEPATH')) exit('No direct script access allowed');
 
+/**
+ * Handles the administrative tasks that are related to e-mail lists
+ * 
+ * @author Nathan Stevens
+ * @author Alexandros Gougousis
+ */
 class Emails extends Admin_Controller {
     
     private $userobj = null;
@@ -13,11 +19,17 @@ class Emails extends Admin_Controller {
 	$this->restrict_access();
     }
     
+    /**
+     * Displays a form for importing an e-mail list
+     */
     public function index(){
 	$data['page_title'] = 'E-mail List Manager';
 	$this->load_view('admin/emails/main',$data);
     }
     
+    /**
+     * Imports e-mails from the posted file
+     */
     public function import(){
 	$tmp_name = $_FILES['fileupload']['tmp_name'];
 	$error = '';
@@ -61,7 +73,12 @@ class Emails extends Admin_Controller {
 	}
     }
     
-    // function to get the emails for an institution
+    /**
+     * Retrieves the emails for an institution
+     * 
+     * @param string $institution
+     * @param string $people
+     */
     protected function get_emails($institution, $people) {
 	$sa  = explode(";", $people);
 	$emails = array();
@@ -93,7 +110,11 @@ class Emails extends Admin_Controller {
 	$this->institutions[] = $inst;
     }
     
-    // function to print our results
+    /**
+     * Writes the emails (separated by institution) in a file
+     * 
+     * @return string
+     */
     protected function write_emails_to_file() {
 	$text = '';
 	$fh = fopen($this->filename, 'w') or die("can't open file");
@@ -114,7 +135,9 @@ class Emails extends Admin_Controller {
     
 }
 
-    /*This stores email list*/
+    /**
+     * A class that is localy used to store an email list
+     */
     class institution {
 	var $name = '';
 	var $emails = array();

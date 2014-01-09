@@ -1,5 +1,11 @@
 <?php if ( ! defined('BASEPATH')) exit('No direct script access allowed');
 
+/**
+ * Manages the arrangement of group meetings
+ * 
+ * @author Nathan Stevens
+ * @author Alexandros Gougousis
+ */
 class Meetings extends Group_Controller {
     
     private $userobj = null;
@@ -20,6 +26,9 @@ class Meetings extends Group_Controller {
 	$this->restrict_access();
     }
     
+    /**
+     * Loads the main group meeting page
+     */
     public function index(){
     
 	$this->load->model('meeting_model');
@@ -139,6 +148,9 @@ class Meetings extends Group_Controller {
 	$this->load_view('group/meetings/main',$data);
     }
     
+    /**
+     * Updates a specific slot of a group meeting date
+     */
     public function edit_slot(){
 	if (isset($_POST['edit_slot_form'])){
 	    $this->load->model('meeting_model');
@@ -157,6 +169,9 @@ class Meetings extends Group_Controller {
 	redirect('group/meetings');
     }
     
+    /**
+     * Adds a new slot on a meeting date
+     */
     public function add_slot(){
 	if (isset($_POST['add_slot_form'])){
 	    $this->load->model('meeting_model');
@@ -175,6 +190,9 @@ class Meetings extends Group_Controller {
 	redirect('group/meetings');
     }
     
+    /**
+     * Removes a slot from meeting data
+     */
     public function delete_slot(){
 	$this->load->model('meeting_model');
 	$slot_id = $this->input->get('slot_id');
@@ -192,6 +210,9 @@ class Meetings extends Group_Controller {
 	redirect('group/meetings');
     }
     
+    /**
+     * Adds a new meeting date
+     */
     public function add_date(){
 	$this->load->model('meeting_model');
 	
@@ -205,6 +226,9 @@ class Meetings extends Group_Controller {
 	redirect('group/meetings');
     }
     
+    /**
+     * Updates the information about a meeting date
+     */
     public function update_date(){
 	$this->load->model('meeting_model');
 	
@@ -219,6 +243,9 @@ class Meetings extends Group_Controller {
 	redirect('group/meetings');
     }
     
+    /**
+     * Deletes a meeting date alongside with it's slots
+     */
     public function delete_date(){
 	$userid = $this->userobj->userid;
 	$role = $this->userobj->role;
@@ -230,6 +257,10 @@ class Meetings extends Group_Controller {
 	redirect('group/meetings');
     }
     
+    /**
+     * Displays a form for attaching a file to meeting date or attaches the
+     * file if the form has been posted.
+     */
     public function add_file(){
 	if (isset($_POST['add_slotfile_form'])){
 	    $slot_id = $this->input->post('slot_id');
@@ -264,6 +295,9 @@ class Meetings extends Group_Controller {
 	}
     }
     
+    /**
+     * Deletes a file that was attached to a meeting date
+     */
     public function delete_file(){
 
 	$file_id = $this->input->get('file_id');
@@ -278,7 +312,12 @@ class Meetings extends Group_Controller {
 	redirect('group/meetings');
     }
     
-    // functon to return a list of semesters
+    /**
+     * Returns a list of semesters
+     * 
+     * @param int $year
+     * @return array
+     */
     protected function get_semesters($year) {
 	$semesters = array(
 	    '1' => 'Year '.$year,
@@ -290,7 +329,11 @@ class Meetings extends Group_Controller {
 	return $semesters;
   }
   
-    // function to return the default semester ID
+    /**
+     * Returns the default semester ID
+     * 
+     * @return int
+     */
     protected function get_default_semester() {
 	$semester_id = $this->input->get('semester_id');
 
@@ -319,7 +362,13 @@ class Meetings extends Group_Controller {
 	}
     }
 
-    // function to check if the list of dates contans the particular semester
+    /**
+     * Checks if the list of dates contains the particular semester
+     * 
+     * @param array $dates
+     * @param int $semester_id
+     * @return boolean
+     */
     protected function has_semester($dates, $semester_id) {
 	$hasit = false;
 	foreach ($dates as $gmdate_id => $gd) {
@@ -331,7 +380,9 @@ class Meetings extends Group_Controller {
 	return $hasit;
     }
   
-    // function to set the default semester
+    /**
+     * Sets the default semester
+     */
     protected function set_default_semester() {
 	$semester_id = $this->input->get('default_semester');
 	

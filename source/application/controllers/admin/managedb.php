@@ -1,5 +1,12 @@
 <?php if ( ! defined('BASEPATH')) exit('No direct script access allowed');
 
+/**
+ * Handles the administrative functionality that is related to 
+ * displaying information about or making changes to database structure.
+ * 
+ * @author Nathan Stevens
+ * @author Alexandros Gougousis
+ */
 class Managedb extends Admin_Controller {
     
     private $userobj = null;
@@ -10,6 +17,10 @@ class Managedb extends Admin_Controller {
 	$this->restrict_access();
     }
     
+    /**
+     * Displays a list of MySQL databases and allows the admin to create
+     * the MyLIS databases.
+     */
     public function index(){
 	
 	$this->load->model('managedb_model');
@@ -22,6 +33,11 @@ class Managedb extends Admin_Controller {
 	$this->load_view('admin/managedb/main',$data);
     }
     
+    /**
+     * Displays information about a certain MySQL database.
+     * 
+     * @param string $dbname
+     */
     public function info($dbname){
 	$this->load->model('managedb_model');
 	$tables = $this->managedb_model->get_db_tables($dbname);
@@ -32,6 +48,9 @@ class Managedb extends Admin_Controller {
 	$this->load_view('admin/managedb/info',$data);
     }
     
+    /**
+     * Manages the creation of a certain type MyLIS database
+     */
     public function create(){
 	$db = 'mylis0_'.$this->input->post('db');
 	$tables = $this->input->post('tables');
@@ -60,7 +79,11 @@ class Managedb extends Admin_Controller {
 	redirect('admin/managedb');
     }
     
-    // function to add tables to the database
+    /**
+     * Adds tables to a certain MyLIS database
+     * 
+     * @param string $db The database id
+     */
     public function create_tables($db) {
 	$this->initialize_table_names();
 
@@ -78,6 +101,11 @@ class Managedb extends Admin_Controller {
 	}
     }
     
+    /**
+     * Displays information about the database tables related to a specific account
+     * 
+     * @param string $account_id
+     */
     public function account($account_id){
 	$this->load->model('managedb_model');
 	$data['statusInfo'] = $this->managedb_model->get_table_status($account_id);

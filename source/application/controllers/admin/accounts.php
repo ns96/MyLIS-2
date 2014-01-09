@@ -1,5 +1,11 @@
 <?php if ( ! defined('BASEPATH')) exit('No direct script access allowed');
 
+/**
+ * Handles the administrative tasks that are related to MyLIS accounts.
+ * 
+ * @author Nathan Stevens
+ * @author Alexandros Gougousis
+ */
 class Accounts extends Admin_Controller {
     
     private $userobj = null;
@@ -28,6 +34,9 @@ class Accounts extends Admin_Controller {
 	$this->restrict_access();
     }
     
+    /**
+     * Loads an acount lisitng page alognside with an account search form
+     */
     public function index(){
 	
 	$accountList = $this->account_model->get_all_accounts();
@@ -42,8 +51,12 @@ class Accounts extends Admin_Controller {
 	$this->load_view('admin/accounts/main',$data);
     }
     
+    /**
+     * Displays information about a specific account
+     * 
+     * @param string $account_id
+     */
     public function view($account_id){
-
 	if(!empty($account_id) && $this->account_model->account_exists($account_id)) {
 	    $data['page_title'] = "MyLIS Account ($account_id)";
 	    $data['account_id'] = $account_id;
@@ -63,6 +76,14 @@ class Accounts extends Admin_Controller {
 	}
     }
     
+    /**
+     * Displays a form for adding a new account or creates a new account.
+     * If the form has been posted it creates the account. In case the string
+     * 'test' or 'sandbox' has been passed as a parameter, it creates a test or 
+     * sandbox account, respectively.
+     * 
+     * @param string $template It is used only when creating a test or sandbox account.
+     */
     public function create($template=null){
 	
 	if ($template == 'test'){
@@ -191,6 +212,9 @@ class Accounts extends Admin_Controller {
 	}
     }
     
+    /**
+     * Creates a test account
+     */
     protected function create_test_account() {
 	$fname = 'Bob'; // PI first name
 	$mi = 'J'; // PI middle name
@@ -296,6 +320,9 @@ class Accounts extends Admin_Controller {
 	showModal($title,$message,$destination);
     }
     
+    /**
+     * Creates a sandbox account
+     */
     protected function create_sandbox_account(){
 	$fname = 'John'; // PI first name
 	$mi = 'H'; // PI middle name
@@ -411,6 +438,12 @@ class Accounts extends Admin_Controller {
 	showModal($title,$message,$destination);
     }
     
+    /**
+     * Displays an editing form for a specific account or updates the account
+     * in case the form has been posted.
+     * 
+     * @param string $account_id
+     */
     public function edit($account_id){
 	
 	if(!empty($account_id) && $this->account_model->account_exists($account_id)) {
@@ -515,6 +548,14 @@ class Accounts extends Admin_Controller {
 	}
     }
     
+    /**
+     * Removes an account 
+     * 
+     * It deletes the account files, drops the account tables and 
+     * removes the account users from lismdb.
+     * 
+     * @param string $account_id
+     */
     public function remove($account_id){
 	
 	if (isset($_POST['account_remove_form'])){
@@ -544,6 +585,11 @@ class Accounts extends Admin_Controller {
 	
     }
     
+    /**
+     * Renews an account 
+     * 
+     * Extends the account expiration date for a certain period.
+     */
     public function renew(){
 	$account_id = $this->input->post('account_id');
 	$term = $this->input->post('term');
@@ -576,6 +622,9 @@ class Accounts extends Admin_Controller {
 	redirect('admin/accounts/edit'.$account_id);
     }
     
+    /**
+     * Updates an account format to a newer version.
+     */
     public function update(){
 	
 	$current_version = '1.2';
@@ -594,9 +643,15 @@ class Accounts extends Admin_Controller {
 	$this->load_view('admin/accounts/update',$data);
     }
     
+    /**
+     * Searches for an account and displays information aabout it.
+     * 
+     * For the time being, the only search functionality that is supported it
+     * to enter a valid account id in therelevant form field. 
+     */
     public function search(){
 	if(isset($_POST['account_id'])) {
-	    $account_id = $_POST['account_id'];
+	    $account_id = $this->input->post('account_id');
 	} else {
 	    $account_id = '';
 	}
@@ -626,7 +681,12 @@ class Accounts extends Admin_Controller {
 	}
     }
     
-    // function to check the input form data from add account and edit account page
+    /**
+     * Checks the input form data from add account and edit account page
+     * 
+     * @param string $page Gets the value 'add' or 'edit'.
+     * @return boolean
+     */
     protected function check_form_input($page) {
 	$error = '';
 
@@ -703,7 +763,12 @@ class Accounts extends Admin_Controller {
 	}
     }
 
-    // function to return the group name 
+    /**
+     * Generates a group name/account id based on the PI's last name.
+     * 
+     * @param string $lname
+     * @return string
+     */
     protected function get_account_id($lname) {
 	$account_id = $this->input->post('account_id');
 	if(empty($account_id) || strlen($account_id) < 3) {
@@ -719,7 +784,11 @@ class Accounts extends Admin_Controller {
 	}
     }
  
-    // function to get an activate code
+    /**
+     * Generates an activation code.
+     * 
+     * @return string
+     */
     protected function get_activation_code() {
 	$code = '';
 	for($i = 0; $i < 6; $i++) {
@@ -728,7 +797,11 @@ class Accounts extends Admin_Controller {
 	return $code;
     }
     
-    // function to send an email informing that the account has been created
+    /**
+     * Sends an email (to the PI) informing that the account has been created
+     * 
+     * @param array $account_info
+     */
     protected function send_email($account_info) {
 	$to  = $account_info[2];
 	$subject  = 'MyLIS Account Created';

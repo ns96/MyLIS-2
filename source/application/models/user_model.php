@@ -1,5 +1,13 @@
 <?php
 
+/**
+ * Manages the information related to group user information.
+ * 
+ * Used only by group controllers
+ * 
+ * @author Nathan Stevens
+ * @author Alexandros Gougousis 
+ */
 class User_model extends CI_Model {
     
     var $lisdb = null;

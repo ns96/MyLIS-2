@@ -1,5 +1,11 @@
 <?php if ( ! defined('BASEPATH')) exit('No direct script access allowed');
 
+/**
+ * Handles the functionality of group account management.
+ * 
+ * @author Nathan Stevens
+ * @author Alexandros Gougousis
+ */
 class Accounts extends Group_Controller {
     
     private $userobj = null;
@@ -10,6 +16,10 @@ class Accounts extends Group_Controller {
 	$this->restrict_access();
     }
     
+    /**
+     * Handles a request for upgrading a group account 
+     * (increase account's storage limit)
+     */
     public function upgrade(){
 	
         $this->load->model('account_model');
@@ -84,6 +94,10 @@ class Accounts extends Group_Controller {
         }
     }
     
+    /**
+     * Displays information about the profile of the logged in user or updates
+     * this information if the relevant form has been submited.
+     */
     public function user_profile(){
 	
 	$base = base_url()."group/";
@@ -124,6 +138,10 @@ class Accounts extends Group_Controller {
 	}
     }
     
+    /**
+     * Displays information about the group's profile or updates
+     * this information if the relevant form has been submited.
+     */
     public function group_profile(){
 	
 	$base = base_url()."group/";
@@ -169,7 +187,11 @@ class Accounts extends Group_Controller {
 	}
     }
     
-    // function to check the form input when editing a user information
+    /**
+     * Validates the posted form before updating user's profile information
+     * 
+     * @return boolean
+     */
     protected function check_form_input() {
 	$error = '';
 
@@ -201,7 +223,11 @@ class Accounts extends Group_Controller {
 	}
     }
     
-    // function to check the form data
+    /**
+     * Validates the posted form before upgrading an account
+     * 
+     * @return boolean
+     */
     protected function check_upgrade_form() {
       $error = '';
 
@@ -260,7 +286,11 @@ class Accounts extends Group_Controller {
       }
     }
     
-    // function to check the input form data
+    /**
+     * Validates the posted form before updating group's profile information
+     * 
+     * @return boolean
+     */
     protected function check_group_form_input() {
 	$error = '';
 
@@ -305,7 +335,12 @@ class Accounts extends Group_Controller {
 	}
     }
     
-    // function to check to see if the password is valid
+    /**
+     * Validates user's password
+     * 
+     * @param string $password
+     * @return boolean
+     */
     protected function valid_password($password) {
 	$valid = true;
 	if(strlen($password) < 6) {
@@ -314,7 +349,11 @@ class Accounts extends Group_Controller {
 	return $valid;
     }
     
-    // function to get the new expiration date
+    /**
+     * Calculates the new expiration date of an account that is being upgraded
+     * 
+     * @return string
+     */
     protected function get_expire_date() {
       $expire_date = '';
       $account_info = $this->account_model->getAccountInfo($this->properties['lis.account']);
@@ -335,7 +374,11 @@ class Accounts extends Group_Controller {
       return $expire_date;
     }
     
-    // function to send a conformation email
+    /**
+     * Sends a confirmation e-mail for an account upgrade
+     * 
+     * @param array $sale_info
+     */
     protected function send_confirm_email($sale_info) {
       $subject  = 'MyLIS Account Upgraded';
       $headers = 'From: sales@mylis.net'."\r\n".

@@ -1,5 +1,11 @@
 <?php
 
+/**
+ * Manages MyLIS log entries
+ * 
+ * @author Nathan Stevens
+ * @author Alexandros Gougousis
+ */
 class Logger {
   var $properties;
   var $user;

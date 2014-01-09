@@ -1,5 +1,13 @@
 <?php
 
+/**
+ * Handles the updating of account information.
+ * 
+ * Used by admin admin and group controllers
+ * 
+ * @author Nathan Stevens
+ * @author Alexandros Gougousis 
+ */
 class Account_model extends CI_Model {
     
     var $lisdb = null;

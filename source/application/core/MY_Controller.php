@@ -1,6 +1,11 @@
 <?php if ( ! defined('BASEPATH')) exit('No direct script access allowed');
 
-// Superclass for all controllers.
+/**
+ * Superclass for all MyLIS controllers.
+ * 
+ * @author Nathan Stevens
+ * @author Alexandros Gougousis
+ */
 class Lis_Controller extends CI_Controller {
     
     public $properties;
@@ -21,7 +26,12 @@ class Lis_Controller extends CI_Controller {
 	$this->lis_tz = $this->listimezones->get_tz();
     }
     
-    // Reads configuration data (from ini file) for group or admin account
+    /**
+     * Reads configuration data (from .ini file) for group or admin account
+     * 
+     * @param string $conf_location
+     * @return array
+     */
     protected function load_properties($conf_location) {
 	    $propertiesFile = CIPATH.$conf_location;
 	    if (file_exists($propertiesFile))
@@ -37,6 +47,13 @@ class Lis_Controller extends CI_Controller {
 	    return $properties;		    
     }
     
+    /**
+     * Advanced view loader that supports the use of template files
+     * 
+     * @param string $viewname
+     * @param array $data
+     * @param boolean $asString
+     */
     protected function load_view($viewname,$data=null,$asString=false){
 	    if ($asString) {
 		$output = $this->load->view($viewname,$data,TRUE);
@@ -84,10 +101,11 @@ class Lis_Controller extends CI_Controller {
 	
 }
 
-// Super class for admin-related controllers
+/**
+ * Super class for admin-related controllers
+ */
 class Admin_Controller extends Lis_Controller {
-
-	// Initializes all admin controllers by loading configuration parameters
+    
 	public function __construct() {
 	    parent::__construct();
 	    
@@ -104,7 +122,11 @@ class Admin_Controller extends Lis_Controller {
 	    $this->properties['home.url'] = base_url().'admin/main';
 	}
 	
-	// Returns an array which contains one data record for each administrator
+	/**
+         * Returns an array which contains one data record for each administrator
+         * 
+         * @return array An array of 'User' objects
+         */
 	protected function load_users() {
 	    
 	    $users = array();
@@ -123,8 +145,10 @@ class Admin_Controller extends Lis_Controller {
 	    return $users;
 	}
 	
-	// This function should be called by every admin page or before
-	// any admin action to prevent unauathorized access
+	/**
+         * This function should be called by every admin page or before
+         * any admin action to prevent unauathorized access
+         */
 	public function restrict_access(){
 	    if ($this->session->userdata('user')) {
 		if (!($this->session->userdata('group') == 'admin')){
@@ -140,7 +164,9 @@ class Admin_Controller extends Lis_Controller {
 	}
 }
 
-// Super class for group-related controllers
+/**
+ * Super class for group-related controllers
+ */
 class Group_Controller extends Lis_Controller {
     
 	public function __construct() {
@@ -170,8 +196,10 @@ class Group_Controller extends Lis_Controller {
 	    
 	}	
 	
-	// This function is called by every group page or before any 
-	// group action to prevent unauathorized access
+	/**
+         * This function is called by every group page or before any 
+	 * group action to prevent unauathorized access
+         */
 	public function restrict_access(){
 	    if (!$this->session->userdata('user')) {
 		// the user is not logged in
@@ -186,7 +214,11 @@ class Group_Controller extends Lis_Controller {
 	    }
 	}
 	
-	// function to get a list of only current users, not past, of a group
+	/**
+         * Returns a list of only current users, not past, of a group
+         * 
+         * @return array
+         */
 	protected function get_current_users() {
 	   $users = $this->load_users();
 	    $current_users = array();
@@ -202,7 +234,11 @@ class Group_Controller extends Lis_Controller {
 	    return $current_users;
 	}
 	
-	// load the default user
+	/**
+         * Loads the default user
+         * 
+         * @return object
+         */
 	protected function get_default_user() {
 	    $userdata = array(
 		    'userid'    =>	'myadmin', 
@@ -217,7 +253,11 @@ class Group_Controller extends Lis_Controller {
 	    return new User($userdata);
 	}
 
-	// funtion to return an array of users
+	/**
+         * Return the list of group users
+         * 
+         * @return array
+         */
 	protected function load_users() {
 	    $users = array();
 

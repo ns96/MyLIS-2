@@ -156,7 +156,7 @@ $order_link = base_url().'group/orderbook/order_process';
                             ?>
                             <option value="Enter Company">Other</option>
                         </select>
-                        <input type="text" name="company_0" value="<?=$company?>" class="input-block-level input-smallmedium">
+                        <input type="text" name="company_0" value="<?=$company?>" class="input-medium">
                     </td>
                     <td>
                         <label for="ponum" class="control-label">PO #:</label><br>
@@ -192,7 +192,7 @@ $order_link = base_url().'group/orderbook/order_process';
 			    echo '[ <a href="javascript:addAccountToTallyList()">Tally</a> ] ';
 			    echo '[ <a href="javascript:removeAccountFromTallyList()">Remove Tally</a> ]';
 			}?>
-			<select name="accounts" size="1" onChange="changeAccount(this.form.accounts, 0)" class="input-medium">
+			<select name="accounts" onChange="changeAccount(this.form.accounts, 0)" class="input-medium">
 			    <option value="">Select One</option>
 			    <?
 			    for($i = 0; $i < $length; $i++) {
@@ -207,7 +207,7 @@ $order_link = base_url().'group/orderbook/order_process';
 			    ?>
 			    <option value="Enter Account">Other</option>
 			</select>
-			<input type="text" name="account" class="input-smallmedium" value="<?=$account?>">
+			<input type="text" name="account" class="input-medium" value="<?=$account?>">
 		    </td>
                     <td>
 			<label for="gexpense" class="control-label">Group Expense :</label>
@@ -284,7 +284,7 @@ $order_link = base_url().'group/orderbook/order_process';
 			    <input type="checkbox" name="item_<?=$i?>" value="<?=$i?>"> <?=$i?>
 			</td>
 			<td>
-			    <select name="type_<?=$i?>" size="1" class="input-smallmedium">
+			    <select name="type_<?=$i?>" class="input-smallmedium">
 				<?
 				if(!empty($type)) {
 				    echo '<option value="'.$type.'">'.$type.'</option>';
@@ -296,13 +296,13 @@ $order_link = base_url().'group/orderbook/order_process';
 			    </select>
 			</td>
 			<td>
-			    <input type="text" name="company_<?=$i?>" value="<?=$company?>" onChange="putCompany(this.form.company_<?=$i?>)" class="input-smallmedium">
+			    <input type="text" name="company_<?=$i?>" value="<?=$company?>" onChange="putCompany(this.form.company_<?=$i?>)" class="input-block-level">
 			</td>
 			<td>
-			    <input type="text" name="product_<?=$i?>" size="8" value="<?=$product?>" class="input-smallmedium" onChange="putProduct(this.form.product_<?=$i?>, this.form.type_<?=$i?>, this.form.company_<?=$i?>, this.form.description_<?=$i?>, this.form.units_<?=$i?>, this.form.price_<?=$i?>)">
+			    <input type="text" name="product_<?=$i?>" size="8" value="<?=$product?>" class="input-block-level" onChange="putProduct(this.form.product_<?=$i?>, this.form.type_<?=$i?>, this.form.company_<?=$i?>, this.form.description_<?=$i?>, this.form.units_<?=$i?>, this.form.price_<?=$i?>)">
 			</td>
 			<td>
-			    <input type="text" name="description_<?=$i?>" class="input-medium" value="<?=$description?>">
+			    <input type="text" name="description_<?=$i?>" class="input-block-level" value="<?=$description?>">
 			</td>
 			<td>
 			    <select name="amount_<?=$i?>" size="1" class="input-mini">';

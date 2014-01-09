@@ -1,5 +1,11 @@
 <?php if ( ! defined('BASEPATH')) exit('No direct script access allowed');
 
+/**
+ * Manages the ordering of chemicals or supplies
+ * 
+ * @author Nathan Stevens
+ * @author Alexandros Gougousis
+ */
 class Orderbook extends Group_Controller {
     
     var $userobj = null;
@@ -21,6 +27,9 @@ class Orderbook extends Group_Controller {
 	$this->set_configuration();
     }
  
+    /**
+     * Loads the main page
+     */
     public function index(){
 	$user_id = $this->userobj->userid;
 	$role = $this->userobj->role;
@@ -104,6 +113,9 @@ class Orderbook extends Group_Controller {
 	$this->load_view('group/orderbook/main',$data);
     }
     
+    /**
+     * Displays all the pending items 
+     */
     public function items_pending(){
         
         $user_id = $this->userobj->userid;
@@ -117,6 +129,9 @@ class Orderbook extends Group_Controller {
         $this->load_view('group/orderbook/pending_items',$data);
     }
     
+    /**
+     * Displays all the items that have been ordered
+     */
     public function items_ordered(){
         
         $user_id = $this->userobj->userid;
@@ -130,6 +145,9 @@ class Orderbook extends Group_Controller {
         $this->load_view('group/orderbook/ordered_items',$data);
     }
     
+    /**
+     * Displays the orders that have been placed by the logged in user
+     */
     public function orders_mine(){
         
         $user_id = $this->userobj->userid;
@@ -177,6 +195,9 @@ class Orderbook extends Group_Controller {
         $this->load_view('group/orderbook/list_orders',$data);
     }
     
+    /**
+     * Displays alist of all the group's orders
+     */
     public function orders_all(){
         
         $user_id = $this->userobj->userid;
@@ -227,6 +248,9 @@ class Orderbook extends Group_Controller {
         
     }
     
+    /**
+     * Displays information about a specific order and its items
+     */
     public function order_info(){
         $order_id = $this->input->get('order_id');
         $order = $this->orderbook_model->get_order($order_id);
@@ -243,6 +267,9 @@ class Orderbook extends Group_Controller {
         $this->load_view('group/orderbook/order_info',$data);
     }
     
+    /**
+     * Displays information about multiple orders
+     */
     public function order_multiple_info(){
         $order_ids = $this->input->post('order_ids');                                                                                              
         $multipleOrderHTML = '';
@@ -271,6 +298,9 @@ class Orderbook extends Group_Controller {
         $this->load_view('group/orderbook/multiple_order_view',$data);
     }
     
+    /**
+     * Deletes an order
+     */
     public function order_delete(){
         $order_id = $this->input->post('order_id');
         if(empty($order_id)) {
@@ -285,6 +315,9 @@ class Orderbook extends Group_Controller {
         redirect('group/orderbook');
     }
     
+    /**
+     * Handles a bunch of actions related to an order
+     */
     public function order_process(){
         $task = $this->input->post('task2');
  
@@ -317,6 +350,9 @@ class Orderbook extends Group_Controller {
         }
     }
     
+    /**
+     * Searches for orders meeting certain criteria
+     */
     public function search(){
         $userid = $this->userobj->userid;
         $userList = $this->load_users();
@@ -350,11 +386,16 @@ class Orderbook extends Group_Controller {
         $this->load_view('group/orderbook/search_results',$data);
     }
     
-    // function to save an order
-    // $task = 1 Save only
-    // $task = 2 Save and mark for odering
-    // $task = 3 Don't forward to new page just save and return
-    // $task = 4 Don't forward to new page and don't change user_id field
+    /**
+     * Saves an order
+     * 
+     * $task = 1 Save only
+     * $task = 2 Save and mark for odering
+     * $task = 3 Don't forward to new page just save and return
+     * $task = 4 Don't forward to new page and don't change user_id field
+     * 
+     * @param int $task
+     */
     public function save_order($task){
         // Setup paramaters for initializing models below
 	$params['user'] = $this->userobj;
@@ -448,7 +489,9 @@ class Orderbook extends Group_Controller {
         redirect("group/orderbook?order_id=$order_id");
     }
     
-    // Method to remove an item from an order
+    /**
+     * Removes an item from an order
+     */
     public function remove_item() {
       $order_id = $this->input->post('order_id');
 
@@ -485,7 +528,9 @@ class Orderbook extends Group_Controller {
       redirect("group/orderbook?order_id=$order_id");
     }
     
-    // Method to mark an item as received
+    /**
+     * Marks an item as received
+     */
     public function item_received() {
       $userid = $this->userobj->userid;
       $order_id = $this->input->post('order_id');
@@ -504,7 +549,14 @@ class Orderbook extends Group_Controller {
       redirect('group/orderbook?order_id=$order_id');
     }
     
-    // function to add the items
+    /**
+     * Adds items to an order
+     * 
+     * @param type $order_id
+     * @param type $order_company
+     * @param type $maxitems
+     * @param type $task
+     */
     public function add_order_items($order_id, $order_company, $maxitems, $task) {
       $user_id = $this->userobj->userid;
       $owner = '';
@@ -578,7 +630,9 @@ class Orderbook extends Group_Controller {
         $this->orderbook_model->update_order_totals($g_expense,$p_expense,$order_id);
     }
     
-    // get company names
+    /**
+     * Loads the company names
+     */
     protected function set_company_names() {
 	$cnames = array('Aldrich', 'Fisher', 'VWR'); // load some default names
 
@@ -599,6 +653,9 @@ class Orderbook extends Group_Controller {
 	$this->js_cnames = $js_cnames;
     }
     
+    /**
+     * Loads the order accounts
+     */
     protected function set_accounts(){
 	$accounts = array();
 	$accountList = $this->orderbook_model->get_accounts();
@@ -613,7 +670,9 @@ class Orderbook extends Group_Controller {
 	$this->accounts = $accounts;
     }
     
-    // function to set the configuration of the order book
+    /**
+     * Reads the privacy setting of the order book
+     */
     protected function set_configuration() {
 
 	$config = $this->orderbook_model->get_order_visibility();
@@ -623,7 +682,12 @@ class Orderbook extends Group_Controller {
 
     }
     
-    // function to set the company/account associative array for popuating accounts automatically
+    /**
+     * Sets the company/account associative array for popuating accounts automatically
+     * 
+     * @param type $arrayName
+     * @return string
+     */
     public function get_default_accounts($arrayName) {
 	$js_code = ''; // The javascrip code with the associative array
 	//
@@ -645,7 +709,13 @@ class Orderbook extends Group_Controller {
 	return $js_code;
     }
  
-    // function to return the names of months. used the the orderbook module
+    /**
+     * Returns the names of months. 
+     * 
+     * Used by the orderbook module
+     * 
+     * @return array
+     */
     public function get_months() {
       $months = array(1 => 'January', 'February', 'March', 'April', 'May',
                       'June', 'July', 'August', 'September', 'October', 
@@ -653,7 +723,12 @@ class Orderbook extends Group_Controller {
       return $months;
     }
     
-    // function to remove leading edge dollay signs from money values
+    /**
+     * Removes leading edge dollar signs from money values
+     * 
+     * @param type $money
+     * @return type
+     */
     public function trim_dollar_sign($money) {
       if(strstr($money, '$')) {
         $money  = substr($money, 1);
@@ -661,7 +736,9 @@ class Orderbook extends Group_Controller {
       return $money;
     }
     
-    // function to increment the maxium item number by 5 or set to the maximum
+    /**
+     * Increments the maximum item number by 5 or set to the maximum
+     */
     public function increment_max_items_value() {
       $order_id = $this->input->post('order_id');
 
@@ -676,8 +753,10 @@ class Orderbook extends Group_Controller {
     }
     
     //--------------- FROM ex-Itellist Class -----------------------//
-    //
-    // function to save the selected items to a list of it exist
+        
+    /**
+     * Saves the selected items to a list of it exist
+     */
     public function save_items_to_list() {
         $user_id = $this->user->userid;                
         $order_id = $this->input->post('order_id');
@@ -728,6 +807,10 @@ class Orderbook extends Group_Controller {
         $this->load_view('group/orderbook/saveItemToListLog',$data0);
     }
     
+    /**
+     * Displays a form for adding an itemlist or saves this itemlist in case the
+     * form has been submitted.
+     */
     public function itemlist(){
         
         if (isset($_POST['save_itemlist_form'])){
@@ -787,6 +870,9 @@ class Orderbook extends Group_Controller {
         }
     }
     
+    /**
+     * Displays information about an itemlist.
+     */
     public function itemlist_info(){
         $order_id = $this->input->get('order_id');
         $order = $this->orderbook_model->get_order($order_id);
@@ -804,6 +890,9 @@ class Orderbook extends Group_Controller {
         $this->load_view('group/orderbook/itemlist_info',$data);
     }
    
+    /**
+     * Displays information about multiple itemlists.
+     */
     public function itemlist_multiple_info(){
         $order_ids = $this->input->post('order_ids');
         $multiItemlistHTML = '';
@@ -836,6 +925,9 @@ class Orderbook extends Group_Controller {
         $this->load_view('group/orderbook/multiple_itemlist_view',$data);
     }
     
+    /**
+     * Removes an itemlist
+     */
     public function itemlist_remove(){
     
         $order_id = $this->input->post('order_id');
@@ -851,7 +943,11 @@ class Orderbook extends Group_Controller {
         redirect('group/orderbook/itemlist_all');
     }
     
-    // this method is called to save a new itemlist or an edited itemlist
+    /**
+     * Saves a new itemlist or updates an edited itemlist
+     * 
+     * @return type
+     */
     protected function save_itemlist(){                                                                                            
         $user_id = $this->userobj->userid;
 
@@ -914,6 +1010,9 @@ class Orderbook extends Group_Controller {
         redirect("group/orderbook/itemlist?order_id=$order_id");
     }
     
+    /**
+     * Displays a list of all itemlists
+     */
     public function itemlist_all(){
         $user_id = $this->userobj->userid;
         $role = $this->userobj->role;

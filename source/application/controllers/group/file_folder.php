@@ -1,5 +1,11 @@
 <?php if ( ! defined('BASEPATH')) exit('No direct script access allowed');
 
+/**
+ * Manages the group's files 
+ * 
+ * @author Nathan Stevens
+ * @author Alexandros Gougousis
+ */
 class File_folder extends Group_Controller {
     
     var $userobj = null;
@@ -23,6 +29,13 @@ class File_folder extends Group_Controller {
         $this->load->model('file_folder_model');
     }
     
+    /**
+     * The main page of file_folder module
+     * 
+     * This page displays a list of all the group's files grouped by
+     * category and a form for adding a new file. If a link id is passed
+     * as a GET parameter, the form is being used for editing a file's information .
+     */
     public function index(){
         
         $filter = $this->input->get('filter');
@@ -102,6 +115,9 @@ class File_folder extends Group_Controller {
 	$this->load_view('group/file_folder/main',$data);
     }
     
+    /**
+     * Adds a new file
+     */
     public function add_file(){
         $userid = $this->userobj->userid;
 	
@@ -133,6 +149,9 @@ class File_folder extends Group_Controller {
         }
     }
     
+    /**
+     * Updates the information about a group's file
+     */
     public function edit_file(){
         if($this-> check_form_input()) {
           $file_id = $this->input->post('file_id');
@@ -156,6 +175,9 @@ class File_folder extends Group_Controller {
         }
     }
     
+    /**
+     * Deletes a group's file.
+     */
     public function delete_file(){
         $file_id = $this->input->get('file_id');
         $this->filemanager->delete_file($file_id);  // delete the file
@@ -164,7 +186,11 @@ class File_folder extends Group_Controller {
         redirect('group/file_folder');
     }
     
-    // function to check the form input
+    /**
+     * Validates the posted form when we add or edit a group file.
+     * 
+     * @return boolean
+     */
     protected function check_form_input() {
       $error = '';
 

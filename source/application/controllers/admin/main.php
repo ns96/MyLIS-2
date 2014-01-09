@@ -1,5 +1,11 @@
 <?php if ( ! defined('BASEPATH')) exit('No direct script access allowed');
 
+/**
+ * Handles the functionality of the Admin area's main page
+ * 
+ * @author Nathan Stevens
+ * @author Alexandros Gougousis
+ */
 class Main extends Admin_Controller {
 
     private $userobj = null;
@@ -11,6 +17,9 @@ class Main extends Admin_Controller {
 	$this->restrict_access();
     }
     
+    /**
+     * Loads the admin main page
+     */
     public function index()
     {
 	// Load necessery data for the view
@@ -26,6 +35,11 @@ class Main extends Admin_Controller {
 	$this->load_view('admin/main/main',$data);
     }
     
+    /**
+     * Dummy implementation for displaying messages
+     * 
+     * @return string
+     */
     protected function display_messages() {
 	$output = "<br><br>Sorry ".$this->userobj->name.", no messages for you<br>";
 	return $output;

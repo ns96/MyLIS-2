@@ -1,5 +1,13 @@
 <?php
 
+/**
+ * Manages the creation and information retrieval for MyLIS databases and tables.
+ * 
+ * Used only by admin controllers
+ * 
+ * @author Nathan Stevens
+ * @author Alexandros Gougousis 
+ */
 class Managedb_model extends CI_Model {
     
     var $lisdb = null;

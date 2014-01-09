@@ -1,5 +1,11 @@
 <?php if ( ! defined('BASEPATH')) exit('No direct script access allowed');
 
+/**
+ * Handles the administration of group messages
+ * 
+ * @author Nathan Stevens
+ * @author Alexandros Gougousis
+ */
 class Messages extends Group_Controller {
     
     var $userobj = null;
@@ -22,7 +28,9 @@ class Messages extends Group_Controller {
 	$this->restrict_access();
     }
     
-   // Handles the posting of new messages  
+   /**
+    *  Handles the posting of new group messages  
+    */
    public function add(){
        
         // // Get posted message data
@@ -61,7 +69,9 @@ class Messages extends Group_Controller {
 	redirect('group/main');
    }
    
-   // Handles the editing of existing messages
+   /**
+    * Handles the editing of existing group messages
+    */
    public function edit(){
        
         // If the edited message has been posted
@@ -105,6 +115,11 @@ class Messages extends Group_Controller {
 	redirect('group/main');
    }
    
+   /**
+    * Handles the deletion of a group message
+    * 
+    * @param int $id
+    */
    public function delete($id){
 	$this->load->model('message_model');
 	
@@ -123,10 +138,19 @@ class Messages extends Group_Controller {
 	redirect('group/main');
    }
    
+   /**
+    * Handles the deletion of a message file
+    * Not implemented yet!
+    * 
+    * @param int $id
+    */
    public function delete_message_file($id){
        // Not implemented yet!
    }
    
+   /**
+    * Changes the group settingsin order to hide the welcome message
+    */
    public function hide_welcome(){
        // function to hide the welcome message
 	$userid = $this->userobj->userid;

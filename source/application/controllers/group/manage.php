@@ -1,5 +1,11 @@
 <?php if ( ! defined('BASEPATH')) exit('No direct script access allowed');
 
+/**
+ * Manages various group-level administrative tasks
+ * 
+ * @author Nathan Stevens
+ * @author Alexandros Gougousis
+ */
 class Manage extends Group_Controller {
     
     private $userobj = null;
@@ -23,10 +29,16 @@ class Manage extends Group_Controller {
 	$this->restrict_access();
     }
    
+    /**
+     * Defines as main management page the user management page
+     */
     public function index(){
         redirect('group/manage/users_main');
     }
     
+    /**
+     * Loads the main page of 'User management'
+     */
     public function users_main(){
         $data1['page'] = 'user';
         $menuHTML = $this->load->view('group/manage/menu_bar',$data1,TRUE);
@@ -44,6 +56,9 @@ class Manage extends Group_Controller {
         $this->load_view('group/manage/users_main',$data);
     }
     
+    /**
+     * Imports a list users from a file
+     */
     public function users_import(){
         if (isset($_POST['users_import_form'])){
            
@@ -120,6 +135,10 @@ class Manage extends Group_Controller {
         }
     }
     
+    /**
+     * 
+     * @return typeAdds a new user to the group
+     */
     public function users_add(){
         if (isset($_POST['user_add_form'])){
             if($this->check_form_input()) {
@@ -142,6 +161,9 @@ class Manage extends Group_Controller {
         redirect('group/manage/users_main');
     }
     
+    /**
+     * Updates the information about the group's users
+     */
     public function userlist_modify(){
         if (isset($_POST['userlist_modify'])){
             
@@ -183,7 +205,9 @@ class Manage extends Group_Controller {
         redirect('group/manage/users_main');
     }
     
-    
+    /**
+     * Loads the main page of 'Location Management'
+     */
     public function locations_main(){
 
         $data1['page'] = 'location';
@@ -200,6 +224,9 @@ class Manage extends Group_Controller {
         $this->load_view('group/manage/locations_main',$data);
     }
     
+    /**
+     * Adds a new location to the group
+     */
     public function locations_add(){
         $userid = $this->userobj->userid;
 
@@ -251,6 +278,9 @@ class Manage extends Group_Controller {
         redirect('group/manage/locations_main');
     }
     
+    /**
+     * Updates information about group's locations
+     */
     public function locations_update(){
         
         $modify_task = $this->input->post('modify_task');
@@ -289,7 +319,9 @@ class Manage extends Group_Controller {
         redirect('group/manage/locations_main');
     }
     
-    
+    /**
+     * Loads the main page of 'Inventory Management'
+     */
     public function inventory_main(){
         $data1['page'] = 'inventory';
         $menuHTML = $this->load->view('group/manage/menu_bar',$data1,TRUE);
@@ -325,6 +357,9 @@ class Manage extends Group_Controller {
         $this->load_view('group/manage/inventory_main',$data);
     }
    
+    /**
+     * Imports items to the chemicals inventory from a file
+     */
     public function inventory_import_chemicals(){  
         $tmp_name = $_FILES['fileupload']['tmp_name'];
         $error = '';
@@ -424,6 +459,9 @@ class Manage extends Group_Controller {
         redirect('group/manage/inventory_main');
     }
     
+    /**
+     * Imports items to the supplies inventory from a file
+     */
     public function inventory_import_supplies(){
         $tmp_name = $_FILES['fileupload']['tmp_name'];
         $error = '';
@@ -523,6 +561,9 @@ class Manage extends Group_Controller {
         redirect('group/manage/inventory_main#supply');
     }
     
+    /**
+     * Adds new categories for chemicals
+     */
     public function inventory_add_chemical_categories(){
         $userid = $this->user->userid;
         $table_name = '';
@@ -538,6 +579,9 @@ class Manage extends Group_Controller {
         redirect('group/manage/inventory_main#chemical');
     }
     
+    /**
+     * Adds new categories for supplies
+     */
     public function inventory_add_supply_categories(){
         $userid = $this->user->userid;
         $table_name = '';
@@ -553,6 +597,9 @@ class Manage extends Group_Controller {
         redirect('group/manage/inventory_main#supply');
     }
     
+    /**
+     * Updates information about the chemical categories
+     */
     public function inventory_edit_chemical_categories(){
         $userid = $this->user->userid;
         $modify_task = $this->input->post('modify_task');
@@ -575,6 +622,9 @@ class Manage extends Group_Controller {
         redirect('group/manage/inventory_main#chemical');
     }
     
+    /**
+     * Updates information about the supply categories
+     */
     public function inventory_edit_supply_categories(){
         $userid = $this->user->userid;
         $modify_task = $this->input->post('modify_task');
@@ -597,7 +647,9 @@ class Manage extends Group_Controller {
         redirect('group/manage/inventory_main#supply');
     }
     
-    
+    /**
+     * Loads the modules' settings page
+     */
     public function modules_main(){
         $data1['page'] = 'module';
         $menuHTML = $this->load->view('group/manage/menu_bar',$data1,TRUE);
@@ -617,6 +669,9 @@ class Manage extends Group_Controller {
         $this->load_view('group/manage/modules_main',$data);
     }
     
+    /**
+     * Reconfigures which modules will be visible 
+     */
     public function modules_update(){
         
         // Setup paramaters for initializing models below
@@ -710,6 +765,9 @@ class Manage extends Group_Controller {
         redirect('group/manage/modules_main');
     }
     
+    /**
+     * Updates settings related each module's functionality
+     */
     public function modules_configure(){
         
         // Setup paramaters for initializing models below
@@ -741,57 +799,67 @@ class Manage extends Group_Controller {
         redirect('group/manage/modules_main');
     }
     
-    
+    /**
+     * Loads the group information management page
+     */
     public function groupinfo_main(){
         if (isset($_POST['groupinfo_update_form'])){
             if($this->check_form_input()) {
                 $account_id = $this->account_id;
-                $fname = trim($_POST['fname']); // PI first name
-                $mi = trim($_POST['mi']); // PI middle name
-                $lname = trim($_POST['lname']); // PI last name
-                $group_name = ucfirst(trim($_POST['group_name'])); // group name
-                $group_type = $_POST['group_type']; // group type or location
-                $discipline = $_POST['discipline']; // discipline
-                $institution = trim($_POST['institution_name']); // name of institution
-                $address = trim($_POST['address']); // institution adress
-                $phone = trim($_POST['phone']);
-                $fax = trim($_POST['fax']);
-                $email = trim($_POST['email']);
+                $fname = trim($this->input->post('fname')); // PI first name
+                $mi = trim($this->input->post('mi')); // PI middle name
+                $lname = trim($this->input->post('lname')); // PI last name
+                $group_name = ucfirst(trim($this->input->post('group_name'))); // group name
+                $group_type = $this->input->post('group_type'); // group type or location
+                $discipline = $this->input->post('discipline'); // discipline
+                $institution = trim($this->input->post('institution_name')); // name of institution
+                $address = trim($this->input->post('address')); // institution adress
+                $phone = trim($this->input->post('phone'));
+                $fax = trim($this->input->post('fax'));
+                $email = trim($this->input->post('email'));
                 $group_pi = "$fname $lname";
                 if(!empty($mi)) {
                   $group_pi = "$fname $mi. $lname";
                 }
 
-                // select the LISMDB database
-                mysql_select_db($this->properties['lisadmin.database']) or die(mysql_error());
-
-                // update the database now
-                $sql = "UPDATE accounts SET pi_fname = '$fname', pi_mi = '$mi',pi_lname = '$lname', group_name = '$group_name', group_type = '$group_type',discipline = '$discipline',
-                institution = '$institution', address = '$address', phone = '$phone', fax = '$fax', email = '$email' WHERE account_id = '$account_id'";
-                mysql_query($sql, $conn) or die(mysql_error());
-
-                // update the profile database
-                mysql_select_db($this->properties['lisprofile.database']) or die(mysql_error());
-                $sql = "UPDATE profiles SET pi_name = '$group_pi', pi_email = '$email', pi_phone = '$phone', group_type = '$group_type',institution = '$institution', 
-                address = '$address', discipline = '$discipline' WHERE account_id = '$account_id'";
-                mysql_query($sql, $conn) or die(mysql_error());
+                $data['account_id'] = $account_id;
+                $data['fname'] = $fname;
+                $data['mi'] = $mi;
+                $data['lname'] = $lname;
+                $data['group_name'] = $group_name;
+                $data['group_type'] = $group_type;
+                $data['discipline'] = $discipline;
+                $data['institution'] = $institution;
+                $data['address'] = $address;
+                $data['phone'] = $phone;
+                $data['fax'] = $fax;
+                $data['email'] = $email;
+                $data['group_pi'] = $group_pi;
+                $this->load->model('account_model');
+                $this->account_model->update_account_info($data);
 
                 // now update the profile files
-                $site_manager = getUser($_POST['site_manager']);
+                $userList = $this->load_users();
+                $site_manager = $userList[$this->input->post('site_manager')];
                 $site_manager_email = $site_manager->email;
 
                 $props = array(
-                'group.name' => $group_name,
-                'site.manager' => $site_manager->userid,
-                'site.manager.email' => $site_manager_email);
+                    'group.name' => $group_name,
+                    'site.manager' => $site_manager->userid,
+                    'site.manager.email' => $site_manager_email
+                );
 
-                $fm = new filemanager($this->properties, $this->user);
-                $fm->modify_initiation_file($props);
+                // Setup paramaters for initializing models below
+                $params['user'] = $this->userobj;
+                $params['account'] = $this->session->userdata('group');
+                $params['properties'] = $this->properties;
+                // Load a FileManager model
+                $this->load->model('filemanager');
+                $this->filemanager->initialize($params);
+                
+                $this->filemanager->modify_initiation_file($props);
 
-                // redirect to main page
-                $script = $this->properties['script'];
-                $link = $script.'?task=manager_group';
-                header("Location: $link");
+                redirect('group/manage/groupinfo_main');
             }
         } else {
             $data1['page'] = 'group';
@@ -811,7 +879,11 @@ class Manage extends Group_Controller {
         }
     }
     
-    // function to check form input
+    /**
+     * Validates the input of the user add form
+     * 
+     * @return boolean
+     */
     protected function check_form_input() {
       $error = '';
 
@@ -848,7 +920,12 @@ class Manage extends Group_Controller {
       }
     }
     
-    // second function to check form input when modifying user account information
+    /**
+     * Validates the form input when modifying user account information
+     * 
+     * @param string $userid
+     * @return boolean
+     */
     protected function check_form_input2($userid) {
       $password = $this->input->post("password_$userid");
       $name = $this->input->post("name_$userid");
@@ -873,10 +950,15 @@ class Manage extends Group_Controller {
       return true;
     }
     
-    // function to make sure userid is valid
+    /**
+     * Validates a userid
+     *
+     * @param string $userid
+     * @return boolean
+     */
     protected function valid_userid($userid) {
-      global $users;
 
+      $users = $this->load_users();
       if(strlen($userid) < 3 || isset($users[$userid])) { // make sure userid is not empty or already in list
         return false;
       }
@@ -885,7 +967,12 @@ class Manage extends Group_Controller {
       }
     }
 
-    // function to check to see if the password is valid
+    /**
+     * Validates user's password
+     * 
+     * @param type $password
+     * @return boolean
+     */
     protected function valid_password($password) {
       $valid = true;
       if(strlen($password) < 4) {

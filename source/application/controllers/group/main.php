@@ -1,5 +1,11 @@
 <?php if ( ! defined('BASEPATH')) exit('No direct script access allowed');
 
+/**
+ * Handles the display, posting and editing of group messages 
+ * 
+ * @author Nathan Stevens
+ * @author Alexandros Gougousis
+ */
 class Main extends Group_Controller {
     
     private $userobj = null;
@@ -37,6 +43,12 @@ class Main extends Group_Controller {
 	$this->restrict_access();
     }
     
+    /**
+     * Loads the main page.
+     * 
+     * Displays a list of system and group messages, the available quota storage
+     * and a form for posting or editing a group message.
+     */
     public function index() {  
 
 	// Load necessery data for the view
@@ -62,8 +74,14 @@ class Main extends Group_Controller {
 	$this->load_view('group/main/main',$data);
     }
 	
-    // This function is a URL destination ( .../group/main/displayMessages ) and not
-    // a helper function. This URL is used as an 'src' property for an iframe.
+    /**
+     * Displays a list of all the group and system messages.
+     * 
+     * This method is a URL destination ( .../group/main/displayMessages ) and not 
+     * a helper function. This URL is used as an 'src' property for an iframe.
+     * 
+     * @return string The message list as HTML string.
+     */
     public function display_messages() { 
 	
 	$userid = $this->userobj->userid;
@@ -96,7 +114,12 @@ class Main extends Group_Controller {
 
     }
     
-    // Display the Post/Edit message form
+    /**
+     * Display the Post/Edit message form
+     * 
+     * @param int $message_id
+     * @return string 
+     */
     protected function load_message_form($message_id=null) {
 	
 	// Setup the necessery data for the view
@@ -118,7 +141,12 @@ class Main extends Group_Controller {
 	return $output;
     }
     
-    // Function to display the first time login message
+    /**
+     * Returns a welcome message for a user that log in for the first time
+     * 
+     * @param string $status
+     * @return string the message as as HTML string
+     */
     protected function load_welcome($status) {
 	$data['base'] = base_url()."group/";
 	$role = $this->session->userdata('user')->role;
@@ -148,7 +176,11 @@ class Main extends Group_Controller {
 	return $output;
     }
     
-    // display message informing users that the file sotrage space quota has been used up
+    /**
+     * Returns a message informing users that the file storage space quota has been used up
+     * 
+     * @return string The message as an HTML string
+     */
     protected function load_quota_used_message() {
 	$data['base'] = base_url()."group/";
 	$data['sales_link'] = $base."accounts/upgrade";
@@ -158,17 +190,33 @@ class Main extends Group_Controller {
 	return $message;
     }
 
-    // function to display messages. Only gets called if account is in trial mode
+    /**
+     * Displays an account activation form. 
+     * 
+     * This method is called only if account is in trial mode
+     * 
+     * @param type $expire
+     * @param type $activated
+     * @return type
+     */
     protected function load_activate_form($expire, $activated) {
 	$data['base'] = base_url()."group/";
 	$data['date'] = getLISDate();
+        $data['expire'] = $expire;
+        $data['activated'] = $activated;
 	$data['account_id'] = $this->properties['lis.account'];
 
 	$form = $this->load_view('group/main/activate_form',$data,true);
 	return $form;
     }
     
-    // Checks if the message should be posted
+    /**
+     * Checks if the message should be posted based.
+     * 
+     * @param string $post_start
+     * @param string $post_end
+     * @return boolean
+     */
     protected function should_be_posted($post_start, $post_end) {
 	$decision = false;
 	$timediff = $this->lis_tz[$this->properties['lis.timezone']];
@@ -181,9 +229,13 @@ class Main extends Group_Controller {
 	return $decision;
     }
 
-    // function to echo html code for a user's message 
+    /**
+     * Formats a group message and returns the relevant html code
+     * 
+     * @param array $messageItem
+     * @return string
+     */ 
     protected function load_user_table($messageItem) {
-	//global $file_directory;
 	
 	$link = $messageItem['url'];
 	$file_id = $messageItem['file_id'];
@@ -222,7 +274,11 @@ class Main extends Group_Controller {
 	return $table;
     }
     
-    // function to display user messages
+    /**
+     * Loads the group messages
+     * 
+     * @return string The html that displays the group messages
+     */
     protected function load_user_messages() {
 	$messageList = $this->message_model->get_user_messages();
 	$umessages = '';
@@ -234,7 +290,12 @@ class Main extends Group_Controller {
 	return $umessages;
     }
     
-    // function to echo html code for a system message
+    /**
+     * Formats a system message and returns the relevant html code
+     * 
+     * @param array $messageItem
+     * @return string
+     */
     protected function load_system_table($messageItem) {
 	$data['message'] = $messageItem['message'];
 	$data['message_date'] = $messageItem['message_date'];
@@ -244,7 +305,11 @@ class Main extends Group_Controller {
 	return $table;
     }
     
-    // function to display system messages
+   /**
+    * Loads the system messages
+    * 
+    * @return string The html that displays the system messages
+    */
     protected function load_system_messages() {
 
 	$account_id = $this->session->userdata('group');
@@ -261,15 +326,23 @@ class Main extends Group_Controller {
 	return $smessages;
     }
     
-    // function to display a message informing the user that the premium account
-    // has expired
+    /**
+     * Returns a message informing the user that the premium account 
+     * has expired
+     * 
+     * @return string
+     */
     protected function load_expired_message() {
 	/*12/8/07 Code This function */
 	$output = '';
 	return $output;
     }
 
-    // function to check if the premium account is about to expired and needs to be renewed
+    /**
+     * Checks if the premium account is about to expired and needs to be renewed.
+     * 
+     * This method has not been implemented yet!
+     */
     protected function is_premium_expired() {
 	/* Code 2/2/08 */
     }

@@ -1,5 +1,13 @@
 <?php
 
+/**
+ * Manages the information related to a group's weblinks.
+ * 
+ * Used only by group controllers
+ * 
+ * @author Nathan Stevens
+ * @author Alexandros Gougousis 
+ */
 class Weblinks_model extends CI_Model {
     
     var $lisdb = null;

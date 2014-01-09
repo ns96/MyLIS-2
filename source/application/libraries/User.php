@@ -1,6 +1,11 @@
 <?php
 
-// The user object
+/**
+ * Used extensively throughout the application to hold user information
+ * 
+ * @author Nathan Stevens
+ * @author Alexandros Gougousis
+ */
 class User {
   var $userid;
   var $password;

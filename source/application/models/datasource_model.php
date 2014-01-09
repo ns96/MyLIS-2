@@ -1,12 +1,12 @@
 <?php
-/** Class to pupulate demo account and developement account with data
-
-Copyright (c) 2008 Nathan Stevens
-
-@author Nathan Stevens
-@version 0.22 4-4-2009
-*/
-
+/**
+ * Pupulates demo account and developement account with data
+ * 
+ * Used only by admin controllers
+ * 
+ * @author Nathan Stevens
+ * @author Alexandros Gougousis 
+ */
 class datasource {
   var $properties = null;
   var $user = null;

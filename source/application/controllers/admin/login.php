@@ -1,12 +1,20 @@
 <?php if ( ! defined('BASEPATH')) exit('No direct script access allowed');
 
+/**
+ * Handles the login functionality of the Admin area.
+ * 
+ * @author Nathan Stevens
+ * @author Alexandros Gougousis
+ */
 class Login extends Admin_Controller {
     
 	public function __construct(){
 	    parent::__construct();
 	}
 	
-	// Loads the login page for users that are not already authenticated
+	/**
+         * Loads the login page for users that are not already authenticated
+         */
 	public function index()
 	{
 	    if ($this->session->userdata('userid')) {
@@ -20,7 +28,13 @@ class Login extends Admin_Controller {
 	    }
 	}
 	
-	// Validates the user's credentials
+	/**
+         * Validates the user's login credentials
+         * 
+         * @param string $userid
+         * @param string $password
+         * @return object The object, if not null, will be of 'User' class
+         */
 	private function validate_user($userid, $password) {
 	    
 	    // Load the array with administrators
@@ -35,10 +49,11 @@ class Login extends Admin_Controller {
 	    return $user;
 	}
 	
-	// Handles the login requests
+	/**
+         * Handles the login requests
+         */
 	public function login_request()
 	{
-	    //echo "<pre>"; var_dump($this->session->userdata, $_POST); die();
 	    // if the user is not logged in
 	    if (!$this->session->userdata('user')) {
 		
@@ -77,7 +92,9 @@ class Login extends Admin_Controller {
 	    }
 	}
 	
-	// Logs a user out
+	/**
+         * Logs the user out
+         */
 	public function logout(){
 	    session_destroy();
 	    $this->session->unset_userdata('user');

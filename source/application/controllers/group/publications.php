@@ -1,5 +1,11 @@
 <?php if ( ! defined('BASEPATH')) exit('No direct script access allowed');
 
+/**
+ * Handles the functionality of the PubTracker module
+ * 
+ * @author Nathan Stevens
+ * @author Alexandros Gougousis
+ */
 class Publications extends Group_Controller {
     
     private $userobj = null;
@@ -22,6 +28,9 @@ class Publications extends Group_Controller {
 	$this->restrict_access();
     }
     
+    /**
+     * Displays a list of all the group publications grouped by author
+     */
     public function index(){
 	$this->load->model('user_model');
 	
@@ -46,6 +55,11 @@ class Publications extends Group_Controller {
 	$this->load_view('group/publications/main',$data);
     }
     
+    /**
+     * Displays non-editable information about a specific publication
+     * 
+     * @param int $pub_id
+     */
     public function show($pub_id){
 	
 	$pub = $this->publication_model->get_publication($pub_id);
@@ -74,6 +88,10 @@ class Publications extends Group_Controller {
 	$this->load_view('group/publications/show',$data);
     }
     
+    /**
+     * Displays a form for adding a new publication or adds a new publication
+     * if the form has been posted
+     */
     public function add() {
 	
 	if (isset($_POST['add_publication_form'])){
@@ -108,6 +126,12 @@ class Publications extends Group_Controller {
 	}
     }   
     
+    /**
+     * Displays a form for editing publication's information or updates
+     * the publication information if the form has been posted
+     * 
+     * @param int $pub_id
+     */
     public function edit($pub_id){
 	
 	if (isset($_POST['publication_edit_form'])){
@@ -155,6 +179,11 @@ class Publications extends Group_Controller {
 	
     }
     
+    /**
+     * Deletes a specific group publication
+     * 
+     * @param int $pub_id
+     */
     public function delete($pub_id){
 	$pub = $this->publication_model->get_publication($pub_id);
 
@@ -172,6 +201,9 @@ class Publications extends Group_Controller {
 	redirect('group/publications');
     }
     
+    /**
+     * Adds a posted file to a group publication.
+     */
     public function add_file(){
 	
 	if (isset($_POST['add_publication_file_form'])){
@@ -197,6 +229,9 @@ class Publications extends Group_Controller {
 	
     }
     
+    /**
+     * Deletes a file from a publication.
+     */
     public function delete_file(){
 	
 	$pub_id	    = $this->input->post('publication_id');
@@ -219,7 +254,12 @@ class Publications extends Group_Controller {
 	redirect('group/publications/show/'.$pub_id);
     }
     
-    // function to check the form input
+    /**
+     * Validates the form input when adding a new publication or editing
+     * an existing one. 
+     * 
+     * @return boolean
+     */
     protected function check_form_input() {
 	
 	$this->error = '';
@@ -241,6 +281,12 @@ class Publications extends Group_Controller {
 	}
     }
     
+    /**
+     * Extracts a publication's file ids from a string
+     * 
+     * @param string $file_ids
+     * @return array
+     */
     protected function get_file_ids($file_ids) {
 	$files = array();
 	$file_ids = trim($file_ids, ",");

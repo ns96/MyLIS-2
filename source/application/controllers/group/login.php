@@ -1,5 +1,11 @@
 <?php if ( ! defined('BASEPATH')) exit('No direct script access allowed');
 
+/**
+ * Handles the login functionality of the Group area.
+ * 
+ * @author Nathan Stevens
+ * @author Alexandros Gougousis
+ */
 class Login extends Group_Controller {
     
 	public $groupname = null;
@@ -8,7 +14,9 @@ class Login extends Group_Controller {
 	    parent::__construct();
 	}
 
-	// Loads the login page for users that are not already authenticated
+	/**
+         * Loads the login page for users that are not already authenticated
+         */
 	public function index()
 	{
 	    if ($this->session->userdata('userid')) {
@@ -23,7 +31,9 @@ class Login extends Group_Controller {
 	    }
 	}
 	
-	// Handles the login requests
+	/**
+         * Handles the login requests
+         */
 	public function login_request()
 	{
 	    // if the user is not logged in
@@ -75,7 +85,13 @@ class Login extends Group_Controller {
 	    }
 	}
 	
-	// Validates the user's credentials
+	/**
+         * Validates the user's login credentials
+         * 
+         * @param string $userid
+         * @param string $password
+         * @return object The object, if not null, will be of 'User' class
+         */
 	protected function validate_user($userid, $password) {
 	    $users = $this->get_current_users(); // ony allow current users to login
 
@@ -88,8 +104,11 @@ class Login extends Group_Controller {
 	    return $user;
 	}
 	
-	// function to check to see if the account has expired. 
-	// if it has then print out message
+	/**
+         * Checks out if the account has expired.
+         * 
+         * @return boolean
+         */
 	protected function is_expired() {
 	    $expired = false;
 	    $expire_date = $this->properties['lis.expire'];
@@ -101,7 +120,12 @@ class Login extends Group_Controller {
 	    return $expired;
 	}
 	
-	// function to return days remaining from todays date and the date variable
+	/**
+         * Returns days remaining from today's date till the date passed as parameter
+         * 
+         * @param string $date
+         * @return int
+         */
 	protected function get_days_remaining($date) {
 	    $days = 0;
 	    $sa  = explode('/', $date);
@@ -112,7 +136,9 @@ class Login extends Group_Controller {
 	    return $days;
 	}
 	
-	// Logs a user out
+	/**
+         * Logs the user out
+         */
 	public function logout(){
 	    $groupname = $this->session->userdata('group');
 	    session_destroy();

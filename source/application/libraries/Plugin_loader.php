@@ -1,5 +1,11 @@
 <?php
 
+/**
+ * Supports the use of plugins
+ * 
+ * @author Nathan Stevens
+ * @author Alexandros Gougousis
+ */
 class plugin_loader {
   var $properties = null;
   var $user = null;
@@ -10,21 +16,22 @@ class plugin_loader {
     $this->user = $params['user'];
   }
   
-  // Method to execute code of a certain plugin
-  function doTask($task) {
-    connectToDB();
-    $class = $_GET['class']; // get the class name and create new instance
-    $instance = new $class($this->properties, $this->user);
-    $instance->doTask($task);
-    closeDB();
-  }
-  
-  // function to get the plugins
+  /**
+   * Returns a list of plugins
+   * 
+   * @return array
+   */
   function getPlugins() {
     return $this->plugins;
   }
   
-  //function to add a plugin
+  /**
+   * Adds a plugin
+   * 
+   * @param string $class_name
+   * @param string $name
+   * @param string $link
+   */ 
   function addPlugin($class_name, $name, $link) {
     $this->plugins["$class_name"] = array (0=> "$name", 1=> "$link");
   }

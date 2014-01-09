@@ -1,5 +1,13 @@
 <?php
 
+/**
+ * Manages the information related to group meetings.
+ * 
+ * Used only by group controllers
+ * 
+ * @author Nathan Stevens
+ * @author Alexandros Gougousis 
+ */
 class Meeting_model extends CI_Model {
     
     var $table = ''; // The group meeting date table name

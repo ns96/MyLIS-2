@@ -1,5 +1,11 @@
 <?php if ( ! defined('BASEPATH')) exit('No direct script access allowed');
 
+/**
+ * Handles the functionality related to the chemical's inventory
+ * 
+ * @author Nathan Stevens
+ * @author Alexandros Gougousis
+ */
 class Chemicals extends Group_Controller {
     
     private $userobj = null;
@@ -10,6 +16,9 @@ class Chemicals extends Group_Controller {
 	$this->restrict_access();
     }
     
+    /**
+     * Displays the main page
+     */
     public function index(){
 	
 	$this->load->model('chemicals_model');
@@ -27,7 +36,9 @@ class Chemicals extends Group_Controller {
 	$this->load_view('group/chemicals/main',$data);
     }
     
-    // Handles the 'ownership transfer' or 'view info' of multiple chemical items
+    /**
+     * Handles the 'ownership transfer' or 'view info' of multiple chemical items
+     */
     public function bulk_actions(){
 	if (isset($_POST['listing_form'])){
 	    $this->load->model('chemicals_model');
@@ -85,6 +96,11 @@ class Chemicals extends Group_Controller {
 	}
     }
     
+    /**
+     * Changes the status of a chemical item
+     * 
+     * @param string $newStatus
+     */
     public function change_status($newStatus){
 	if (isset($_GET['chem_id'])){
 	    $this->load->model('chemicals_model');
@@ -125,6 +141,13 @@ class Chemicals extends Group_Controller {
 	}
     }
     
+    /**
+     * List chemical items
+     * 
+     * The selecion of items to be listed is based on the parameter passed.
+     * 
+     * @param string $type
+     */
     public function listing($type){
 	$this->load->model('chemicals_model');
 	$user_id = $this->userobj->userid;
@@ -187,6 +210,10 @@ class Chemicals extends Group_Controller {
 	}
     }
     
+    /**
+     * Searches for chemical items that contains a given search term in their
+     * metadata and displays a list of them.
+     */
     public function search(){
 	if (isset($_POST['search_chemicals_form'])){
 	   
@@ -229,6 +256,9 @@ class Chemicals extends Group_Controller {
 	}
     }
     
+    /**
+     * Adds a new chemical in the inventory
+     */
     public function add(){
 	
 	if (isset($_POST['add_chemical_form']))
@@ -328,6 +358,10 @@ class Chemicals extends Group_Controller {
 	}
     }
     
+    /**
+     * Displays a chemical item edit form or updates the chemical if the form
+     * has been posted.
+     */
     public function edit(){
 	$this->load->model('chemicals_model');
 	 
@@ -465,6 +499,9 @@ class Chemicals extends Group_Controller {
 	
     }
     
+    /**
+     * Deletes a chemical item
+     */
     public function delete(){
 	$this->load->model('chemicals_model');
 	$chem_id = $this->input->get("chem_id");
@@ -474,6 +511,9 @@ class Chemicals extends Group_Controller {
 	redirect('group/chemicals');
     }
     
+    /**
+     * Displays information about a chemical item
+     */
     public function view(){
 	if (isset($_GET['chem_id'])){
 	    $this->load->model('chemicals_model');
@@ -497,6 +537,9 @@ class Chemicals extends Group_Controller {
 	}
     }
     
+    /**
+     * Transfers the ownership of a chemical item to another person
+     */
     public function transfer(){
 	
 	$users = $this->get_current_users();
@@ -543,6 +586,10 @@ class Chemicals extends Group_Controller {
 	}
     }
     
+    /**
+     * Displays a list of all the registered locations in the chemical 
+     * laboratory that a chemical item can be stored.
+     */
     public function list_locations(){
 	$this->load->model('chemicals_model');
 	$users = $this->get_current_users();
@@ -551,7 +598,14 @@ class Chemicals extends Group_Controller {
 	displayLocationList($locations,$users,$home);
     }
     
-    // function to return the search terms
+    /**
+     * Constructs the 'WHERE' part of the SQL query used when searching the 
+     * chemical's inventory.
+     * 
+     * @param string $searchby
+     * @param string $searchterm
+     * @return string
+     */
     protected function get_where_clause($searchby, $searchterm) {
 	$where_clause = '';
 

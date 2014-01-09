@@ -1,5 +1,11 @@
 <?php if ( ! defined('BASEPATH')) exit('No direct script access allowed');
 
+/**
+ * Handles the arrangement of group meetings
+ * 
+ * @author Nathan Stevens
+ * @author Alexandros Gougousis
+ */
 class Grouptask extends Group_Controller {
     
     var $userobj = null;
@@ -21,6 +27,12 @@ class Grouptask extends Group_Controller {
         $this->load->model('grouptask_model');
     }
 
+    /**
+     * Loads the main group task management page
+     * 
+     * If a group task id has been given as a GET parameter  the items 
+     * of this task are displyed.
+     */
     public function index(){
         if (!empty($this->grouptask_id)){
             $grouptask_info = $this->grouptask_model->get_group_task_information($this->grouptask_id);
@@ -157,6 +169,9 @@ class Grouptask extends Group_Controller {
         $this->load_view('group/grouptask/main',$data);
     }
     
+    /**
+     * Handles requested changes to group task items
+     */
     public function update_tasks(){
         $task2 = $this->input->post('task2');
     
@@ -171,6 +186,9 @@ class Grouptask extends Group_Controller {
         }
     }
     
+    /**
+     * Diplays group task information in a print-friendly format
+     */
     public function printable(){
         $grouptask_info = $this->grouptask_model->get_group_task_information($this->grouptask_id);
         $task_name = $grouptask_info['task_name'];
@@ -193,6 +211,9 @@ class Grouptask extends Group_Controller {
         $this->load->view('group/grouptask/printable_page',$data);
     }
     
+    /**
+     * Sets a group task item completed
+     */
     public function set_task_item_completed(){
         $item_id = $this->input->get('item_id');
         $this->grouptask_model->set_task_item_completed($item_id);
@@ -200,6 +221,9 @@ class Grouptask extends Group_Controller {
         redirect('group/grouptask');
     }
     
+    /**
+     * Updates the notes of a group task
+     */
     public function update_notes(){
         $notes = $this->input->post(notes);
 
@@ -210,6 +234,9 @@ class Grouptask extends Group_Controller {
         redirect('group/grouptask');
     }
     
+    /**
+     * Adds a new or updates an existing group task
+     */
     public function add_edit_task(){
         $egrouptask_id = $this->input->post('egrouptask_id');
         $task_name = $this->input->post('taskname');
@@ -272,7 +299,9 @@ class Grouptask extends Group_Controller {
         redirect("group/grouptask?grouptask_id=$grouptask_id");        
     }
     
-    // function to add an item to the group task
+    /**
+     * Adds new items to a group task
+     */
     public function add_task_item() {
       $start_num = $this->input->post('max_num') + 1;
       $add_amount = $this->input->post('add_amount');
@@ -296,7 +325,9 @@ class Grouptask extends Group_Controller {
       redirect('group/grouptask');
     }
     
-    // function to reset the group task items
+    /**
+     * Resets the group task items
+     */
     public function reset_task_items() {
       $item_ids = $this->input->post('item_ids');
 
@@ -308,7 +339,9 @@ class Grouptask extends Group_Controller {
       redirect('group/grouptask');
     }
     
-    // function to update the group task items
+    /**
+     * Updates the group task items
+     */
     public function update_task_items() {
         $items = $this->grouptask_model->get_group_task_items($this->grouptask_id);
 
@@ -328,6 +361,11 @@ class Grouptask extends Group_Controller {
         redirect('group/grouptask');
     }
     
+    /**
+     * Makes a copy of a group task
+     * 
+     * @param int $mode
+     */
     public function copy_task($mode){
         $grouptask_id = $this->input->get('grouptask_id');
         $year = $this->input->get('year');
@@ -337,6 +375,9 @@ class Grouptask extends Group_Controller {
         redirect('group/grouptask');
     }
     
+    /**
+     * Deletes a group task
+     */
     public function delete_task(){
         $grouptask_id = $this->input->get('grouptask_id');
         $this->grouptask_model->delete_task($grouptask_id);
@@ -344,6 +385,9 @@ class Grouptask extends Group_Controller {
         redirect('group/grouptask');
     }
     
+    /**
+     * Deletes a group task item
+     */
     public function delete_task_item(){
         $item_id = $this->input->get('item_id');
 
@@ -353,7 +397,11 @@ class Grouptask extends Group_Controller {
         redirect('group/grouptask');
     }
     
-    // This is the source of the iframe area of main grouptask page
+    /**
+     * This is the source of the iframe area of main grouptask page
+     * 
+     * @return type
+     */
     public function load_task_page(){
         $y = $this->get_selected_year();
         $y_min = $y - 1;
@@ -367,7 +415,11 @@ class Grouptask extends Group_Controller {
 	return $html;
     }
     
-    // function to return the name of the selected group task
+    /**
+     * Returns the name of the selected group task
+     * 
+     * @return string
+     */
     protected function get_group_task_name() {
       $task_name = 'No Group Task Selected';
 
@@ -378,9 +430,12 @@ class Grouptask extends Group_Controller {
       return $task_name;
     }
     
-    /** function to display button to allow selection of year
-    *pry = previous year
-    *chy = change year number
+    /** 
+    * Displays a button to allow selection of year
+    * pry = previous year
+    * chy = change year number
+     * 
+     * @return string
     */
     protected function display_year_selector() {
       $data['main_link'] = base_url().'group/grouptask';
@@ -390,7 +445,11 @@ class Grouptask extends Group_Controller {
       return $output;
     }
     
-    // function to get the selected year
+    /**
+     * Returns the selected year
+     * 
+     * @return int
+     */
     protected function get_selected_year() {
       $pry = $this->input->get('pry');
       $chy = $this->input->get('chy');

@@ -1,5 +1,11 @@
 <?php if ( ! defined('BASEPATH')) exit('No direct script access allowed');
 
+/**
+ * Handles the administrative 'file manager' functionality
+ * 
+ * @author Nathan Stevens
+ * @author Alexandros Gougousis
+ */
 class Managefiles extends Admin_Controller {
     
     private $userobj = null;
@@ -11,6 +17,9 @@ class Managefiles extends Admin_Controller {
 	$this->restrict_access();
     }
     
+    /**
+     * Loads the main page of the 'File Manager'
+     */
     public function index(){
 	$data['page_title'] = 'MyLIS File Manager';
 	if(isset($_GET['message'])) {
@@ -22,6 +31,9 @@ class Managefiles extends Admin_Controller {
 	$this->load_view('admin/managefiles/main',$data);
     }
     
+    /**
+     * Displays the file manager's logs.
+     */
     public function view_log(){
 	$data['page_title'] = 'Code Manager Log';
 	$userList = $this->load_users();
@@ -34,6 +46,9 @@ class Managefiles extends Admin_Controller {
 	$this->load_view('admin/managefiles/view_log',$data);
     }
     
+    /**
+     * Removes all or selected log entries
+     */
     public function remove_logs(){
 	$all = $this->input->post('all');
 	$entries = $this->input->post('entries');
@@ -47,7 +62,9 @@ class Managefiles extends Admin_Controller {
 	redirect('admin/managefiles/view_logs');
     }
     
-    // function to update the files
+    /**
+     * Updates account files
+     */
     public function update(){
 	$all = $this->input->post('all');
 	$files = $this->input->post('files');
@@ -91,7 +108,9 @@ class Managefiles extends Admin_Controller {
 	redirect('admin/managefiles?message='.$message);
     }
 
-    // function to rmove files in the trash dir
+    /**
+     * Removes files/folders from the trash dir
+     */
     public function remove(){
 	$all = $this->input->post('all');
 	$files = $this->input->post('files');
@@ -120,7 +139,11 @@ class Managefiles extends Admin_Controller {
 	redirect('admin/managefiles');
     }
    
-    // get the accounts that should be updated
+    /**
+     * Retrieves the accounts that should be updated
+     * 
+     * @return array An array containing the account ids
+     */
     protected function get_account_ids() {
 	$accounts = $this->input->post('accounts');
 	$account_ids = array();
@@ -139,12 +162,14 @@ class Managefiles extends Admin_Controller {
 		$account_ids[] = trim($id);
 	    }
 	}
-
 	return $account_ids;
     }
     
-    // Method to get the names of the files
-    /* Must figure what this does?*/
+    /**
+     * Retrieves the names of the files
+     * 
+     * @return array
+     */
     protected function get_all_files() {
 	$f_list = $this->admin_filemanager->get_file_list();
 	$files = array();
@@ -156,7 +181,11 @@ class Managefiles extends Admin_Controller {
 	return $files;
     }
     
-    // function to get all trash files
+    /**
+     * Returns a list of all the trash files
+     * 
+     * @return array
+     */
     protected function get_all_trash_files() {
 	$f_list = $this->admin_filemanager->get_trash_files();
 

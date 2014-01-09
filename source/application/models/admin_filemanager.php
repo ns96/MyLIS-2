@@ -1,4 +1,13 @@
 <?php
+
+/**
+ * Handles logs and files related to group accounts.
+ * 
+ * Used only by admin controllers
+ * 
+ * @author Nathan Stevens
+ * @author Alexandros Gougousis 
+ */
 class Admin_filemanager extends CI_Model {
     
     var $properties;

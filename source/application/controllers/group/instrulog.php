@@ -1,5 +1,11 @@
 <?php if ( ! defined('BASEPATH')) exit('No direct script access allowed');
 
+/**
+ * Handles the reservations of group instruments
+ * 
+ * @author Nathan Stevens
+ * @author Alexandros Gougousis
+ */
 class Instrulog extends Group_Controller {
     
     private $userobj = null;
@@ -10,7 +16,11 @@ class Instrulog extends Group_Controller {
 	$this->restrict_access();
     }
     
-    // Loads the reservation page
+    /**
+     * Loads the reservation page
+     * 
+     * @param int $instrument_id
+     */
     public function index($instrument_id=''){
 	
 	// Loading data for the calendar subview
@@ -90,8 +100,12 @@ class Instrulog extends Group_Controller {
 	$this->load_view('group/instrulog/main',$data);
     }
     
-    // If a day was selected (from calendar), get the selected date from URL.
-    // Otherwise return the current date.
+    /**
+     * If a day was selected (from calendar), returns the selected date from URL.
+     * Otherwise returns the current date.
+     * 
+     * @return array
+     */
     protected function get_selected_date() {
 
 	$sd = $this->input->get('sd');
@@ -107,8 +121,18 @@ class Instrulog extends Group_Controller {
 	return array($sd, $sm, $sy);
     }
     
-    // function to get reserve check box and text input. i = hour in 24 hour clock, display hour with am/pm
-    // reservations array. If the user has no right to change the reservations, the checkboxes will be disabled.
+    /**
+     * Returns a reserve check box and text input. 
+     * 
+     * i = hour in 24 hour clock, display hour with am/pm reservations array. 
+     * If the user has no right to change the reservations, the checkboxes 
+     * will be disabled.
+     * 
+     * @param int $i
+     * @param string $hour
+     * @param array $reservations
+     * @return string
+     */
     protected function get_reserve_field($i, $hour, $reservations) {
 	$userid = $this->userobj->userid;
 	$role = $this->userobj->role;
@@ -142,7 +166,11 @@ class Instrulog extends Group_Controller {
 	return $html;
     }
     
-    // Delete an instrument from the group
+    /**
+     * Deletes an instrument from the group
+     * 
+     * @param int $instrument_id
+     */
     public function delete($instrument_id){
 
 	$this->load->model('instrulog_model');
@@ -151,7 +179,9 @@ class Instrulog extends Group_Controller {
 	redirect('group/instrulog');
     }
     
-    // Add a new instrument to the group
+    /**
+     * Adds a new instrument to the group
+     */
     public function add(){
 	
 	if (isset($_POST['add_instrument_form'])){
@@ -175,7 +205,11 @@ class Instrulog extends Group_Controller {
 	}
     }
 
-    // Update the reservations
+    /**
+     * Updates the reservations for a specific day and instrument
+     * 
+     * @param int $instrument_id
+     */
     public function update($instrument_id=''){
 	
 	if (isset($_POST['update_reservations_form'])){

@@ -1,5 +1,11 @@
 <?php
 
+/**
+ * Used by the instrulog_model
+ * 
+ * @author Nathan Stevens
+ * @author Alexandros Gougousis
+ */
 class Reservation {
   var $reservation_id = ''; // the reservation id
   var $hour = ''; // the key used to access this

@@ -1,5 +1,11 @@
 <?php
 
+/**
+ * Used as a placeholder for timezones
+ * 
+ * @author Nathan Stevens
+ * @author Alexandros Gougousis
+ */
 class Listimezones {
     
   public $lis_tz;

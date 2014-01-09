@@ -1,5 +1,11 @@
 <?php if ( ! defined('BASEPATH')) exit('No direct script access allowed');
 
+/**
+ * Handles the functionality related to the supplies' inventory
+ * 
+ * @author Nathan Stevens
+ * @author Alexandros Gougousis
+ */
 class Supplies extends Group_Controller {
     
     private $userobj = null;
@@ -10,6 +16,9 @@ class Supplies extends Group_Controller {
 	$this->restrict_access();
     }
     
+    /**
+     * Displays the main page
+     */
     public function index(){
 	
 	$this->load->model('supplies_model');
@@ -27,7 +36,9 @@ class Supplies extends Group_Controller {
 	$this->load_view('group/supplies/main',$data);
     }
     
-    // Handles the 'ownership transfer' or 'view info' of multiple items
+    /**
+     * Handles the 'ownership transfer' or 'view info' of multiple supplies
+     */
     public function bulk_actions(){
 	if (isset($_POST['listing_form'])){
 	    $this->load->model('supplies_model');
@@ -85,6 +96,11 @@ class Supplies extends Group_Controller {
 	}
     }
     
+    /**
+     * Changes the status of a supply
+     * 
+     * @param string $newStatus
+     */
     public function change_status($newStatus){
 	if (isset($_GET['item_id'])){
 	    $this->load->model('supplies_model');
@@ -125,6 +141,13 @@ class Supplies extends Group_Controller {
 	}
     }
     
+    /**
+     * List supplies
+     *      * 
+     * The selecion of items to be listed is based on the parameter passed.
+     * 
+     * @param string $type
+     */
     public function listing($type){
 	$this->load->model('supplies_model');
 	$user_id = $this->userobj->userid;
@@ -188,6 +211,10 @@ class Supplies extends Group_Controller {
 	}
     }
     
+    /**
+     * Searches for supplies that contains a given search term in their
+     * metadata and displays a list of them.
+     */
     public function search(){
 	if (isset($_POST['search_supplies_form'])){
 	   
@@ -230,6 +257,9 @@ class Supplies extends Group_Controller {
 	}
     }
     
+    /**
+     * Adds a new supply in the inventory
+     */
     public function add(){
 	
 	if (isset($_POST['add_supply_form']))
@@ -328,6 +358,10 @@ class Supplies extends Group_Controller {
 	}
     }
     
+    /**
+     * Displays a supply edit form or updates the chemical if the form
+     * has been posted.
+     */
     public function edit(){
 	$this->load->model('supplies_model');
 	 
@@ -465,6 +499,9 @@ class Supplies extends Group_Controller {
 	
     }
     
+    /**
+     * Deletes a supply
+     */
     public function delete(){
 	$this->load->model('supplies_model');
 	$item_id = $this->input->get("item_id");
@@ -474,6 +511,9 @@ class Supplies extends Group_Controller {
 	redirect('group/supplies');
     }
     
+    /**
+     * Displays information about a supply 
+     */
     public function view(){
 	if (isset($_GET['item_id'])){
 	    $this->load->model('supplies_model');
@@ -497,6 +537,9 @@ class Supplies extends Group_Controller {
 	}
     }
     
+    /**
+     * Transfers the ownership of a supply to another person
+     */
     public function transfer(){
 	
 	$users = $this->get_current_users();
@@ -542,6 +585,10 @@ class Supplies extends Group_Controller {
 	}
     }
     
+    /**
+     * Displays a list of all the registered locations in the chemical 
+     * laboratory that a supply can be stored.
+     */
     public function list_locations(){
 	$this->load->model('supplies_model');
 	$users = $this->get_current_users();
@@ -550,7 +597,14 @@ class Supplies extends Group_Controller {
 	displayLocationList($locations,$users,$home);
     }
     
-    // function to return the search terms
+    /**
+     * Constructs the 'WHERE' part of the SQL query used when searching the 
+     * chemical's inventory.
+     * 
+     * @param string $searchby
+     * @param string $searchterm
+     * @return string
+     */
     protected function get_where_clause($searchby, $searchterm) {
 	$where_clause = '';
 

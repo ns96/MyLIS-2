@@ -1,5 +1,14 @@
 <?php
 
+/**
+ * Manages the information related to group file uploading and storing, as well as 
+ * the generation of html related to file uploading.
+ * 
+ * Used only by group controllers
+ * 
+ * @author Nathan Stevens
+ * @author Alexandros Gougousis 
+ */
 class Filemanager extends CI_Model {
   var $user = null;
   var $table = '';

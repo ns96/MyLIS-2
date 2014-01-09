@@ -1,5 +1,13 @@
 <?php
 
+/**
+ * Manages the upgrading of MyLIS accounts.
+ * 
+ * Used only by admin controllers
+ * 
+ * @author Nathan Stevens
+ * @author Alexandros Gougousis 
+ */
 class Updater_model extends CI_Model {
     
     var $lisdb = null;

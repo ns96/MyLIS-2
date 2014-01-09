@@ -1,5 +1,11 @@
 <?php if ( ! defined('BASEPATH')) exit('No direct script access allowed');
 
+/**
+ * Manages the system messages
+ * 
+ * @author Nathan Stevens
+ * @author Alexandros Gougousis
+ */
 class Messages extends Admin_Controller {
     
     var $userobj = null;
@@ -11,7 +17,9 @@ class Messages extends Admin_Controller {
 	$this->restrict_access();
     }
     
-    // Handles the posting of new messages 
+    /**
+     * Lists system messages and handles the posting of new system messages
+     */
     public function index(){
 
 	// If a new message has been posted
@@ -67,7 +75,11 @@ class Messages extends Admin_Controller {
 	}
     }
     
-    // Handes the editing of existing messages
+    /**
+     * Handes the editing of an existing system message
+     * 
+     * @param int $message_id
+     */
     public function edit($message_id){
 	
 	// If the edited message has been posted
@@ -111,7 +123,11 @@ class Messages extends Admin_Controller {
 	
     }
     
-    // Deletes a message
+    /**
+     * Deletes a system message
+     * 
+     * @param int $id
+     */
     public function delete($id){
 	$this->load->model('message_model');
 	$this->message_model->delete_system_message($id);
@@ -120,7 +136,11 @@ class Messages extends Admin_Controller {
 	redirect('admin/messages');
    }
     
-    // Checks the validity of posted data when editing a message or posting a new message
+    /**
+     * Checks the validity of posted data when editing a message or posting a new message
+     * 
+     * @return int
+     */
     protected function check_form_input() {
 	$error;
 	$account_ids	= $this->input->post('accounts');
