@@ -162,7 +162,7 @@ class Meetings extends Group_Controller {
 	    $data['presenter']	= $this->input->post('presenter');
 	    $data['title']	= $this->input->post('title');
 	    $data['file_id']	= ''; // blank on purpose
-	    $data['modify_date'] = getLISDate();
+	    $data['modify_date'] = $this->get_lis_date();
 
 	    $this->meeting_model->update_slot($data);
 	}
@@ -183,8 +183,7 @@ class Meetings extends Group_Controller {
 	    $data['presenter']	= $this->input->post('presenter');
 	    $data['title']	= $this->input->post('title');
 	    $data['file_id']	 = ''; // blank on purpose
-	    $data['modify_date'] = getLISDate();
-
+	    $data['modify_date'] = $this->get_lis_date();
 	    $this->meeting_model->add_slot($data);
 	}
 	redirect('group/meetings');
@@ -220,8 +219,7 @@ class Meetings extends Group_Controller {
 	$data['gmdate'] = dateToMySQL($this->input->post('gmdate'));
 	$data['gmtime'] = $this->input->post('gmtime');
 	$data['semester_id'] = $this->input->post('semester_id');
-
-	$this->meeting_model->add_date();
+	$this->meeting_model->add_date($data);
 	
 	redirect('group/meetings');
     }
@@ -265,7 +263,7 @@ class Meetings extends Group_Controller {
 	if (isset($_POST['add_slotfile_form'])){
 	    $slot_id = $this->input->post('slot_id');
 	    $file_id = $this->input->post('file_id');
-	    $modify_date = getLISDate();
+	    $modify_date = $this->get_lis_date();
 
 	    if(empty($file_id)) { // add a new entry
 		$file_id = $this->filemanager->upload_file(1, $this->s_table, $slot_id);
@@ -303,7 +301,7 @@ class Meetings extends Group_Controller {
 	$file_id = $this->input->get('file_id');
 
 	$this->load->model('meeting_model');
-	$data['modify_date'] = getLISDate();
+	$data['modify_date'] = $this->get_lis_date();
 	$data['slot_id'] = $this->input->get('slot_id');
 	$this->meeting_model->delete_slot_file($data);
 

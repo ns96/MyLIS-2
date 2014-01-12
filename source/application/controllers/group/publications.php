@@ -121,7 +121,7 @@ class Publications extends Group_Controller {
 	    
 	    $data['page_title'] = 'Add Publication';
 	    $data['user'] = $this->userobj;
-	    
+	    $data['lisdate'] = $this->get_lis_date();
 	    $this->load_view('group/publications/add_publication_form',$data);
 	}
     }   
@@ -215,7 +215,7 @@ class Publications extends Group_Controller {
 	    $table = $this->session->userdata('group')."_publications";
 	    $file_id = $this->filemanager->upload_file(1, $table, $pub_id);
 	    
-	    $data['modify_date'] = getLISDate();
+	    $data['modify_date'] = $this->get_lis_date();
 	    $data['file_ids'] = $pub['file_ids'].' '.$file_id.',';
 	    $data['pub_id'] = $pub_id;
 	    
@@ -248,7 +248,7 @@ class Publications extends Group_Controller {
 	$data['new_file_ids'] = str_replace($search, "", $file_ids); // replace with empty string
 
 	$data['pub_id'] = $pub_id;
-	$data['modify_date'] = getLISDate();
+	$data['modify_date'] = $this->get_lis_date();
 	$this->publication_model->delete_file($data);
 
 	redirect('group/publications/show/'.$pub_id);

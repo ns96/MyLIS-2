@@ -6,14 +6,14 @@
                     <table style="width:100%; font-size: 14px;">
 			<tr>
 			    <td style="text-align: left"><small><b>
-				<a href='<?=$main_link?>&pry=<?=$y?>&chy=-1'><< <?=($y - 1)?></a></b></small>
+				<a href='<?=$main_link?>?pry=<?=$y?>&chy=-1'><< <?=($y - 1)?></a></b></small>
 			    </td>
 			    <td style="text-align: center">
 				<b>Selected Year ( <?=$y?> )</b>
 			    </td>
 			    <td style="text-align: right">
 				<b><small>
-				    <a href='<?=$main_link?>&pry=<?=$y?>&chy=1'><?=($y+1)?> >></b></small>
+				    <a href='<?=$main_link?>?pry=<?=$y?>&chy=1'><?=($y+1)?> >></b></small>
 			    </td>
 			</tr>
 		    </table>

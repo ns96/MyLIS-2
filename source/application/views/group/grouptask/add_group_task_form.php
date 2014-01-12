@@ -22,7 +22,7 @@
     // End hiding script from older browsers-->              
 </script>
 
-<form name="form2" action="<?=$target_link?>" method="POST" class="form-inline" style="margin-right:10px; font-size: 15px;">
+<form name="form2" action="<?=$target_link?>" method="POST" class="form-inline" style="margin:5px; font-size: 15px;">
     <input type="hidden" name="task" value="grouptask_addtask">
     <input type="hidden" name="egrouptask_id" value="<?=$egrouptask_id?>">
     <input type="hidden" name="selected_year" value="<?=$y?>">     
@@ -35,11 +35,11 @@
 		<input type="text" name="taskname" class="input-block-level input-medium" value="<?=$task_name?>">
 	    </td>
 	</tr>
+	<? if(empty($egrouptask_id)) { ?>
 	<tr>
 	    <td>
 		<label for="tasktype" class="control-label">Type :</label>
 	    </td>
-	    <? if(empty($egrouptask_id)) { ?>
 	    <td>
 		<select name="tasktype" onChange="changeTaskType()" class="input-smallmedium">
 		    <option value="monthly">Monthly for</option>
@@ -47,8 +47,8 @@
 		</select>
 		<input type="text" name="tasknum" class="input-block-level input-mini" value="<?=$y?>">
 	    </td>
-	    <? } ?>
 	</tr>
+	<? } ?>
 	<tr>
 	    <td>
 		<label for="radio" class="control-label">Manager :</label>
@@ -69,7 +69,7 @@
 	</tr>
 	<tr>
 	    <td colspan="2" style="text-align: center">
-		<button type="submit" name="Add" class="btn btn-primary btn-small"><?=$button_title?></button>
+		<button type="submit" name="Add" class="btn btn-primary btn-small" style="margin-top:7px"><?=$button_title?></button>
 	    </td>
 	</tr>
     </table>

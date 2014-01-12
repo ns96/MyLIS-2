@@ -113,13 +113,13 @@ class Accounts extends Admin_Controller {
 		$keywords = trim($this->input->post('keywords')); // research keywords
 		$description = addslashes(trim($this->input->post('description'))); // research keywords
 		$piurl = trim($this->input->post('piurl')); // the group web page of the PI
-		$piurl = $this->checkURL($piurl);
+		$piurl = checkURL($piurl);
 
 		$term = $this->input->post('term');
 		$cost = $this->input->post('cost');
 		$activate_date = $this->input->post('activate_date');
 		$status = $this->input->post('status');
-		$expire_date = getExpireDate($activate_date, $status, $term); // automatically set
+		$expire_date = $this->get_expire_date($activate_date, $status, $term); // automatically set
 		$storage = $this->input->post('storage');
 		$max_users = $this->input->post('max_users');
 		$time_zone = $this->input->post('time_zone');
@@ -129,17 +129,17 @@ class Accounts extends Admin_Controller {
 		if(!empty($mi)) {
 		    $group_pi = "$fname $mi. $lname";
 		}
-		$name = $this->user->name;
+		$name = $this->userobj->name;
 		$department_id = ''; // blank on purpose
 		$network_ids = ''; // blank on purpose
-		$manager_id = $this->user->userid;
+		$manager_id = $this->userobj->userid;
 		$activate_code = $this->get_activation_code();
 
 		if(!empty($notes)) {
-		    $notes = $name.' ('.getLISDateTime().") >>Account Created\n$notes\n";
+		    $notes = $name.' ('.$this->get_lis_date_time().") >>Account Created\n$notes\n";
 		}
 		else {
-		    $notes = $name.' ('.getLISDateTime().") >>Account Created\n";
+		    $notes = $name.' ('.$this->get_lis_date_time().") >>Account Created\n";
 		}
 
 		$account_id = $this->get_account_id($lname); // get the account id
@@ -201,6 +201,10 @@ class Accounts extends Admin_Controller {
 		$data['page_title'] = 'System Message!';
 		$data['account_id'] = $account_id;
 		$this->load_view('admin/accounts/account_created',$data);
+	    } else {
+		$data['page_title'] = 'Account form error!';
+		$data['error'] = $this->formError;
+		$this->load_view('admin/generic_error',$data);
 	    }
 	} else {
 	    $data['page_title'] = "Add MyLIS Account";
@@ -208,6 +212,7 @@ class Accounts extends Admin_Controller {
 	    $data['disciplines'] = $this->disciplines;
 	    $data['properties'] = $this->properties;
 	    $data['lis_tz'] = $this->lis_tz;
+	    $data['lisdate'] = $this->get_lis_date();
 	    $this->load_view('admin/accounts/add',$data);
 	}
     }
@@ -236,9 +241,9 @@ class Accounts extends Admin_Controller {
 
 	$term = 4;
 	$cost = 0;
-	$activate_date = getLISDate();
+	$activate_date = $this->get_lis_date();
 	$status = 'trial';
-	$expire_date = getExpireDate($activate_date, $status, $term); // automatically set
+	$expire_date = $this->get_expire_date($activate_date, $status, $term); // automatically set
 	$storage = 50;
 	$max_users = '25';
 	$time_zone = 'UTC';
@@ -251,10 +256,10 @@ class Accounts extends Admin_Controller {
 	$activate_code = $this->get_activation_code();
 
 	if(!empty($notes)) {
-	    $notes = $name.' ('.getLISDateTime().") >>Account Created\n$notes\n";
+	    $notes = $name.' ('.$this->get_lis_date_time().") >>Account Created\n$notes\n";
 	}
 	else {
-	    $notes = $name.' ('.getLISDateTime().") >>Account Created\n";
+	    $notes = $name.' ('.$this->get_lis_date_time().") >>Account Created\n";
 	}
 
 	$this->load->model('managedb_model');
@@ -344,9 +349,9 @@ class Accounts extends Admin_Controller {
 
 	$term = 4;
 	$cost = 0;
-	$activate_date = getLISDate();
+	$activate_date = $this->get_lis_date();
 	$status = 'active';
-	$expire_date = getExpireDate($activate_date, $status, $term); // automatically set
+	$expire_date = $this->get_expire_date($activate_date, $status, $term); // automatically set
 	$storage = 50;
 	$max_users = '25';
 	$time_zone = 'UTC';
@@ -359,10 +364,10 @@ class Accounts extends Admin_Controller {
 	$login_count = 0;
 
 	if(!empty($notes)) {
-	    $notes = $name.' ('.getLISDateTime().") >>Account Created\n$notes\n";
+	    $notes = $name.' ('.$this->get_lis_date_time().") >>Account Created\n$notes\n";
 	}
 	else {
-	    $notes = $name.' ('.getLISDateTime().") >>Account Created\n";
+	    $notes = $name.' ('.$this->get_lis_date_time().") >>Account Created\n";
 	}
 
 	$this->load->model('managedb_model');
@@ -500,7 +505,7 @@ class Accounts extends Admin_Controller {
 		    $data['activate_code'] = $this->input->post('activate_code');
 
 		    if(!empty($new_note)) {
-			$data['notes'] .= $name.' ('.getLISDateTime().") >>\n$new_note\n";
+			$data['notes'] .= $name.' ('.$this->get_lis_date_time().") >>\n$new_note\n";
 		    } else {
 			$data['notes'] = $notes;
 		    }
@@ -608,7 +613,7 @@ class Accounts extends Admin_Controller {
 	// set the new expire date based on the old one
 	$accountInfo = $this->account_model->get_account_info($account_id);
 	$expire_date = $accountInfo['expire_date'];
-	$expire_date = getExpireDate($expire_date, '', $term);
+	$expire_date = $this->get_expire_date($expire_date, '', $term);
 
 	// update the database now
 	$this->account_model->renew_account($expire_date,$term,$account_id);
@@ -750,7 +755,7 @@ class Accounts extends Admin_Controller {
 	if(empty($piurl)) {
 	    $error .= '<li>Please Enter Group\'s or PI Webpage URL</li>';
 	}
-
+	
 	if(!empty($error)) {
 	    $this->formError = '<h3><span style="background-color: rgb(255, 0, 0);">
 	    Error, the following value(s) were not entered, or the formating is 

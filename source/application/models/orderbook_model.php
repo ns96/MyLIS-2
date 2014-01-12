@@ -55,7 +55,7 @@ class Orderbook_model extends CI_Model {
         $toReturn['ordersData'] = $this->get_orders_array($sql_result1);
 
         $sql_result2 = $this->lisdb->query($sql2)->result_array();
-        $toReturn['items'] = $this->getItemsArray($sql_result2);
+        $toReturn['items'] = $this->get_items_array($sql_result2);
         
         return $toReturn;
     }
@@ -73,8 +73,12 @@ class Orderbook_model extends CI_Model {
         $this->lisdb->query($sql);
     }
     
+    public function add_order_items(){
+	
+    }
+    
     public function update_order_keep_user($data){
-        $sql = "UPDATE $this->o_table SET company='$data[company]', ponum='$data[ponum]', conum='$data[conum]', priority='$data[priority]', account='$data[account]', 
+	$sql = "UPDATE $this->o_table SET company='$data[company]', ponum='$data[ponum]', conum='$data[conum]', priority='$data[priority]', account='$data[account]', 
             status='$data[status]', status_date='$data[status_date]', s_expense='$data[s_expense]', notes='$data[notes]' WHERE order_id='$data[order_id]'";
         $this->lisdb->query($sql);
     }
@@ -104,6 +108,44 @@ class Orderbook_model extends CI_Model {
     public function update_order_totals($g_expense,$p_expense,$order_id){
         $sql = "UPDATE $this->o_table SET g_expense='$g_expense', p_expense='$p_expense' WHERE order_id='$order_id'";
         $this->lisdb->query($sql);
+    }
+    
+    /**
+     * Called when updating pending items
+     * 
+     * @param array $orders
+     * @param array $p_expenses
+     * @param array $g_expenses
+     * @param string $userid
+     * @param string $status_date 
+     */
+    public function update_orders_status($orders,$p_expenses,$g_expenses,$userid,$status_date){
+	foreach($orders as $order_id) {
+	    $p_expense = $p_expenses[$order_id];
+	    $g_expense = $g_expenses[$order_id];
+
+	    $sql = "UPDATE $this->o_table SET status='ordered', status_date='$status_date', userid='$userid', 
+	    p_expense='$p_expense', g_expense='$g_expense' WHERE order_id='$order_id'";
+	    $this->lisdb->query($sql);
+	}
+    }
+    
+    /**
+     * Called when updating pending items
+     * 
+     * @param array $items_status
+     * @param array $items_price
+     * @param string $status_date
+     * @param string $userid 
+     */
+    public function update_items_status($items_status,$items_price,$status_date,$userid){
+	foreach($items_status as $item_id => $status) {
+	    $price =  $items_price[$item_id];
+
+	    $sql = "UPDATE $this->i_table SET status='$status', status_date='$status_date', price='$price', userid='$userid' 
+	    WHERE item_id='$item_id'";
+	    $this->lisdb->query($sql);
+	}
     }
     
     public function update_item_status($status,$status_date,$order_id,$i){
@@ -176,7 +218,11 @@ class Orderbook_model extends CI_Model {
 	return $records;
     }
     
-    // function to return account which have need to be tallied when producing the order report
+    /**
+     * Returns account which have need to be tallied when producing the order report
+     * 
+     * @return string 
+     */
     public function get_tally_accounts() {
       $tally_accounts = array();
 
@@ -196,7 +242,14 @@ class Orderbook_model extends CI_Model {
 	return $records;
     }
     
-    // function to return any pending orders
+    /**
+     * Returns any pending orders
+     * 
+     * $param array users
+     * @param string my_userid
+     * @param string my_role
+     * @return array
+     */
     public function get_pending_items($users,$my_userid,$my_role) {
       $items = array();
 
@@ -230,18 +283,17 @@ class Orderbook_model extends CI_Model {
       return $items;
     }
    
-    // function to return the items which have been ordered
     public function get_ordered_items($users,$my_userid,$my_role) {
       $items = array();
 
       $sql = "SELECT * FROM $this->i_table WHERE (status='ordered' OR status='back ordered')";
       $records = $this->lisdb->query($sql)->result_array();
       $count = count($records);
-
+   
       if($count > 0) {
          foreach($records as $singleItem){
           $userid = $singleItem['userid'];
-          $user = $users[$userid];
+	  $user = $users[$userid];
           $name = $user->name;
           $owner = $singleItem['owner'];
 
@@ -258,7 +310,12 @@ class Orderbook_model extends CI_Model {
       return $items;
     }
     
-    // function to retrive any saved orders
+    /**
+     * Retrives any saved orders
+     * 
+     * @param string $my_userid
+     * @return array 
+     */
     public function get_saved_orders($my_userid) {
       $saved_orders = array();
 
@@ -277,7 +334,12 @@ class Orderbook_model extends CI_Model {
       return $saved_orders;
     }
     
-    // function to return a list of recent orders
+    /**
+     * Returns a list of recent orders
+     * 
+     * @param string $my_userid
+     * @return array 
+     */
     public function get_recent_orders($my_userid) {
       $recent_orders = array();
 
@@ -297,7 +359,14 @@ class Orderbook_model extends CI_Model {
       return $recent_orders;
     }
     
-    // function to actually view the orders
+    /**
+     * Retreives a list of orders according to some filtering criteria
+     * 
+     * @param string $ordered_by
+     * @param string $year
+     * @param string $month
+     * @return array 
+     */
     public function get_orders($ordered_by, $year, $month) {
       $orders = array();
 
@@ -334,7 +403,12 @@ class Orderbook_model extends CI_Model {
       return $this->get_orders_array($records);
     }
     
-    // function to return a all the items list
+    /**
+     * Returns all the item lists for the selected company
+     * 
+     * @param string $company
+     * @return array 
+     */
     public function get_itemlists($company) {
       $itemlists = array();
       $user_id = $this->userobj->userid;
@@ -357,13 +431,22 @@ class Orderbook_model extends CI_Model {
         $this->lisdb->query($sql);
     }
     
-    // function to save a company in the category database
+    /**
+     * Saves a company in the category database
+     * 
+     * @param string $account 
+     */
     public function save_account($account) {
       $sql = "INSERT INTO $this->ct_table VALUES('', '$this->o_table', 'account', '$account', 'myadmin')";
       $this->lisdb->query($sql);
     }
     
-    // function to return to see if orders are private or not. Private orders can only be viewed by the owner or admin, or buyer
+    /**
+     * Checks if orders are private or not. Private orders can only be viewed by the owner or admin, or buyer
+     * 
+     * @param string $role
+     * @return boolean 
+     */
     protected function are_orders_private($role) {
      if($role == 'admin' || $role == 'buyer') {  // user with these roles have the right to view all orders
        return false;
@@ -372,7 +455,12 @@ class Orderbook_model extends CI_Model {
      }
    }
    
-   // function to return an array containing order information
+   /**
+    * Returns an array containing order information
+    * 
+    * @param array $sql_result
+    * @return array 
+    */
     public function get_orders_array($sql_result) {
       $orders = array();
       $all_total = 0;
@@ -413,7 +501,12 @@ class Orderbook_model extends CI_Model {
       return $to_return;
     }
     
-    // function to add search results for ordered items to the results 2
+    /**
+     * Adds search results for ordered items to the results 2
+     * 
+     * @param array $sql_result
+     * @return array 
+     */
     public function get_items_array($sql_result) {
       $items = array();
       $count = count($sql_result);
@@ -438,15 +531,18 @@ class Orderbook_model extends CI_Model {
       return $items;
     }
    
-    // function to return the maximum number of items allow for this order
+    /**
+     * Returns the maximum number of items allow for this order
+     * 
+     * @param int $order_id
+     * @return int 
+     */
     public function get_max_items_value($order_id) {
-      global $conn;
 
       // get the maximum number of items for this order
-      $sql = "SELECT maxitems FROM $this->o_table WHERE order_id='$order_id'";
+      $sql = "SELECT * FROM $this->o_table WHERE order_id='$order_id'";
       $record = $this->lisdb->query($sql)->result_array();
-
-      return $record['maxitems'];
+      return $record[0]['maxitems'];
     }
     
     public function set_max_items_value($order_id,$new_value){
@@ -461,8 +557,14 @@ class Orderbook_model extends CI_Model {
         return $count;
     }
     
-    // function to either add or update the database
-    public function update_inventory_db($user_id, $order_id, $item_num) {
+    /**
+     * Either adds or updates the database
+     * 
+     * @param string $user_id
+     * @param int $order_id
+     * @param int $item_num 
+     */
+    public function update_inventory_db($user_id, $order_id, $item_num, $lisdate) {
 
       $sql = "SELECT * FROM $this->i_table WHERE (order_id='$order_id' AND item_num='$item_num')";
       $record = $this->lisdb->query($sql)->result_array();
@@ -470,7 +572,7 @@ class Orderbook_model extends CI_Model {
       $item_id = $record['item_id'];
       $type = $record['type'];
       $stock_id = $record['stock_id'];
-      $status_date = getLISDate();
+      $status_date = $lisdate;
 
       if($type == 'Chemical' && $this->update_chemical) { // update chemicals database
         $cas = "000000";
@@ -479,7 +581,7 @@ class Orderbook_model extends CI_Model {
         $product_id = $record['product_id'];
         $amount = $record['amount'];
         $units = $record['units'];
-        $entry_date = getLISDate();
+        $entry_date = $lisdate;
         $status = 'In Stock';
         $status_date =  $entry_date;
         $mfmw = 'Not Entered';
@@ -511,7 +613,7 @@ class Orderbook_model extends CI_Model {
         $product_id = $record['product_id'];
         $amount = $record['amount'];
         $units = $record['units'];
-        $entry_date = getLISDate();
+        $entry_date = $lisdate;
         $status = 'In Stock';
         $status_date =  $entry_date;
         $sn = '000000';
@@ -538,8 +640,14 @@ class Orderbook_model extends CI_Model {
       }
     }
     
-    // function to return the order_id based on the company name for an item. If more than one
-    // order exist return the fisrt one
+    /**
+     * function to return the order_id based on the company name for an item. 
+     * If more than one order exist return the fisrt one
+     * 
+     * @param string $company
+     * @param string $user_id
+     * @return array 
+     */
     public function get_order_id_from_company($company,$user_id) {
       $info = array();
 
@@ -559,8 +667,13 @@ class Orderbook_model extends CI_Model {
       return $info;
     }
 
-    // function to break apart company names seperated by / character
-    // and create a sql search string
+    /**
+     * Breaks apart company names seperated by / character
+     * and creates a sql search string
+     * 
+     * @param string $company
+     * @return string 
+     */
     public function get_company_sql_string($company) {
       if(strstr($company, '/')) {
         $sql = '';

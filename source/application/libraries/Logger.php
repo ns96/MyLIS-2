@@ -11,6 +11,7 @@ class Logger {
   var $user;
   var $logfile;
   var $old_logfile;
+  var $CI;
   
   public function __construct($params) {
     // Set the object's properties
@@ -36,7 +37,7 @@ class Logger {
   
   // function to add a log entry
   function addLog($task) {
-    $date_time = getLISDateTime();
+    $date_time = $this->CI->get_lis_date_time();
     $userid = $this->user->userid;
     
     $fp = fopen($this->logfile, "a") or die ("Couldn't open the log file");

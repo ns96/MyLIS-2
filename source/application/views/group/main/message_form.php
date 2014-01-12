@@ -47,7 +47,15 @@ if(!empty($message_id)) {
     </div>
   </div>
   <div class="control-group">
-      <label for="fileupload_1" class="control-label">Attach file:</label>
+      <label for="fileupload_1" class="control-label">
+	  <?
+	    if(!empty($messageItem['file_id'])) {
+		echo "Attach new file:";
+	    } else {
+		echo "Attach file:";
+	    }
+	  ?>
+      </label>
       <div align="left" class="controls">
 	<input id="fileupload_1" name="fileupload_1" class="filestyle" type="file" data-icon="false" style="position: fixed; left: -500px;">  
       <span style="color:grey; margin-left: 5px; margin-right: 10px">(max file size: 2MB)</span>

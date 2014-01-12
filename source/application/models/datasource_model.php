@@ -13,6 +13,7 @@ class datasource {
   var $account_id = null;
   var $lisdb = null;
   var $user_names = array();
+  var $CI;
   
   public function __construct() {
     parent::__construct();
@@ -22,7 +23,9 @@ class datasource {
     $this->lisdb = $this->load->database('lisdb',TRUE);
   }
   
-  // function to add demo data
+  /**
+   * Adds demo data for the sandbox account
+   */
   function add_sandbox_data($account_id) {
     $this->account_id = $account_id;
     $this->add_users();
@@ -40,7 +43,9 @@ class datasource {
     $this->add_weblinks();
   }
   
-  // function to add a set of three users to database
+  /**
+   * Adds a set of three users to database 
+   */
   function add_users() {
     $table = $this->account_id.'_users';
     $this->user_names[] = 'Carl Higgins';
@@ -58,10 +63,12 @@ class datasource {
     $this->lisdb->query($sql);
   }
   
-  // add messages
+  /**
+   * Adds messages 
+   */
   function add_messages() {
     $table = $this->account_id.'_messages';
-    $date = getLISDateTime();
+    $date = $CI->get_lis_date_time();
     $text1 = 'Some message of interest to the group in general dealing with chemicals';
     $text2 = 'Message about article which talks about the nature of the human animal';
     $text3 = 'Science article highlighting the discovery of intelligent life<br>found in the oceans of on an ice moon';
@@ -70,7 +77,9 @@ class datasource {
     $this->lisdb->query($sql);
   }
   
-  // function to add 5 locations
+  /**
+   * Adds 5 locations 
+   */
   function add_locations() {
     $table = $this->account_id.'_locations';
     
@@ -83,10 +92,14 @@ class datasource {
     $this->lisdb->query($sql);
   }
   
-  // function to add dumy chemicals
+  /**
+   * Adds dumy chemicals
+   * 
+   * @param int $count 
+   */
   function add_chemicals($count) {
     $table = $this->account_id.'_chemicals';
-    $date = getLISDateTime();
+    $date = $this->CI->get_lis_date_time();
     $locations = array('CA', 'CB', 'CC', 'FC');
     
     $sql = "INSERT INTO $table VALUES ";
@@ -108,10 +121,14 @@ class datasource {
     $this->lisdb->query($sql);
   }
   
-  // function to add dummy supplies
+  /**
+   * Adds dummy supplies
+   * 
+   * @param type $count 
+   */
   function add_supplies($count) {
     $table = $this->account_id.'_supplies';
-    $date = getLISDateTime();
+    $date = $this->CI->get_lis_date_time();
     $locations = array('CA', 'CB', 'CC', 'FC');
     
     $sql = "INSERT INTO $table VALUES ";
@@ -139,7 +156,11 @@ class datasource {
      $this->add_group_meeting_for_year($year+1);
   }
   
-  // function to add group meeting dates
+  /**
+   * Adds group meeting dates
+   * 
+   * @param int $year 
+   */
   function add_group_meeting_for_year($year) {
     // add group meeting dates
     $table = $this->account_id.'_gmdates';
@@ -184,7 +205,13 @@ class datasource {
     }
   }
   
-  // function to get the fisrt monday of month
+  /**
+   * Gets the fisrt monday of month
+   * 
+   * @param int $month
+   * @param int $year
+   * @return date 
+   */
   function get_first_monday($month, $year) {
     $num = date("w",mktime(0,0,0,$month,1,$year));
     
@@ -199,7 +226,9 @@ class datasource {
     }
   }
   
-  // function to add dummy orders
+  /**
+   * Adds dummy orders 
+   */
   function add_orders() {
     $year = date("Y");
     $month = date("m");
@@ -224,9 +253,15 @@ class datasource {
     $this->add_orders_for_year($year-1, 12, $companies, $accounts);
   }
   
-  //function to add orders for a particular year
+  /**
+   * Adds orders for a particular year 
+   * 
+   * @param int $year
+   * @param int $month
+   * @param array $companies
+   * @param array $accounts 
+   */
   function add_orders_for_year($year, $month, $companies, $accounts) {
-    //echo "Year $year Month $month<br>";
     $table = $this->account_id.'_orders';
     $itable = $this->account_id.'_order_items';
     
@@ -296,7 +331,9 @@ class datasource {
     }
   }
   
-  // function to add dummy publication data
+  /**
+   * Adds dummy publication data 
+   */
   function add_publications() {
     $table = $this->account_id.'_publications';
     $year = date("Y");
@@ -341,7 +378,9 @@ class datasource {
     }
   }
   
-  // function to add instrument logs
+  /**
+   * Adds instrument logs 
+   */
   function add_instruments() {
     $table = $this->account_id.'_instrulog';
     $rtable = $this->account_id.'_reservations';
@@ -371,7 +410,9 @@ class datasource {
     }
   }
   
-  // function to add group task
+  /**
+   * Adds group task 
+   */
   function add_group_task() {
     $table = $this->account_id.'_grouptask';
     $itable = $this->account_id.'_grouptask_item';
@@ -426,7 +467,9 @@ class datasource {
     }
   }
   
-  // function to add a few fake files
+  /**
+   * Adds a few fake files 
+   */
   function add_bibliographies() {
     $table = $this->account_id.'_doclibrary';
     $ctable = $this->account_id.'_categories';
@@ -446,7 +489,7 @@ class datasource {
         $description = 'EndNote file containing references related to '.$category;
         $url = 'http://www.ncbi.nlm.nih.gov/pubmed/';
         $status = 'current';
-        $date_time = getLISDateTime();
+        $date_time = $this->CI->get_lis_date_time();
         
         if($k < 3) {
           $userid = 'jhsmith@nano.edu';
@@ -469,7 +512,9 @@ class datasource {
     }
   }
   
-  // function to add file folders
+  /**
+   * Adds file folders 
+   */
   function add_files() {
     $table = $this->account_id.'_folder_files';
     $ctable = $this->account_id.'_categories';
@@ -504,7 +549,9 @@ class datasource {
     }
   }
   
-  // function to add weblinks
+  /**
+   * Adds weblinks
+   */
   function add_weblinks() {
     $table = $this->account_id.'_weblinks';
     $ctable = $this->account_id.'_categories';

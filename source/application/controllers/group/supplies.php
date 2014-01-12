@@ -107,7 +107,7 @@ class Supplies extends Group_Controller {
 	    
 	    $data['item_id'] = $this->input->get('item_id');
 	    $data['userid'] = $this->userobj->userid;
-	    $data['status_date'] = getLISDate();
+	    $data['status_date'] = $this->get_lis_date();
 
 	    $status = '';
 	    $sql = '';
@@ -226,7 +226,7 @@ class Supplies extends Group_Controller {
 
 	    $searchby = $this->input->post("searchby");
 	    $category = $this->input->post("categories");
-	    $location = $this->input->post("locations");
+	    $location = $this->input->post("location");
 	    $searchterm = $this->input->post("searchterm");
 
 	    if($searchby == 'id' && !empty($searchterm)) {
@@ -242,7 +242,7 @@ class Supplies extends Group_Controller {
 		$results = $this->supplies_model->search($where_clause);
 	    }
 	    elseif($searchby == 'location' && !empty($searchterm)) {
-		$where_clause = "name REGEXP '$searchterm' AND location_id='$location[0]'";
+		$where_clause = "name REGEXP '$searchterm' AND location_id='$location'";
 		$results = $this->supplies_model->search($where_clause);
 	    } else {
 		$results = array();
@@ -283,7 +283,7 @@ class Supplies extends Group_Controller {
 	    $notes = $this->input->post("notes");
 	    $personal = $this->input->post("personal");
 	    
-	    $entry_date = getLISDate();
+	    $entry_date = $this->get_lis_date();
 	    $status_date = $entry_date;
 	    
 	    if(!empty($personal)) {
@@ -384,7 +384,7 @@ class Supplies extends Group_Controller {
 	    
 	    // create some variable to add to the database
 	    $userid = $this->userobj->userid;
-	    $status_date = getLISDate();
+	    $status_date = $this->get_lis_date();
 
 	    if(!empty($personal)) {
 		$owner = $userid;
@@ -403,7 +403,6 @@ class Supplies extends Group_Controller {
 	    // check to see if to add a new location
 	    if(!empty($other_location) && !strstr($other_location, 'Location ID,')) {
 		$location_info = preg_split("/,/", $other_location);
-		//echo 'Size of array '.count($locations).'<br>';
 
 		if(count($location_info) < 3 || count($location_info) > 4) {
 		    $data0['page_title'] = 'Error';
@@ -546,7 +545,7 @@ class Supplies extends Group_Controller {
 	$this->load->model('supplies_model');
 	
 	// The case of 'make selected mine' of supplies listing page
-	if (isset($_POST['trasfer_supply_form'])){ 
+	if (isset($_POST['transfer_supply_form'])){ 
 	   
 	    $userid = $this->userobj->userid;
 	    $item_id = $this->input->post('item_id');

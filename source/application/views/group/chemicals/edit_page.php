@@ -89,6 +89,7 @@ $back_image = base_url()."images/icons/back.png";
 			<tr>
 			    <td>
 				<select name="categories[]" class="input-medium">
+				    <option value="<?=$category?>"><?=$category?></option>
 				    <?
 				    foreach($categories as $category) {
 					if($category != 'My Chemicals') {
@@ -112,7 +113,7 @@ $back_image = base_url()."images/icons/back.png";
 				    <option value="<?=$location_id?>"><?=$location_id?></option>
 				    <?
 				    foreach($locations as $location) {
-					echo '<option value="'.$location.'">'.$location.'</option>';
+					echo '<option value="'.$location['location_id'].'">'.$location['location_id'].'</option>';
 				    }
 				    ?>
 				</select>

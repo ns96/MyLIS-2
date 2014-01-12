@@ -60,7 +60,7 @@ $location_link = base_url()."group/chemicals/list_locations";
                                 <select name="location">';
                                     <?
                                     foreach($locations as $location) {
-                                        echo '<option value="'.$location.'">'.$location['location_id'].'</option>';
+                                        echo "<option value='$location[location_id]'>$location[location_id]</option>";
                                     }
                                     ?>
                                 </select>
@@ -198,7 +198,7 @@ $add_chemical_link = base_url().'group/chemicals/add';
                         <select name="location" size="1" class="input-medium">';
                         <?
                         foreach($locations as $location) {
-                            echo '<option value="'.$location.'">'.$location.'</option>';
+                            echo '<option value="'.$location['location_id'].'">'.$location['location_id'].'</option>';
                         }
                         ?>
                         </select>

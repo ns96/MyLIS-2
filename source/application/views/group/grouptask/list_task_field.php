@@ -35,7 +35,7 @@ if(!empty($item_info['note'])) {
 	if($completed != 'YES') {
 	    $link = base_url()."group/grouptask/set_task_item_completed?item_id=$item_id";
 	    $delete_link = base_url()."group/grouptask/delete_task_item?item_id=$item_id";
-	    echo '<a href ="'.$link.'" class="btn btn-success btn-mini" style="margin-left:10px">Mark as completed</a>';
+	    echo '<a href ="'.$link.'" class="btn btn-success btn-mini" style="margin-left:8px">Mark as completed</a>';
 	    if($ismanager) {
 		echo '<a href ="'.$delete_link.'" class="btn btn-danger btn-mini" style="margin-left:5px">Delete</a>';
 	    }

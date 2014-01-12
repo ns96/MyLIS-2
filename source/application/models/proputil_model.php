@@ -17,7 +17,12 @@ class Proputil_model extends CI_Model {
     $this->table = $params['account'].'_properties';
   }
   
-  // function to get a property from database
+  /**
+   * Reads a property from database
+   * 
+   * @param string $key
+   * @return string|null 
+   */
   function get_property($key) {
     $lisdb = $this->load->database('lisdb',TRUE);
     $lisdb->where('key_id',$key);
@@ -28,7 +33,12 @@ class Proputil_model extends CI_Model {
 	return null;
   }
   
-  // function to see if it as the key is already in DB
+  /**
+   * Checks if the key is already in DB
+   * 
+   * @param string $key
+   * @return boolean 
+   */
   function has_key($key) {
     $lisdb = $this->load->database('lisdb',TRUE);
     $lisdb->where('key_id',$key);
@@ -42,7 +52,12 @@ class Proputil_model extends CI_Model {
     }
   }
   
-  // save a property in the database
+  /**
+   * Saves a property in the database
+   * 
+   * @param string $key
+   * @param string $value 
+   */
   function store_property($key, $value) {
     $lisdb = $this->load->database('lisdb',TRUE);
     $userid = $this->user->userid;
@@ -65,14 +80,17 @@ class Proputil_model extends CI_Model {
     }
   }
   
-  // function to return all the properties as an array with key value pair
+  /**
+   * Returns all the properties as an array with key value pair
+   * 
+   * @return array 
+   */
   function get_properties() {
     
     $properties = array();
     
     $lisdb = $this->load->database('lisdb',TRUE);
     $records = $lisdb->get($this->table)->result_array();
-    //echo "<pre>"; var_dump($records); die();
     
     foreach($records as $record){
 	$properties[$record['key_id']]=$record['value'];
@@ -80,7 +98,11 @@ class Proputil_model extends CI_Model {
     return $properties;
   }
   
-  // function to remove a property
+  /**
+   * Removes a property
+   * 
+   * @param string $key 
+   */
   function remove_property($key) {
       
     $lisdb = $this->load->database('lisdb',TRUE);

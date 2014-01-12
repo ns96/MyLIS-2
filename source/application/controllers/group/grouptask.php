@@ -147,11 +147,13 @@ class Grouptask extends Group_Controller {
           $info = $this->grouptask_model->get_group_task_information($egrouptask_id);
           $manager_id = $info['manager_id'];
           $task_name = $info['task_name'];
-          $button_title = 'Edit Task';
+          $button_title = 'Update Task';
+	  $data['edit_task'] = true;
         } else {
             $manager_id = '';
             $button_title = 'Add New Task';
             $task_name = '';
+	    $data['edit_task'] = false;
         }
         $data4['users'] = $this->load_users();
         $data4['egrouptask_id'] = $egrouptask_id;

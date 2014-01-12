@@ -39,7 +39,7 @@ class Accounts extends Group_Controller {
                 $storage = $this->input->post('storage'); // amount of storage requested
                 
                 $data['sale_type'] = $storage.'MB'; // the type of sale
-                $data['date'] = getLISDateTime(); // get the current date and time
+                $data['date'] = $this->get_lis_date_time(); // get the current date and time
                 $data['cost'] = $this->properties["storage.cost.".$storage.'MB']; // get cost of this storage
                 $data['userid'] = $this->userobj->userid;
                 $data['account_id'] = $this->properties['lis.account'];
@@ -92,6 +92,45 @@ class Accounts extends Group_Controller {
             $data['cost3'] = $this->properties['storage.cost.5000MB'];
             $this->load_view('group/account/upgrade_form',$data);
         }
+    }
+    
+    /**
+     * Activates the account 
+     */
+    public function activate() {
+	$this->load->model('account_model');
+	
+	$activate_code = $this->input->post('activate_code');
+	$account_id = $this->input->post('account_id');
+	$main_page = $this->input->post('main_page'); // URL of main page
+
+	$accountInfo = $this->account_model->get_account_info($account_id);
+	$stored_code = $accountInfo['activate_code'];
+
+	if($activate_code == $stored_code) {
+	    $activate_date = $accountInfo['activate_date'];
+	    $term = $accountInfo['term'];
+	    $expire_date = $this->getExpireDate($activate_date, '', $term);
+
+	    $this->account_model->activate_account($expire_date,$account_id);
+
+	    $params['properties'] = $this->properties;
+	    $params['user'] = $this->userobj;
+	    $this->load->model('admin_filemanager');
+	    $this->admin_filemanager->initialize($params);
+	    
+	    $props = array(
+		'lis.expire' => $expire_date,
+		'lis.status' => $expire_date,
+	    );
+	    $this->admin_filemanager->modifyInitiationFile($account_id, $props);
+
+	    $main_page .='&activated=yes';
+	}
+	else {
+	    $main_page .='&activated=no';
+	}
+	header("Location: $main_page");
     }
     
     /**
@@ -156,7 +195,7 @@ class Accounts extends Group_Controller {
 		$data['keywords'] = $this->input->post('keywords'); // research keywords
 		$data['description'] = trim($this->input->post('description')); // research decription
 		$data['instruments'] = trim($this->input->post('instruments')); // list of instruments
-		$data['edit_date'] = getLISDateTime();
+		$data['edit_date'] = $this->get_lis_date_time();
 		$data['userid'] = $userid;
 		$data['group'] = $this->session->userdata('group');
 
@@ -369,7 +408,7 @@ class Accounts extends Group_Controller {
         }
       }
       else {
-        $expire_date = addDaysToDate(getLISDate(), 365);
+        $expire_date = addDaysToDate($this->get_lis_date(), 365);
       }
       return $expire_date;
     }

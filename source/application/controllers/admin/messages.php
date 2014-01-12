@@ -37,7 +37,7 @@ class Messages extends Admin_Controller {
 		// If 'Post Immediately' checkbox has been selected change $post_start 
 		// current date
 		if(!empty($now)) {
-		    $post_start = getLISDate();
+		    $post_start = $this->get_lis_date();
 		}
 
 		// If url is not empty add an 'http' prefix
@@ -49,7 +49,7 @@ class Messages extends Admin_Controller {
 		$data['account_ids'] = $account_ids;
 		$data['post_start'] = $post_start;
 		$data['post_end'] = $post_end;
-		$data['message_date'] = getLISDateTime();
+		$data['message_date'] = $this->get_lis_date_time();
 		$data['manager'] = $this->userobj->userid;
 		$data['message'] = $message;
 		$data['url'] = $url;
@@ -65,7 +65,7 @@ class Messages extends Admin_Controller {
 	    $this->load->model('message_model');
 	    $messageList = $this->message_model->get_all_system_messages();
 	    
-	    $data['post_start'] = getLISDate();
+	    $data['post_start'] = $this->get_lis_date();
 	    $data['post_end'] = addDaysToDate($data['post_start'], 7);
 	    $data['messageList'] = $messageList;
 	    $data['accounts'] = $this->load_users();
@@ -102,7 +102,7 @@ class Messages extends Admin_Controller {
 		$data['url'] = $url;
 		// Save the edited message
 		$this->load->model('message_model');
-		$message = $this->message_model->update_message($data);
+		$message = $this->message_model->update_system_message($data);
 	    }
 	    
 	    redirect('admin/messages');

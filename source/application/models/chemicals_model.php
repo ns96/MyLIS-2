@@ -35,7 +35,7 @@ class Chemicals_model extends CI_Model {
     }
     
     public function transfer_full_ownership($data){
-	$sql = "UPDATE $this->table SET owner='$data[to_user]', userid='$data[userid]' WHERE owner='$data[from_user]'";
+	$sql = "UPDATE $this->table SET userid='$data[to_user]', owner='$data[userid]' WHERE owner='$data[from_user]'";
 	$this->lisdb->query($sql);
     }
     
@@ -90,7 +90,12 @@ class Chemicals_model extends CI_Model {
 	return $categories;
     }
     
-    // function to return categories for a particular section
+    /**
+     * Returns the categories for a particular section
+     * 
+     * @param string $type
+     * @return array 
+     */
     function get_categories_by_type($type) {
       $categories = array();
       $table_name = '';

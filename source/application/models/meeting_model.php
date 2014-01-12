@@ -73,12 +73,12 @@ class Meeting_model extends CI_Model {
     }
 
     public function add_date($data){
-	$sql = "INSERT INTO $this->table VALUES('', '$data[semester_id]','$data[gmdate]', '$data[gmtime]', '$data[userid]')";
+	$sql = "INSERT INTO $this->table VALUES('', $data[semester_id],'$data[gmdate]', '$data[gmtime]', '$data[userid]')";
 	$this->lisdb->query($sql);
     }
     
     public function update_date($data){
-	$sql = "UPDATE $this->table SET semester_id = '$data[semester_id]', gmdate = '$data[gmdate]', 
+	$sql = "UPDATE $this->table SET semester_id = $data[semester_id], gmdate = '$data[gmdate]', 
 	    gmtime = '$data[gmtime]', userid = '$data[userid]' WHERE gmdate_id = '$data[gmdate_id]'";
 	$this->lisdb->query($sql);
     }
@@ -105,7 +105,9 @@ class Meeting_model extends CI_Model {
     
 }
 
-/*Class to store group meeting date information */
+/**
+ * Class to store group meeting date information  
+ */
 class gm_date {
   var $gmdate_id = '';
   var $semester_id = '';

@@ -11,7 +11,11 @@
 		    <tbody>
 		    <tr>
 			<td colspan="2" style="background-color: rgb(180,200,230); width: 25%;">
-			    Add new task
+			    <?	if ($edit_task) 
+				    echo "Edit task";
+				else 
+				    echo "Add new task";
+			    ?>
 			</td>
 		    </tr>
 		    </tbody>

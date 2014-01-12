@@ -96,7 +96,7 @@ class File_folder extends Group_Controller {
         $data1['categories'] = $categories;
         $file_id = $this->input->get('file_id');
         if(!empty($file_id)) {
-            $data1['title'] = 'Edit File';
+            $data1['title'] = 'Update File';
             $data1['task'] = 'folder_edit';
             $data1['file_id'] = $file_id;
             $data1['fileInfo'] = $this->file_folder_model->get_file($file_id);

@@ -8,6 +8,7 @@ $add_link = base_url().'group/publications/add';
 
 <div class="formWrapper">
     <form action="<?=$add_link?>" method="POST" class="form-inline">
+	<input type="hidden" name="add_publication_form" value="posted">
 	<table id="pub_info_table">
 	    <tr>
 		<td class="pub_info_label">Title :</td>
@@ -50,7 +51,7 @@ $add_link = base_url().'group/publications/add';
 		    </select>
 		</td>
 		<td>
-		    <input type="text" name="start_date" class="input-block-level" value="<?=getLISDate()?>">
+		    <input type="text" name="start_date" class="input-block-level" value="<?=$lisdate?>">
 		</td>
 		<td><input type="text" class="input-block-level" value="n/a"></td>
 		<td><input type="text" name="end_date" class="input-block-level" placeholder="mm/dd/yyyy"></td>

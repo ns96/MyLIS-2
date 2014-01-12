@@ -32,7 +32,14 @@ class Filemanager extends CI_Model {
     $this->plugin_url = $home_url.'plugins/';
   }
   
-  // function to display the upload. number is used if multiple file browse are used
+  /**
+   * Displays the upload fields. 
+   * 
+   * Number is used if multiple file browse are used
+   * 
+   * @param int $field_id
+   * @return string 
+   */
   function get_file_upload_field($field_id) {
     $html = 'Select Type :
     <select name="filetype_'.$field_id.'">
@@ -53,8 +60,11 @@ class Filemanager extends CI_Model {
     return $html;
   }
   
-  // function to display the upload form with the option of url upload. 
-  // number is used if multiple file browse are used
+  /**
+   * Displays the upload form with the option of url upload.
+   * 
+   * Number is used if multiple file browse are used
+   */
   function get_url_file_upload_field($field_id) {
     $html = 'Select Type :
     <select name="filetype_'.$field_id.'" class="input-smallmedium">
@@ -79,7 +89,9 @@ class Filemanager extends CI_Model {
     return $html;
   }
   
-  // function to get plane file upload with only two choices
+  /**
+   * Gets plane file upload with only two choices
+   */
    function get_plain_url_file_upload_field($field_id) {
      $html = 'Select Type :
      <select name="filetype_'.$field_id.'">
@@ -92,11 +104,13 @@ class Filemanager extends CI_Model {
      return $html;
    }
   
-  // function to add to the main table
+  /**
+   * Uploads the file and adds it to the files table
+   */
   function upload_file($field_id, $table_name, $table_id) {
     
     // check to see if there is storage space avialable
-    if(!$this->hasSpace()) {
+    if(!$this->has_space()) {
       return;
     }
     
@@ -140,12 +154,16 @@ class Filemanager extends CI_Model {
     return $file_id;
   }
   
-  // function to update a file
+  /**
+   * Updates a file
+   * 
+   * @param int $field_id
+   * @param int $file_id
+   */
   function update_file($field_id, $file_id) {
-    global $conn;
     
     // check to see if there is storage space avialable
-    if(!$this->hasSpace()) {
+    if(!$this->has_space()) {
       return;
     }
     
@@ -160,7 +178,7 @@ class Filemanager extends CI_Model {
     $userid = $this->user->userid;
     
     if(is_uploaded_file($tmp_name)) {
-      $this->deleteFileOnly($file_id); // delete any file that's there
+      $this->delete_file_only($file_id); // delete any file that's there
       
       $ext = '';
       if($file_type == 'other') {
@@ -189,7 +207,11 @@ class Filemanager extends CI_Model {
     }
   }
   
-  // function to delete a file
+  /**
+   * Deletes a file
+   * 
+   * @param int $file_id 
+   */
   function delete_file($file_id) {
     $file_info = $this->get_file_info($file_id);
     
@@ -206,7 +228,11 @@ class Filemanager extends CI_Model {
     $lisdb->query($sql);
   }
   
-  // function to just delete the file and not the database entry
+  /**
+   * Deletes just the file and not the database entry
+   * 
+   * @param int $file_id 
+   */
   function delete_file_only($file_id) {
     $file_info = $this->get_file_info($file_id);
     $fullname = $this->file_directory.'file_'.$file_id.'.'.$file_info['type'];
@@ -215,7 +241,12 @@ class Filemanager extends CI_Model {
     }
   }
   
-  // function to return the file url
+  /**
+   * Returns the file url
+   * 
+   * @param int $file_id
+   * @return string 
+   */
   function get_file_url($file_id) {
     $file_info = $this->get_file_info($file_id);
     $file_url = '';
@@ -228,7 +259,12 @@ class Filemanager extends CI_Model {
     return $file_url;
   }
   
-  // fuction to return a file info from the files table
+  /**
+   * Returns a file info from the files table
+   * 
+   * @param int $file_id
+   * @return array 
+   */
   function get_file_info($file_id) {
     $lisdb = $this->load->database('lisdb',TRUE);
     $sql = "SELECT * FROM $this->table WHERE file_id=$file_id";
@@ -238,7 +274,12 @@ class Filemanager extends CI_Model {
     return $records[0];
   }
   
-  // function to get the file extention aka file type
+  /**
+   * Gets the file extention (aka file type)
+   * 
+   * @param string $filename
+   * @return string 
+   */
   function get_file_type($filename) {
     $filetype = "txt"; // default is just .txt
     $sp = strrpos($filename, ".");
@@ -248,7 +289,11 @@ class Filemanager extends CI_Model {
     return $filetype;
   }
   
-  // function to return space usage
+  /**
+   * Returns the current space usage
+   * 
+   * @return int 
+   */
   function get_file_space_usage() {
     
     $lisdb = $this->load->database('lisdb',TRUE);
@@ -258,7 +303,11 @@ class Filemanager extends CI_Model {
     return $usage;
   }
   
-  // function to check to see if there is more file storage space
+  /**
+   * Checks to see if there is more file storage space
+   * 
+   * @return boolean 
+   */
   function has_space() {
     $quota = $this->properties['storage.quota']*1048576; // convert to bytes
     $usage = $this->get_file_space_usage();
@@ -270,7 +319,11 @@ class Filemanager extends CI_Model {
     }
   }
   
-  // function to return the quota usage text
+  /**
+   * Returns the quota usage text
+   * 
+   * @return string 
+   */
   function get_storage_quota_text() {
     // now dislay the file usage information
     $usage = round($this->get_file_space_usage()/1048576, 2);
@@ -288,7 +341,11 @@ class Filemanager extends CI_Model {
     return $quota;
   }
   
-  // function to update the initiation file
+  /**
+   * Updates the initiation file
+   * 
+   * @param array $new_props 
+   */
   function modify_initiation_file($new_props) {
     foreach ($this->properties as $key => $value) {
       if(isset($new_props[$key])) {
@@ -298,7 +355,11 @@ class Filemanager extends CI_Model {
     $this->writeInitiationFile();
   }
   
-  // function to write out the initiation file
+  /**
+   * Writes out the initiation file
+   * 
+   * @param array $newProperties 
+   */
   function write_initiation_file($newProperties) {
     $init_file = $this->home_dir.'conf/lis.ini';
     
@@ -314,7 +375,12 @@ class Filemanager extends CI_Model {
     fclose($fp);
   }
   
-  // function to see if to save a certain key
+  /**
+   *  Checks if a certain key should be saved
+   * 
+   * @param string $key
+   * @return boolean 
+   */
   function save_key($key) {
     $savekey = true;
     
@@ -334,7 +400,9 @@ class Filemanager extends CI_Model {
     return $savekey;
   }
   
-  // function to get the files in the pulgin directory
+  /**
+   * Gets the files in the pulgin directory
+   */
   function load_plugin_files() {
     if(!is_dir($this->plugin_directory)) {  // no plugin directory so just return
       return;

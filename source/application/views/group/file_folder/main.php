@@ -1,7 +1,11 @@
 <?php
 
 // initialize some links
-$add_link = '#add'; // the add link
+if (!empty($file_id)){
+    $add_link = base_url().'group/file_folder#add'; // the add link
+} else {
+    $add_link = '#add'; // the add link
+}
 $myfiles_link = encodeURL(base_url()."group/file_folder?filter=myfiles"); // list only the users web links
 $allfiles_link = encodeURL(base_url()."group/file_folder"); // list all links
 $home_link = encodeURL(base_url()."group/main");

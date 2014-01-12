@@ -101,7 +101,7 @@ $target_link = base_url().'admin/accounts/create';
 		</select>
 	    </td>
 	    <td><input type="text" name="cost" value="<?=$properties['lis.cost']?>"></td>
-	    <td><input type="text" name="activate_date" value="<?=getLISdate()?>"></td>
+	    <td><input type="text" name="activate_date" value="<?=$lisdate?>"></td>
 	    <td>Automatically Set</td>
 	</tr>
     </table>

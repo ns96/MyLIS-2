@@ -27,7 +27,12 @@ class Account_model extends CI_Model {
 	return $records; 
     }
     
-    // function to return information about the database
+    /**
+     * Retreives information about an account
+     * 
+     * @param string $account_id
+     * @return array 
+     */
     public function get_account_info($account_id){
         $array = null;
         $sql = "SELECT * FROM accounts WHERE account_id = '$account_id'";
@@ -36,7 +41,12 @@ class Account_model extends CI_Model {
         return $records[0];
     }
     
-    // checks to see if an account already exist
+    /**
+     * Checks to see if an account already exist
+     * 
+     * @param string $account_id
+     * @return int 
+     */
     public function account_exists($account_id){
 	$exists = 0;
     
@@ -74,6 +84,11 @@ class Account_model extends CI_Model {
         $this->lismdb->query($sql);
     }
     
+    public function activate_account($expire_date,$account_id){
+	$sql = "UPDATE accounts set expire_date = '$expire_date', status = 'active' WHERE account_id = '$account_id'";
+	$this->lismdb->query($sql);
+    }
+    
     public function update_account_info($data){
         // update the database now
         $sql = "UPDATE accounts SET pi_fname = '$data[fname]', pi_mi = '$data[mi]',pi_lname = '$data[lname]', group_name = '$data[group_name]', group_type = '$data[group_type]',discipline = '$data[discipline]',
@@ -105,9 +120,9 @@ class Account_model extends CI_Model {
     
     public function add_account($data){
 	$sql = "INSERT INTO accounts VALUES('$data[account_id]', '$data[fname]', '$data[mi]', '$data[lname]', '$data[group_name]', '$data[group_type]', 
-	'$data[discipline]', '$data[institution]', '$data[address]', '$data[phone]', '$data[fax]', '$data[email]', '$data[term]', 
-	'$data[cost]', '$data[activate_date]', '$data[expire_date]', '$data[status]', '$data[storage]', '$data[max_users]', '$data[time_zone]', 
-	'$data[activate_code]', '$data[notes]', '$data[department_id]', '$data[network_ids]', $data[manager_id]')";
+	'$data[discipline]', '$data[institution]', '$data[address]', '$data[phone]', '$data[fax]', '$data[email]', $data[term], 
+	$data[cost], '$data[activate_date]', '$data[expire_date]', '$data[status]', $data[storage], $data[max_users], '$data[time_zone]', 
+	'$data[activate_code]', '$data[notes]', '$data[department_id]', '$data[network_ids]', '$data[manager_id]')";
 	$this->lismdb->query($sql);
 
 	$sql = "INSERT INTO users VALUES('$data[email]', '$data[account_id]', '$data[password1]')";
@@ -117,16 +132,20 @@ class Account_model extends CI_Model {
 	$sql = "INSERT INTO profiles VALUES('', '$data[account_id]', '$data[group_pi]', '$data[email]', '$data[phone]', '$data[group_type]', '$data[institution]', 
 	'$data[address]', '$data[discipline]', '$data[keywords]', '$data[description]', 'List Instruments',  '$data[piurl]', 
 	'List Colloborators IDs', 'YES', '$data[activate_date]', '$data[email]')";
-	$this->lismdb->query($sql);
+	$this->lispdb->query($sql);
     }
     
     public function add_account_admin($data){
-	$table = $data[account_id].'_users';
+	$table = $data['account_id'].'_users';
 	$sql = "INSERT INTO $table VALUES('$data[email]', '$data[password1]', 'admin', '$data[group_pi]', '$data[email]', 'Group PI', 'none')";
 	$this->lisdb->query($sql);
     }
     
-    // function to set default locations and categories
+    /**
+     * Sets default locations and categories
+     * 
+     * @param string $account_id 
+     */
     function set_default_database_entries($account_id) {
 	$ct_table = $account_id.'_categories';
 	$l_table = $account_id.'_locations';
@@ -163,7 +182,11 @@ class Account_model extends CI_Model {
 	$this->lisdb->query($sql);
     }
     
-    // function to remove tables from an account
+    /**
+     * Removes tables from an account
+     * 
+     * @param string $account_id 
+     */
     public function remove_MyLIS_tables($account_id) {
 
 	// delete this account from the database
@@ -179,7 +202,11 @@ class Account_model extends CI_Model {
 	}
     }
     
-    // function to remove mylis users from the users table
+    /**
+     * Removes mylis users from the users table
+     * 
+     * @param type $account_id 
+     */
     public function remove_MyLIS_users($account_id) {
 
 	// delete this accpunt from the database

@@ -9,6 +9,7 @@
 class Messages extends Group_Controller {
     
     var $userobj = null;
+    var $table_name = null;
     
     public function __construct(){
 	parent::__construct();
@@ -25,6 +26,7 @@ class Messages extends Group_Controller {
 	$this->proputil_model->initialize($params);
 	$this->userobj = $this->session->userdata('user');
 	
+	$this->table = $this->session->userdata('group').'_messages';
 	$this->restrict_access();
     }
     
@@ -41,7 +43,7 @@ class Messages extends Group_Controller {
 	
 	$message = $this->input->post('message');
 	$file_type = $this->input->post('filetype_1');
-	$date_time = getLISDateTime();
+	$date_time = $this->get_lis_date_time();
 	$userid = $this->userobj->userid;
 	
 	// If the message was empty go back to main page
@@ -52,7 +54,7 @@ class Messages extends Group_Controller {
 	
 	// If a file was attached, upload it and get the file id
 	if($file_type != 'none') {
-	    $file_id = $this->filemanager->upload_file(1, $this->table, $message_id);
+	    $file_id = $this->filemanager->upload_file(1, $this->table);
 	}
 
 	$data['url'] = $url;
@@ -87,7 +89,7 @@ class Messages extends Group_Controller {
 	    $data['url'] = $url;
 	    $data['message'] = $this->input->post('message');
 	    $data['file_type'] = $this->input->post('filetype_1');
-	    $data['date_time'] = getLISDateTime();
+	    $data['date_time'] = $this->get_lis_date_time();
 	    $data['userid'] = $this->userobj->userid;
 
 	    // Get the originall message data
@@ -146,6 +148,7 @@ class Messages extends Group_Controller {
     */
    public function delete_message_file($id){
        // Not implemented yet!
+       echo "This function is not implemented yet!";
    }
    
    /**

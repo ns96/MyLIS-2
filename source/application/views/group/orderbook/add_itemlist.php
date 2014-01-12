@@ -2,7 +2,7 @@
 
 $orderbook_link = base_url()."group/orderbook";
 $home_link = base_url()."group/main";
-$target_link = base_url()."group/orderbook/itemlist";
+$target_link = base_url()."group/orderbook/itemlist_process";
 
 // some javascript code
 echo '<script language="Javascript">
@@ -64,6 +64,7 @@ echo "<div style='text-align:right; margin:0px 15px'><a href='$orderbook_link'>B
     <div class="formSubBar">General Itemlist Information</div>
     <form name="form1" action="<?=$target_link?>" method="post">
 	<input type="hidden" name="save_itemlist_form" value="posted">
+	<input type="hidden" name="task2" value="save">
 	<? if(!empty($order_id)) {
 	    echo '<input type="hidden" name="order_id" value="'.$order_id.'"><br>';
 	} ?>
@@ -157,7 +158,7 @@ echo "<div style='text-align:right; margin:0px 15px'><a href='$orderbook_link'>B
 			<td>
 			    <select name="type_<?=$i?>" class="input-block-level">
 				<? if(!empty($type)) {
-				    echo '<option value="$type">$type</option>';
+				    echo "<option value='$type'>$type</option>";
 				} ?>
 				<option value="Chemical">Chemical</option>
 				<option value="Supply">Supply</option>
@@ -185,12 +186,12 @@ echo "<div style='text-align:right; margin:0px 15px'><a href='$orderbook_link'>B
 	<div style="text-align: right">
 	    <?
 	    if(!empty($order_id)) {
-		echo "<button name='butRemove' type='submit' class='btn' style='margin-bottom: 10px; margin-right:10px' onclick='submitOrder(".'remove'.")'>Remove Item</button>";
+		echo "<button name='butRemove' type='submit' class='btn' style='margin-bottom: 10px; margin-right:10px' onclick='submitOrder(\"remove\")'>Remove Item</button>";
 		if($role == 'admin' || $role == 'buyer' || $owner == $user_id) {
-		    echo "<button name='' type='submit' class='btn btn-danger' style='margin-bottom: 10px; margin-right:10px' onclick='submitOrder(".'remove_order'.")'>Remove List</button>";
+		    echo "<button name='' type='submit' class='btn btn-danger' style='margin-bottom: 10px; margin-right:10px' onclick='submitOrder(\"remove_order\")'>Remove List</button>";
 		}
 	    }
-	    echo "<button name='butSave' type='submit' class='btn btn-primary' style='margin-bottom: 10px' onclick='submitOrder(".'save'.")'>Save List</button>";
+	    echo "<button name='butSave' type='submit' class='btn btn-primary' style='margin-bottom: 10px' onclick='submitOrder(\"save\")'>Save List</button>";
 	    ?>
 	</div>
     </form>

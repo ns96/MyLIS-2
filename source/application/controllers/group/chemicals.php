@@ -107,7 +107,7 @@ class Chemicals extends Group_Controller {
 	    
 	    $data['chem_id'] = $this->input->get('chem_id');
 	    $data['userid'] = $this->userobj->userid;
-	    $data['status_date'] = getLISDate();
+	    $data['status_date'] = $this->get_lis_date();
 
 	    $status = '';
 	    $sql = '';
@@ -225,7 +225,7 @@ class Chemicals extends Group_Controller {
 
 	    $searchby = $this->input->post("searchby");
 	    $category = $this->input->post("categories");
-	    $location = $this->input->post("locations");
+	    $location = $this->input->post("location");
 	    $searchterm = $this->input->post("searchterm");
 
 	    if($searchby == 'id' && !empty($searchterm)) {
@@ -241,7 +241,7 @@ class Chemicals extends Group_Controller {
 		$results = $this->chemicals_model->search($where_clause);
 	    }
 	    elseif($searchby == 'location' && !empty($searchterm)) {
-		$where_clause = "name REGEXP '$searchterm' AND location_id='$location[0]'";
+		$where_clause = "name REGEXP '$searchterm' AND location_id='$location'";
 		$results = $this->chemicals_model->search($where_clause);
 	    } else {
 		$results = array();
@@ -282,7 +282,7 @@ class Chemicals extends Group_Controller {
 	    $notes = $this->input->post("notes");
 	    $personal = $this->input->post("personal");
 	    
-	    $entry_date = getLISDate();
+	    $entry_date = $this->get_lis_date();
 	    $status_date = $entry_date;
 	    
 	    if(!empty($personal)) {
@@ -299,7 +299,6 @@ class Chemicals extends Group_Controller {
 	    // check to see if to add a new location
 	    if(!empty($other_location) && !strstr($other_location, 'Location ID,')) {
 		$location_info = preg_split("/,/", $other_location);
-		//echo 'Size of array '.count($locations).'<br>';
 
 		if(count($location_info) < 3 || count($location_info) > 4) {
 		    $data0['page_title'] = 'Error';
@@ -384,7 +383,7 @@ class Chemicals extends Group_Controller {
 
 	    // create some variable to add to the database
 	    $userid = $this->userobj->userid;
-	    $status_date = getLISDate();
+	    $status_date = $this->get_lis_date();
 
 	    if(!empty($personal)) {
 		$owner = $userid;
@@ -403,7 +402,6 @@ class Chemicals extends Group_Controller {
 	    // check to see if to add a new location
 	    if(!empty($other_location) && !strstr($other_location, 'Location ID,')) {
 		$location_info = preg_split("/,/", $other_location);
-		//echo 'Size of array '.count($locations).'<br>';
 
 		if(count($location_info) < 3 || count($location_info) > 4) {
 		    $data0['page_title'] = 'Error';
@@ -480,6 +478,7 @@ class Chemicals extends Group_Controller {
 	    $data['status'] = $status;
 	    $data['units'] = $units;
 	    $data['owner'] = $owner;
+	    $data['category'] = $category;
 	    $data['notes'] = $notes;
 	    $data['location_id'] = $location_id;
 	    $data['amount'] = $amount;
@@ -546,8 +545,7 @@ class Chemicals extends Group_Controller {
 	$this->load->model('chemicals_model');
 	
 	// The case of 'make selected mine' of chemicals listing page
-	if (isset($_POST['trasfer_chemical_form'])){ 
-	   
+	if (isset($_POST['transfer_chemical_form'])){ 
 	    $userid = $this->userobj->userid;
 	    $chem_id = $this->input->post('chem_id');
 
@@ -571,7 +569,6 @@ class Chemicals extends Group_Controller {
 	elseif (!empty($_GET['chem_id'])) { 
 	    $chem_id = $this->input->get('chem_id');
 	    $userid = $this->userobj->userid;
-	   
 	    $data['chem_id'] = $chem_id;
 	    $data['userid'] = $userid;
 	    $this->chemicals_model->transfer_single_ownership($data);
@@ -579,8 +576,6 @@ class Chemicals extends Group_Controller {
 	    $message = "Chemical with id =$chem_id transferred to ".$users[$userid]->name;
 	    $destination = base_url().'group/chemicals/view?chem_id='.$chem_id;
 	    showModal('Ownership transfer',$message,$destination);
-
-	    //redirect('group/chemicals/view?chem_id='.$chem_id);
 	} else { // the url was loaded by mistake
 	    redirect(base_url().'group/chemicals');
 	}

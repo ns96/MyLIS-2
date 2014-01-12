@@ -107,6 +107,7 @@ class Main extends Group_Controller {
 	if(!$this->filemanager->has_space()) {
 	    $output .= $this->load_quota_used_message();
 	}
+
 	$output .= $this->load_system_messages();
 	$output .= $this->load_user_messages();
 	$output .= $this->load_view('group/main/iFrame_footer',null,TRUE);
@@ -150,7 +151,7 @@ class Main extends Group_Controller {
     protected function load_welcome($status) {
 	$data['base'] = base_url()."group/";
 	$role = $this->session->userdata('user')->role;
-	$data['date'] = getLISDate();
+	$data['date'] = $this->get_lis_date();
 	$data['hide_link'] = base_url()."group/messages/hide_welcome";
 	$data['sales_link'] = base_url()."group/accounts/upgrade";
 	$data['manage_link'] = base_url()."group/manage";
@@ -182,8 +183,7 @@ class Main extends Group_Controller {
      * @return string The message as an HTML string
      */
     protected function load_quota_used_message() {
-	$data['base'] = base_url()."group/";
-	$data['sales_link'] = $base."accounts/upgrade";
+	$data['sales_link'] = base_url()."group/accounts/upgrade";
 	$data['quota'] = $this->properties['storage.quota'];
 
 	$message = $this->load_view('group/main/quota_used_message',$data,true);
@@ -201,7 +201,7 @@ class Main extends Group_Controller {
      */
     protected function load_activate_form($expire, $activated) {
 	$data['base'] = base_url()."group/";
-	$data['date'] = getLISDate();
+	$data['date'] = $this->get_lis_date();
         $data['expire'] = $expire;
         $data['activated'] = $activated;
 	$data['account_id'] = $this->properties['lis.account'];

@@ -33,7 +33,7 @@ class Supplies_model extends CI_Model {
     }
     
     public function transfer_full_ownership($data){
-	$sql = "UPDATE $this->table SET owner='$data[to_user]', userid='$data[userid]' WHERE owner='$data[from_user]'";
+	$sql = "UPDATE $this->table SET userid='$data[to_user]', owner='$data[userid]' WHERE owner='$data[from_user]'";
 	$this->lisdb->query($sql);
     }
     

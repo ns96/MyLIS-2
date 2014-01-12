@@ -366,7 +366,7 @@ class Manage extends Group_Controller {
         $this->load->model('chemicals_model');
         
         if(is_uploaded_file($tmp_name)) {
-          $date = getLISDate(); // get todays date
+          $date = $this->get_lis_date(); // get todays date
           $categories = $this->chemicals_model->get_categories_by_type('Chemical');
           $lc = 2; // keep tracks of the current line
           $ec = 0; // keep tracks of the entries add to the database
@@ -468,7 +468,7 @@ class Manage extends Group_Controller {
         $this->load->model('supplies_model');
         
         if(is_uploaded_file($tmp_name)) {
-          $date = getLISDate(); // get todays date
+          $date = $this->get_lis_date(); // get todays date
           $categories = $this->chemicals_model->get_categories_by_type('Supply');
           $lc = 2; // keep tracks of the current line
           $ec = 0; // keep tracks of the entries add to the database
@@ -931,7 +931,6 @@ class Manage extends Group_Controller {
       $name = $this->input->post("name_$userid");
       $email = $this->input->post("email_$userid");
 
-      //echo "UserID $userid password $password name $name email $email";
       if(empty($email) || !valid_email($email)) {
             $this->error_message = 'Please Enter Valid E-mail ';
             return false;

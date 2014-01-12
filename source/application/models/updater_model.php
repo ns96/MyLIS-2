@@ -17,7 +17,12 @@ class Updater_model extends CI_Model {
         $this->lisdb = $this->load->database('lisdb',TRUE);
     }
     
-    // function to actually upgrade the 
+    /**
+     * Upgrades an account
+     * 
+     * @param string $account_id
+     * @return string 
+     */ 
     function update_account($account_id) {
 	$output = '';
 	$output .= "Updating <b>$account_id </b><br>";
@@ -27,7 +32,12 @@ class Updater_model extends CI_Model {
 	return $output;
     }
     
-    // function to update to version 1.1.
+    /**
+     * Upgrades an account to version 1.1.
+     * 
+     * @param string $account_id
+     * @return string 
+     */
     function upgradeTo_1_1($account_id) {
 	$echo = '';
 	$echo .= '<div style="margin-left: 40px;">';
@@ -47,7 +57,12 @@ class Updater_model extends CI_Model {
 	return $echo;
     }
 
-    // function to update to version 1.1.
+    /**
+     * Upgrades an account to version 1.3.
+     * 
+     * @param type $account_id
+     * @return string 
+     */
     function upgradeTo_1_3($account_id) {
 	$echo = '';
 	$echo .= '<div style="margin-left: 40px;">';

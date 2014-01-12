@@ -42,7 +42,7 @@ class Orderbook extends Group_Controller {
 	$conum = 'n/a';
 	$priority = '';
 	$status = 'saved';
-	$status_date = getLISDate();
+	$status_date = $this->get_lis_date();
 	$account = '';
 	$g_expense = '$'.sprintf("%01.2f", 0.00);
 	$p_expense = '$'.sprintf("%01.2f", 0.00);
@@ -84,8 +84,6 @@ class Orderbook extends Group_Controller {
         $recentOrders = $this->orderbook_model->get_recent_orders($user_id);
         $tallyAccounts = $this->orderbook_model->get_tally_accounts();
 	
-	
-	
 	$data['page_title'] = "Group Orders";
 	$data['order_id'] = $order_id;
         $data['role'] = $this->userobj->role;
@@ -101,6 +99,7 @@ class Orderbook extends Group_Controller {
         $data['status'] = $status;
         $data['ponum'] = $ponum;
         $data['conum'] = $conum;
+	$data['priority'] = $priority;
         $data['g_expense'] = $g_expense;
         $data['p_expense'] = $p_expense;
         $data['s_expense'] = $s_expense;
@@ -117,16 +116,74 @@ class Orderbook extends Group_Controller {
      * Displays all the pending items 
      */
     public function items_pending(){
-        
-        $user_id = $this->userobj->userid;
-	$role = $this->userobj->role;
-        $userList = $this->load_users();
-        
-        $data['page_title'] = 'Pending Items';
-        $data['user_id'] = $user_id;
-        $data['role'] = $role;
-        $data['items'] = $this->orderbook_model->get_pending_items($userList,$user_id,$role);
-        $this->load_view('group/orderbook/pending_items',$data);
+        if (isset($_POST['pending_items_form'])){
+	    $user_id = $this->userobj->userid;
+	    $role = $this->userobj->role;
+	    $userList = $this->load_users();
+    
+	    // get the pending orders
+	    $items = $this->orderbook_model->get_pending_items($userList,$user_id,$role);
+	    $items_status = array();
+	    $items_price = array();
+	    $p_expenses = array(); // store the personal expense
+	    $g_expenses = array(); // store the group expense
+	    $orders = array();
+
+	    // set the status array
+	    foreach($items as $item) {
+		$info = preg_split("/\t/", $item);
+		$order_id = trim($info[0]);
+		$item_id = trim($info[1]);
+		$item_amount = trim($info[6]);
+		$item_owner = trim($info[10]);
+		$id = $order_id.'_'.$item_id;
+
+		$status = $this->input->post('status_'.$id);
+		$price = $this->trim_dollar_sign($this->input->post('price_'.$id));
+
+		if(!empty($status)) {
+		    $items_status[$item_id] = $status;
+		    $items_price[$item_id] = $price;
+		    $orders[$order_id] = $order_id; // store the order id
+
+		    if($item_owner != 'admin') { // increment the personal expense
+			$p_expenses[$order_id] += $price*$item_amount;
+		    }
+		    else { // increment the group expense
+			$g_expenses[$order_id] += $price*$item_amount;
+		    }
+		}
+	    }
+
+	    // update the status of the items and the order
+	    $status_date = $this->get_lis_date();
+
+	    // update the status of orders
+	    $this->orderbook_model->update_orders_status($orders,$p_expenses,$g_expenses,$user_id,$status_date);
+
+	    // update the status of the items
+	    $this->orderbook_model->update_items_status($items_status,$items_price,$status_date,$user_id);
+
+	    // indicate to the user the the update was succesfull
+	    $back_link = "$script?task=orderbook_main";
+	    $count = count($items_status);
+	    $message = '<div style="text-align: Center;">
+	    The status of '.$count.' item(s) have been successfully updated</div>';
+	    
+	    $this->session->set_flashdata('message', $message);
+	    redirect('group/orderbook/items_pending');
+	} else {
+	    $user_id = $this->userobj->userid;
+	    $role = $this->userobj->role;
+	    $userList = $this->load_users();
+
+	    $data['page_title'] = 'Pending Items';
+	    $data['user_id'] = $user_id;
+	    $data['role'] = $role;
+	    $data['items'] = $this->orderbook_model->get_pending_items($userList,$user_id,$role);
+	    $data['message'] = $this->session->flashdata('message');
+	    $this->load_view('group/orderbook/pending_items',$data);
+	}
     }
     
     /**
@@ -242,7 +299,6 @@ class Orderbook extends Group_Controller {
         $data['orders'] = $orderData['orders'];
 	$data['order_page'] = 'all';
         $data['tally_totals'] = $orderData['tally_totals'];
-        //$this->load_view('group/orderbook/allOrders',$data);
         $this->load_view('group/orderbook/list_orders',$data);
 
         
@@ -413,9 +469,9 @@ class Orderbook extends Group_Controller {
         $ponum =  trim($this->input->post('ponum'));
         $conum =  trim($this->input->post('conum'));
         $priority = $this->input->post('priority');
-        $order_date = getLISDate();
+        $order_date = $this->get_lis_date();
         $status = $this->input->post('status');
-        $status_date = getLISDate();
+        $status_date = $this->get_lis_date();
         $account = trim($this->input->post('account'));
         $s_expense = $this->trim_dollar_sign($this->input->post('sexpense'));
         $notes = $this->input->post('notes');
@@ -479,7 +535,7 @@ class Orderbook extends Group_Controller {
         $maxitems = $this->orderbook_model->get_max_items_value($order_id);
 
         // now add the items
-        $this->orderbook_model->add_order_items($order_id, $company, $maxitems, $task);
+        $this->add_order_items($order_id, $company, $maxitems, $task);
 
         // see if to return at this point
         if($task == 3 || $task == 4) {
@@ -535,18 +591,18 @@ class Orderbook extends Group_Controller {
       $userid = $this->userobj->userid;
       $order_id = $this->input->post('order_id');
       $status = 'received';
-      $status_date = getLISDate();
+      $status_date = $this->get_lis_date();
       $maxitems = $this->orderbook_model->get_max_items_value($order_id);
-
       for($i = 1; $i <= $maxitems; $i++) {
         $item = trim($this->input->post('item_'.$i));
         if(!empty($item)) {
             $this->orderbook_model->update_item_status($status,$status_date,$order_id,$i);
             // update the database now
-            $this->orderbook_model->update_inventory_db($userid,$order_id, $i);
+	    $lisdate = $this->get_lis_date();
+            $this->orderbook_model->update_inventory_db($userid,$order_id, $i, $lisdate);
         }
       }
-      redirect('group/orderbook?order_id=$order_id');
+      redirect("group/orderbook?order_id=$order_id");
     }
     
     /**
@@ -573,7 +629,7 @@ class Orderbook extends Group_Controller {
         $units = trim($this->input->post('units_'.$i));
         $price = $this->trim_dollar_sign($this->input->post('price_'.$i));
         $status = $this->input->post('status_'.$i);
-        $status_date = getLISDate();
+        $status_date = $this->get_lis_date();
 
         $myitem = $this->input->post('myitem_'.$i);
         if(empty($myitem)) {
@@ -807,67 +863,81 @@ class Orderbook extends Group_Controller {
         $this->load_view('group/orderbook/saveItemToListLog',$data0);
     }
     
+    public function itemlist_process(){
+	
+	$task = $this->input->post('task2');
+ 
+        if($task == 'save') {
+          $this->save_itemlist();
+        }
+        else if($task == 'remove') {
+          $this->remove_item();
+        }
+        else if($task == 'remove_order') {
+          $this->itemlist_remove();
+        }
+        else {
+          $data['error'] = 'Unknown task 2 : '.$task;
+          $this->load_view('error/generic_error',$data);
+        }
+    }
+    
     /**
      * Displays a form for adding an itemlist or saves this itemlist in case the
      * form has been submitted.
      */
     public function itemlist(){
-        
-        if (isset($_POST['save_itemlist_form'])){
-            $this->save_itemlist();
-        } else {
-            $user_id = $this->userobj->userid;
-            $role = $this->userobj->role;
-            $order_id = $this->input->get('order_id'); // get the order id
+        $user_id = $this->userobj->userid;
+	$role = $this->userobj->role;
+	$order_id = $this->input->get('order_id'); // get the order id
 
-            // set some variables
-            $company = '';
-            $priority = ''; // used to set the share with group variable
-            $status = 'itemlist'; // specify that this order is an item list
-            $status_date = getLISDate();
-            $notes = 'none';
-            $maxitems = 15;
+	// set some variables
+	$company = '';
+	$priority = ''; // used to set the share with group variable
+	$status = 'itemlist'; // specify that this order is an item list
+	$status_date = $this->get_lis_date();
+	$notes = 'none';
+	$maxitems = 15;
 
-            // if we have a saved order_id retrieved the order. item list are stored as regular orders
-            $order = array();
-            if(!empty($order_id)) {
-              $order = $this->orderbook_model->get_order($order_id);
-              $company = $order['company'];
-              $priority = $order['priority'];
-              $status = $order['status'];
-              $status_date = $order['status_date'];
-              $notes = $order['notes'];
-              $owner = $order['owner'];
-              $maxitems = $order['maxitems'];
-            }
+	// if we have a saved order_id retrieved the order. item list are stored as regular orders
+	$order = array();
+	if(!empty($order_id)) {
+	    $order = $this->orderbook_model->get_order($order_id);
+	    $company = $order['company'];
+	    $priority = $order['priority'];
+	    $status = $order['status'];
+	    $status_date = $order['status_date'];
+	    $notes = $order['notes'];
+	    $owner = $order['owner'];
+	    $maxitems = $order['maxitems'];
+	}
 
-            $title = "Company Item List";
-            if(!empty($company)) {
-              $title .= " ($company)";
-            }
+	$title = "Company Item List";
+	if(!empty($company)) {
+	    $title .= " ($company)";
+	}
 
-            if(!empty($order_id)) {
-		$data['page_title'] = 'Edit itemlist';
-	    } else {
-		$data['page_title'] = 'Add new itemlist';
-	    }
-            $data['role'] = $role;
-            $data['user_id'] = $user_id;
-            $data['cnames'] = $this->cnames;
-            $data['js_cnames'] = $this->js_cnames;
-            $data['maxItemsMax'] = $this->maxItemsMax;
+	if(!empty($order_id)) {
+	    $data['page_title'] = 'Edit itemlist';
+	} else {
+	    $data['page_title'] = 'Add new itemlist';
+	}
+	$data['role'] = $role;
+	$data['user_id'] = $user_id;
+	$data['cnames'] = $this->cnames;
+	$data['js_cnames'] = $this->js_cnames;
+	$data['maxItemsMax'] = $this->maxItemsMax;
 
-            $data['title'] = $title;
-            $data['order_id'] = $order_id;
-            $data['company'] = $company;
-            $data['maxitems'] = $maxitems;
-            $data['priority'] = $priority;
-            $data['status_date'] = $status_date;
-            $data['notes'] = $notes;
-            $data['order'] = $order;
+	$data['title'] = $title;
+	$data['order_id'] = $order_id;
+	$data['company'] = $company;
+	$data['maxitems'] = $maxitems;
+	$data['priority'] = $priority;
+	$data['status_date'] = $status_date;
+	$data['notes'] = $notes;
+	$data['order'] = $order;
 
-            $this->load_view('group/orderbook/add_itemlist',$data);
-        }
+	$this->load_view('group/orderbook/add_itemlist',$data);
     }
     
     /**
@@ -956,9 +1026,9 @@ class Orderbook extends Group_Controller {
         $ponum =  'n/a';
         $conum =  'n/a';
         $priority = $this->input->post('priority');
-        $order_date = getLISDate();
+        $order_date = $this->get_lis_date();
         $status = 'itemlist';
-        $status_date = getLISDate();
+        $status_date = $this->get_lis_date();
         $account = 'n/a';
         $notes = $this->input->post('notes');
         $owner = $user_id;
@@ -972,7 +1042,7 @@ class Orderbook extends Group_Controller {
           return;
         }
 
-        // reset the maxitems variable which is used to set the maxium number of items
+        // reset the maxitems variable which is used to set the maximum number of items
         // also check to see if it a number. if it is not then set to 15
         if(is_numeric($maxitems)) {
           if($maxitems > $this->maxItemsMax) {
@@ -997,6 +1067,7 @@ class Orderbook extends Group_Controller {
         $data['status_date'] = $status_date;
         $data['notes'] = $notes;          $data['owner'] = $owner;
         $data['user_id'] = $user_id;      $data['maxitems'] = $maxitems;
+	$data['s_expense'] = 0;
         if(empty($order_id)) { // add new order
             // get the id for this entry
             $order_id = $this->orderbook_model->add_order($data);

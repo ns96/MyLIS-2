@@ -50,14 +50,13 @@ class Emails extends Admin_Controller {
 		    $people = trim($sa[1]);
 		    $email_count = substr_count($people, '@');
 		    $total += $email_count;
-		    //echo "Found $email_count Emails on line $lc for $institution<br>";
 
 		    $this->get_emails($institution, $people);
 		}
 	    }
 
 	    fclose($fp); // close the file now
-	    //
+	    
 	    // save the emails to the file
 	    $text = $this->write_emails_to_file();
 	    
@@ -103,7 +102,6 @@ class Emails extends Admin_Controller {
 
 	    // add the email to the email array
 	    $emails[] = "$fname\t$lname\t$em\n";
-	    //echo "$fname  $lname : $em <br>";
 	}
 
 	$inst = new institution($institution, $emails); 

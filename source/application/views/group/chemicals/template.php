@@ -22,7 +22,13 @@
 	<!-- TOP SECTION -->
 	<div class="span12">
 	    <div class="topwell">
-		<? loadGroupTopArea(); ?>
+		<? 
+		  $restricted = $this->session->userdata('direct_entry');
+		  if (!empty($restricted)) 
+		      loadRestrictedGroupTopArea(); 
+		  else
+		      loadGroupTopArea();
+		?>
 	    </div>
 	</div>
     </div>

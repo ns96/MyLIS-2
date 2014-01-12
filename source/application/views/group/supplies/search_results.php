@@ -11,11 +11,11 @@ if($count > 0) {
     $all_ids = '';
     
     ?>
-    <form enctype="multipart/form-data" action="<?=base_url()?>group/chemicals/bulk_actions/" method="POST">
+    <form enctype="multipart/form-data" action="<?=base_url()?>group/supplies/bulk_actions/" method="POST">
 	<input type="hidden" name="listing_form" value="posted">
 	<table class="table table-condensed table-bordered">
 	    <thead>
-		<th>Chem ID</th>
+		<th>Item ID</th>
 		<th>Model #</th>
 		<th>Name</th>
 		<th>Amount</th>

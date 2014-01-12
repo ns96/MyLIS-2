@@ -19,7 +19,12 @@ class Message_model extends CI_Model {
 	$this->table = $this->session->userdata('group')."_messages";
     }
     
-    // function to return the array containing the message
+    /**
+     * Returns an array containing the message data
+     * 
+     * @param int $message_id
+     * @return array 
+     */
     public function get_message($message_id) {
 	$sql = "SELECT * FROM $this->table WHERE message_id=$message_id";
 	$records = $this->lisdb->query($sql)->result_array();

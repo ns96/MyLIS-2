@@ -1,10 +1,10 @@
 <?php
 if(!empty($slot_id)) {
     $form_link = base_url()."group/meetings/edit_slot";
-    $form_name = 'add_slot_form';
+    $form_name = 'edit_slot_form';
 } else {
     $form_link = base_url()."group/meetings/add_slot";
-    $form_name = 'edit_slot_form';
+    $form_name = 'add_slot_form';
 }
 
 if (isset($slot_info['presenter']))
@@ -93,7 +93,7 @@ echo '<a name="add_slot"></a>'; // target for link from top
 			if(!empty($slot_info['file_id'])) {
 			    $file_id = $slot_info['file_id'];
 			    $delete_file_link = base_url()."group/meetings/delete_file?slot_id=$slot_id&file_id=$file_id";
-			    echo '[ <a href="'.$delete_file_link.'">delete file</a> ] ';
+			    echo '<a href="'.$delete_file_link.'" class="btn btn-small" style="margin-left:10px">delete file</a> ';
 			}
 			?>
 		    </td>

@@ -59,13 +59,26 @@ class Login extends Group_Controller {
 			    $user->password = ''; // strip out password from data that will be stored to session
 			    $this->session->set_userdata('user',$user); 
 			    $this->session->set_userdata('group',$this->properties['lis.account']);
+			    
+			    // If the user came to MyLIS with a module direct link there may be a url
+			    // of the place from where he came from. We need to store that in the session
+			    // to send him back there after the logout
+			    if (isset($_GET['home']))
+				$this->session->set_userdata('logout_target',$this->input->get('home'));
 
 			    // Add a log entry
 			    $params['user'] = $user;
 			    $this->load->library('logger',$params);
 			    $this->logger->addLog('main');
 
-			    redirect('group/main');
+			    // If the user came to MyLIS with a module direct link we will 
+			    // redirect him to that module
+			     if (isset($_GET['redirect'])){
+				 $this->session->set_userdata('direct_entry','yes');
+				 redirect($this->input->get('redirect'));
+			     } else {
+				redirect('group/main'); 
+			     }
 			} else {
 			    // If the account has been expired
                             $data['login_error'] = $this->load->view('errors/expired_account',null,TRUE);
@@ -141,10 +154,17 @@ class Login extends Group_Controller {
          */
 	public function logout(){
 	    $groupname = $this->session->userdata('group');
+	    $logout_target = $this->session->userdata('logout_target');
 	    session_destroy();
 	    $this->session->unset_userdata('user');
 	    $this->session->unset_userdata('role');
 	    $this->session->unset_userdata('group');
-	    redirect('group/login?group='.$groupname);
+	    $this->session->unset_userdata('direct_entry');
+	    $this->session->unset_userdata('logout_target');
+	    
+	    if (!empty($logout_target))
+		redirect($logout_target);
+	    else 
+		redirect('group/login?group='.$groupname);
 	}
 }

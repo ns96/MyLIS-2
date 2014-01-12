@@ -1,5 +1,9 @@
 <?php
-    $update_link = base_url()."group/orderbook/update_status";
+
+    if(!empty($message))
+	echo $message;
+
+    $update_link = base_url()."group/orderbook/items_pending";
     $back_link = base_url()."group/orderbook"; // link to go back to the orders
     
     echo '<div style="text-align: right;">';
@@ -15,7 +19,7 @@
 ?>
 
 <form name="form1" action="<?=$update_link?>" method="post" class="form-inline">
-    <input type="hidden" name="task" value="orderbook_update">
+    <input type="hidden" name="pending_items_form" value="posted">
     <table class="table table-condensed table-bordered" id="pending_table">
 	<thead>
 	    <th>Order ID</th>
@@ -60,7 +64,7 @@
 		    <td><?=$product?></td>
 		    <td><?=$description?></td>
 		    <td><?=$amount.'x '.$units?></td>
-		    <td><input type="text" name="price_<?=$id?>" value="<?=$price?>" class="input-small"></td>
+		    <td><input type="text" name="price_<?=$id?>" value="<?=$price?>" class="input-block-level input-small"></td>
 		    <td><?=$date?></td>
 		    <?
 		    if($role == 'admin' || $role == 'buyer') {

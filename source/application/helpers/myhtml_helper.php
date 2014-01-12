@@ -1,5 +1,8 @@
 <?php
 
+/**
+ * Generates the html for the group side menu
+ */
 function loadGroupMenu(){
 	
     $base = base_url()."group/";
@@ -96,6 +99,9 @@ function loadGroupMenu(){
     echo $menuHTML;
 }
 
+/**
+ * Generates the html for the admin side menu
+ */
 function loadAdminMenu(){
 	
     $base = base_url()."admin/";
@@ -179,6 +185,9 @@ function loadAdminMenu(){
     echo $menuHTML;
 }
 
+/**
+ * Generates the html for the group pages' top bar and a common login
+ */
 function loadGroupTopArea(){
     $CI = & get_instance();
     $fullname = $CI->session->userdata('user')->name;
@@ -207,6 +216,10 @@ function loadGroupTopArea(){
     <? }
 }
 
+/**
+ * Generates the html for the group pages' top bar and for the case
+ * where a user logs in through another site with a module direct link
+ */
 function loadRestrictedGroupTopArea(){
     $logout_link = base_url()."group/login/logout";
     
@@ -225,6 +238,9 @@ function loadRestrictedGroupTopArea(){
     <? }
 }
 
+/**
+ * Generates the html for the admin pages' top bar and a common login
+ */
 function loadAdminTopArea(){
     $CI = & get_instance();
     $fullname = $CI->session->userdata('user')->name;
@@ -250,6 +266,11 @@ function loadAdminTopArea(){
     <? }
 }
 
+/**
+ * Displays a title bar inside (and at the top of) the main area of a page
+ * 
+ * @param string $title 
+ */
 function showPageTitle($title){
      if ('1' == '1') { ?>
 	<div style="background-color:#e5e5e5; padding:2px; margin-bottom: 15px">
@@ -260,6 +281,14 @@ function showPageTitle($title){
     <? }
 }
 
+/**
+ * Displays a page with a modal window with a certain title, message. The modal 
+ * window redirects the user to a certain destination where he presses the button.
+ * 
+ * @param string $title
+ * @param string $message
+ * @param string $destination 
+ */
 function showModal($title,$message,$destination=''){
   
     echo "<html><head>

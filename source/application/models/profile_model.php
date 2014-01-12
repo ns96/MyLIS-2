@@ -27,7 +27,11 @@ class Profile_model extends CI_Model {
 	$this->gtable = 'profiles';
     }
     
-    // Updates the user profile
+    /**
+     * Updates the user profile
+     * 
+     * @param array $profile 
+     */
     public function update($profile){
 	// update the users database table now
 	$sql = "UPDATE $this->table SET password = '$profile[password]', name = '$profile[name]', email = '$profile[email]', info = '$profile[info]' WHERE userid = '$profile[userid]'";

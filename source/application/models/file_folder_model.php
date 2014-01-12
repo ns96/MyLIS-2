@@ -41,7 +41,14 @@ class File_folder_model extends CI_Model {
         return $categories;
     }
     
-    // function to add a new category to the category db
+    /**
+     * Adds a new category to the category db
+     * 
+     * @param string $type
+     * @param string $category
+     * @param string $userid
+     * @return int 
+     */
     public function add_category($type, $category, $userid) {
       $sql = "INSERT INTO $this->c_table VALUES('', '$this->table','$type', '$category', '$userid')";
       $this->lisdb->query($sql);
@@ -59,7 +66,12 @@ class File_folder_model extends CI_Model {
         return $records;
     }
     
-    // function to get a file
+    /**
+     * Gets a file
+     * 
+     * @param int $file_id
+     * @return array 
+     */
     public function get_file($file_id) {
       $sql = "SELECT * FROM $this->table WHERE file_id='$file_id'";
       $records = $this->lisdb->query($sql)->result_array();

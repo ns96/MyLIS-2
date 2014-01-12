@@ -51,7 +51,7 @@ $search_target = base_url()."group/orderbook/search";
 		<input type="hidden" name="order_id" value="<?=$order_id?>'">
 		<input type="checkbox" name="myorders" value="yes" checked="checked"> 
 		My orders 
-		<input type="text" name="searchfor" size="35" value="" class="input-block-level input-medium"> 
+		<input type="text" name="searchfor" value="" class="input-block-level input-medium"> 
 		<button type="submit" class="btn btn-primary btn-small">Search</button>
 	    </form>
 	</td>
@@ -168,10 +168,10 @@ $order_link = base_url().'group/orderbook/order_process';
                     </td>
                     <td>
                         <label for="priority" class="control-label">Priority :</label>
-                        <select name="priority" size="1" class="input-small">
+                        <select name="priority" class="input-small">
                             <?
                             if(!empty($priority)) {
-                                echo "<option value=\"$priority\">$priority</option>";
+                                echo "<option value='$priority'>$priority</option>";
                             }
                             ?>
                             <option value="Low">Low</option>
@@ -396,10 +396,9 @@ $order_link = base_url().'group/orderbook/order_process';
 	}
 
 	if($status == 'saved') {
-	    echo '<input type="button" name="butSubmit" value="Submit Order" class="btn" onclick="submitOrder(\'submit\')"/>';
+	    echo '<input type="button" name="butSubmit" value="Submit Order" class="btn btn-primary" onclick="submitOrder(\'submit\')"/>';
 	}
 	?>
-        <button type="submit" class="btn btn-primary btn-small">Order</button>
     </form>
 </div>
 

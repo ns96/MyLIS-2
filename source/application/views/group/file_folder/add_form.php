@@ -64,7 +64,15 @@ if(isset($fileInfo['title'])) {
             </tr>
             <tr>
                 <td>
-                    <label for="cas" class="control-label">Upload file (2MB Max):</label>
+                    <label for="cas" class="control-label">
+			<? 
+			if (!empty($file_id)){
+			    echo "Change file (2MB Max): ";
+			} else {
+			  echo "Upload file (2MB Max):  ";
+			}
+			?>
+		    </label>
                 </td>
                 <td>
                     <?=$urlUploadField?>

@@ -98,7 +98,94 @@ class Lis_Controller extends CI_Controller {
 	    // Load the template
 	    $this->load->view($template,$data);
 	}
+
+    /**
+    * Function to return the date is lis format
+    * 
+    * @return string 
+    */
+    public function get_lis_date() {
+	$now_utc = mktime() + $this->lis_tz[$this->properties['lis.timezone']];
+	$array = getdate($now_utc);
+	$date_now = $array['mon'].'/'.$array['mday'].'/'.$array['year'];
+
+	return $date_now;
+    }
+    
+    /**
+    * function to get the lis time
+    * 
+    * @global type $properties
+    * @global type $lis_tz
+    * @return string 
+    */
+    public function get_lis_time() {
+
+	$now_utc = mktime() + $this->lis_tz[$this->properties['lis.timezone']];
+	$array = getdate($now_utc);
+
+	$hour = $array['hours'];
+	$am_pm = ' am';
+	$min = $array['minutes'];
+
+	if($hour > 12) {
+	    $hour -= 12;
+	    $am_pm = ' pm';
+	}
+	else if($hour == 12) {
+	    $am_pm = ' pm';
+	}
+
+	// add a leading zero to the minutes if needed
+	$minutes = $min;
+	if($min < 10) {
+	    $minutes = '0'.$min;
+	}
+
+	$time_now = $hour.':'.$minutes.$am_pm;
+
+	return $time_now;
+    }
+  
+    /**
+    * Function to get the date and time now
+    * 
+    * @return string 
+    */
+    public function get_lis_date_time() {
+	$date_time = $this->get_lis_date().' '.$this->get_lis_time();
+	return $date_time;
+    }      	
 	
+    /**
+    * Function to get the expire date given a term
+    * 
+    * @param string $activate_date
+    * @param string $status
+    * @param int $term
+    * @return string 
+    */
+    public function get_expire_date($activate_date, $status, $term) {
+	$expire_date = '';
+
+	if($status == 'trial') {
+	    $expire_date = addDaysToDate($activate_date, $this->properties['lis.trial.days']);
+	}
+	else if($term == 1) {
+	    $expire_date = addDaysToDate($activate_date, 365);
+	}
+	else if($term == 2) {
+	    $expire_date = addDaysToDate($activate_date, 730);
+	}
+	else if($term == 3) {
+	    $expire_date = addDaysToDate($activate_date, 1095);
+	}
+	else if($term == 4) {
+	    $expire_date = addDaysToDate($activate_date, 1460);
+	}
+	return $expire_date;
+    }    
+    
 }
 
 /**
@@ -201,11 +288,24 @@ class Group_Controller extends Lis_Controller {
 	 * group action to prevent unauathorized access
          */
 	public function restrict_access(){
-	    if (!$this->session->userdata('user')) {
-		// the user is not logged in
-		$this->load->view('group/login');
+	    if (!$this->session->userdata('user')) { // the user is not logged in
+		$login_target = base_url().'group/login/login_request?group='.$this->properties['lis.account'];
+		
+		// If the user came to MyLIS with a module direct link we need to store the module path to redirect 
+		// him there after the login we should store the place from where the user came from to send him
+		// after the logout
+		$redirect_to = uri_string();
+		if (!empty($redirect_to))
+		    $login_target .= "&redirect=".$redirect_to;
+		
+		$home_link = $this->input->get('home_link');
+		if (!empty($home_link))
+		    $login_target .= "&home=".urlencode($home_link);
+		
+		$data['target'] = $login_target;
+		$this->load->view('group/login',$data);
 		$this->output->_display(); die();
-	    } else {
+	    } else {  // the user is already logged in
 		if ($this->session->userdata('group') == 'admin'){
 		    // The user is logged in as admin but this is a group area
 		    $this->load->view('errors/unauthorized'); 
