@@ -219,8 +219,8 @@ class Admin_Controller extends Lis_Controller {
 	    $users = array();
 	
 	    $userdata = array(
-		'userid'    =>	'johnsmith', 
-		'password'  =>	'john$^&100', 
+		'userid'    =>	$this->config->item('mylis_admin_username'), 
+		'password'  =>	$this->config->item('mylis_admin_password'), 
 		'role'	    =>	'admin', 
 		'name'	    =>	'John Smith',
 		'email'	    =>	'john@mylis.net', 
@@ -228,7 +228,7 @@ class Admin_Controller extends Lis_Controller {
 		'info'	    =>	'Administrator'
 	    );
 	    
-	    $users['johnsmith'] = new User($userdata);
+	    $users[$this->config->item('mylis_admin_username')] = new User($userdata);
 	    return $users;
 	}
 	

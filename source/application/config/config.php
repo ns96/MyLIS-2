@@ -360,7 +360,10 @@ $config['proxy_ips'] = '';
 /*
  * Extra parameters 
  */
-$config['mysql_myroot_userbane'] = 'root';
+$config['mylis_admin_username'] = 'admin';
+$config['mylis_admin_password'] = 'admin';
+
+$config['mysql_myroot_usernane'] = 'root';
 $config['mysql_myroot_password'] = 'mysqladmin';
 
 
