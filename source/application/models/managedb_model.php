@@ -10,106 +10,154 @@
  */
 class Managedb_model extends CI_Model {
     
-    var $lisdb = null;
-    var $lismdb = null;
-    var $lispdb = null;
-    var $lissdb = null;
+    var $link = null;
     
+    var $db_tables_count = array(
+        'lisdb'     =>  0,
+        'lismdb'    =>  0,
+        'lispdb'    =>  0,
+        'lissdb'    =>  0,
+    );
+    //echo "<pre>"; var_dump($this->lispdb); die();
+    var $dbnames = array('lisdb','lismdb','lispdb','lissdb');
     
     public function __construct() {
 	parent::__construct();
-	$this->lisdb = $this->load->database('lisdb',TRUE);
-	$this->lismdb = $this->load->database('lismdb',TRUE);
-	$this->lispdb = $this->load->database('lispdb',TRUE);
-	$this->lissdb = $this->load->database('lissdb',TRUE);
+        $root_name = $this->config->item('mysql_root_username');
+        $root_pwd = $this->config->item('mysql_root_password');
+        $this->link = mysql_connect('localhost', $root_name, $root_pwd);
+        if (!$this->link) {
+                die('Could not connect: ' . mysql_error());
+        }
+	$this->count_database_tables();
     }
     
+    /**
+     * Counts the number of tables in each MyLIS database
+     */
+    public function count_database_tables(){
+            foreach($this->dbnames as $dbname){
+                $sql = "SHOW DATABASES LIKE 'mylis0_$dbname'";
+                $records = mysql_query($sql);
+                $count = mysql_num_rows($records);
+                if ($count == 1) {
+                        $this->{$dbname} = $this->load->database($dbname,TRUE);
+                        $sql = "SELECT COUNT(*) AS count_tables FROM information_schema.TABLES WHERE TABLE_SCHEMA='mylis0_$dbname'";
+                        $records = mysql_query($sql);
+                        $row = mysql_fetch_array($records);
+                        $this->db_tables_count[$dbname] = $row['count_tables'];
+                }
+            }
+    }
+    
+    /**
+     * Checks if each MyLIS database has been created (itself and its tables)
+     * 
+     * @return int 0 = not created, 1 = created without tables, 2 = created with tables
+     */
+    public function get_db_state(){
+        foreach($this->dbnames as $dbname){
+            if ($this->db_tables_count[$dbname] > 0)
+                $state[$dbname] = 2;
+            elseif (!empty($this->{$dbname}))
+                $state[$dbname] = 1;
+            else 
+                $state[$dbname] = 0;
+        }
+        return $state;
+    }
+        
+    /**
+     * Reads the names of all the mysql databases
+     * @return type
+     */
     public function current_databases(){
 	$sql = "SHOW DATABASES";
-	$databases = $this->lisdb->query($sql)->result_array();
+	$records = mysql_query($sql);
+	$databases = array();
+	while ($row = mysql_fetch_assoc($records)) {
+		$databases[] = $row;
+	}
 	return $databases;
     }
     
     public function get_db_tables($db){
-	$sql = "SHOW TABLE STATUS FROM $db";
-	$tables = $this->lisdb->query($sql)->result_array();
+        $sql = "SHOW TABLE STATUS FROM $db";
+        $records = mysql_query($sql);
+        while ($row = mysql_fetch_assoc($records)) {
+		$tables[] = $row;
+	}
 	return $tables;
     }
     
     public function get_table_status($account_id){
-	$this->lisdb = $this->load->database('lisdb',TRUE);
 	$sql = "SHOW TABLE STATUS LIKE '".$account_id."_%'";
-	$statusInfo = $this->lisdb->query($sql)->result_array();
+	$results = mysql_query($sql);
+        $statusInfo = mysql_fetch_array($results);
 	return $statusInfo;
     }
     
     public function create_db($db){
-	$sql = "CREATE DATABASE $db";
-	$this->lisdb->query($sql);
+	$sql = "CREATE DATABASE mylis0_$db";
+        mysql_query($sql);
     }
     
-    public function create_lisdb_tables($db){
+    public function create_lisdb_tables(){
 	$this->initialize_table_names();
 	$aname = 'test_';  // account name that is appended to the table
 	foreach ($this->lis_tables as $key => $value) {
 	    if($key != 'lismessages') {
-		$this->create_table(2,$db,$key,$value,$aname);
+		$this->create_table(2,'lisdb',$key,$value,$aname);
 	    }
 	}
 	// create the account wide tables "lismessages, etc..."
-	$this->create_table(3,$db,null,$this->lis_tables['lismessages']);
+	$this->create_table(3,'lisdb',null,$this->lis_tables['lismessages']);
     }
     
-    public function create_lismdb_tables($db){
+    public function create_lismdb_tables(){
 	$this->initialize_table_names();
 	foreach ($this->lism_tables as $key => $value) {
-	    $this->create_table(1,$db,$key,$value);
+	    $this->create_table(1,'lismdb',$key,$value);
 	}
     }
     
-    public function create_lispdb_tables($db){
+    public function create_lispdb_tables(){
 	$this->initialize_table_names();
 	foreach ($this->lisp_tables as $key => $value) {
-	    $this->create_table(1,$db,$key,$value);
+	    $this->create_table(1,'lispdb',$key,$value);
 	}
     }
     
-    public function create_lissdb_tables($db){
+    public function create_lissdb_tables(){
 	$this->initialize_table_names();
 	foreach ($this->liss_tables as $key => $value) {
-	    $this->create_table(1,$db,$key,$value);
+	    $this->create_table(1,'lissdb',$key,$value);
 	}
     }
     
+    /**
+     * Creates a database table
+     * 
+     * @param int $mode 2 = create an account table, 3 = create lismessage table (common to all accounts), 1 = other cases
+     * @param string $db the short name of the database (e.g 'lisdb' for 'mylis0_lisdb)
+     * @param string $key the name of the table
+     * @param type $value
+     * @param string $account
+     */
     public function create_table($mode,$db,$key,$value=null,$account=null){
-	
-	switch($db){
-	    case 'LISMDB':
-		$this->database = $this->lismdb;
-		break;
-	    case 'LISPDB':
-		$this->database = $this->lispdb;
-		break;
-	    case 'LISSDB':
-		$this->database = $this->lissdb;
-		break;
-	    case 'LISDB':
-		$this->database = $this->lisdb;
-		break;
-	}
-	
+        mysql_select_db("mylis0_".$db) or die(mysql_error()); 
 	switch($mode){
 	    case 1:
 		$sql = "CREATE TABLE IF NOT EXISTS $key ($value)";
-		$this->database->query($sql);
+		mysql_query($sql);                    
 		break;
 	    case 2:
 		$sql  = 'CREATE TABLE IF NOT EXISTS '.$account."$key ($value)";
-		$this->database->query($sql);
+		mysql_query($sql);
 		break;
 	    case 3:
 		$sql  = 'CREATE TABLE IF NOT EXISTS lismessages ('.$value.')';
-		$this->database->query($sql);
+		mysql_query($sql);
 		break;
 	}
 	
@@ -123,11 +171,13 @@ class Managedb_model extends CI_Model {
      * @return string 
      */
     public function get_MyLIS_property($account_id, $key_id) {
+        mysql_select_db("mylis0_lisdb") or die(mysql_error()); 
 	$table = $account_id.'_properties';
 	$sql = "SELECT value FROM $table WHERE key_id = '$key_id'";
-	$records = $this->lisdb->query($sql)->result_array();
+	$results = mysql_query($sql);
+        $record = mysql_fetch_array($resutls);
 
-	return $records[0]['value'];
+	return $record['value'];
     }
     
     /**
@@ -137,11 +187,11 @@ class Managedb_model extends CI_Model {
      */
     public function create_MyLIS_tables($account_id) {
 	$this->initialize_table_names();
-
+        mysql_select_db("mylis0_lisdb") or die(mysql_error()); 
 	foreach ($this->lis_tables as $key => $value) {
 	    if($key != 'lismessages') {
 		$sql  = 'CREATE TABLE IF NOT EXISTS '.$account_id."_$key ($value)";
-		$this->lisdb->query($sql);
+		mysql_query($sql);
 	    }
 	}
     }

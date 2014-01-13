@@ -25,11 +25,11 @@ class Managedb extends Admin_Controller {
 	
 	$this->load->model('managedb_model');
 	$databaseList = $this->managedb_model->current_databases();
-	
-	
+	$db_state = $this->managedb_model->get_db_state();
 	$data['page_title'] = "Manage DB";
 	$data['home_link'] = encodeUrl($this->properties['home.url']);
 	$data['databases'] = $databaseList;
+        $data['db_state'] = $db_state;
 	$this->load_view('admin/managedb/main',$data);
     }
     
@@ -52,7 +52,8 @@ class Managedb extends Admin_Controller {
      * Manages the creation of a certain type MyLIS database
      */
     public function create(){
-	$db = 'mylis0_'.$this->input->post('db');
+	$db = $this->input->post('db');
+        $full_db_name = 'mylis0_'.$db;
 	$tables = $this->input->post('tables');
 
 	// load the names of the databases that are already in the database
@@ -65,15 +66,16 @@ class Managedb extends Admin_Controller {
 	    $dbname = $array['Database'];
 	    $dbnames[$dbname] = "db...";
 	}
-
+        
 	// check to see if the dn doesn't already exist
-	if(isset($dbnames[$db]) && $tables == 'yes') {
-	    $this->create_tables($db);
-	} else if(!isset($dbnames[$db])){ // create database
+        $method_name = "create_".$db."_tables";
+	if(isset($dbnames[$full_db_name]) && $tables == 'yes') {
+	    $this->managedb_model->$method_name();
+	} else if(!isset($dbnames[$full_db_name])){ // create database
 	    $this->managedb_model->create_db($db);
 
 	    if($tables == 'yes') {
-		$this->create_tables($db);
+                $this->managedb_model->$method_name();
 	    }
 	}
 	redirect('admin/managedb');
@@ -85,7 +87,7 @@ class Managedb extends Admin_Controller {
      * @param string $db The database id
      */
     public function create_tables($db) {
-	$this->initialize_table_names();
+	$this->managedb_model->initialize_table_names();
 
 	if(strstr($db, 'LISMDB')) {
 	    $this->managedb_model->create_lismdb_tables($db);

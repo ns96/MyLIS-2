@@ -4,6 +4,13 @@
 // print out the current databases
 $info_link = base_url().'admin/managedb/info/';
 $target = base_url().'admin/managedb/create';
+$dbnames = array('lisdb','lismdb','lispdb','lissdb');
+$dbtitles = array(
+    'lismdb'     =>  'management',
+    'lispdb'    =>  'profiles',
+    'lissdb'    =>  'services',
+    'lisdb'     =>  'accounts',
+ );
 ?>
 
 <div class="formWrapper">
@@ -43,73 +50,34 @@ $target = base_url().'admin/managedb/create';
 	</tbody>
     </table>
     <table id="dblist_table">
+        <? foreach($dbnames as $dbname) { ?>
 	<tr>
-	    <td>Database :  <b>LISMDB</b> (management)</td>
+            <td>Database :  <b><?=strtoupper($dbname)?></b> (<?=$dbtitles[$dbname]?>)</td>
 	    <td>
 		<form action="<?=$target?>" method="post" class="inline-form">
-		    <input type="hidden" name="db" value="LISMDB">
+		    <input type="hidden" name="db" value="<?=$dbname?>">
 		    <input type="hidden" name="tables" value="no">
-		    <button type="submit" class="btn btn-primary btn-small">Create</button>
+                    <?
+                        if ($db_state[$dbname] == 0)
+                            echo "<button type='submit' class='btn btn-primary btn-small'>Create</button>";
+                        else
+                            echo "<button type='submit' class='btn btn-small' disabled>Create</button>";
+                    ?>
 		</form>
 	    </td>
 	    <td>
 		<form action="<?=$target?>" method="post" class="inline-form">
-		    <input type="hidden" name="db" value="LISMDB">
+		    <input type="hidden" name="db" value="<?=$dbname?>">
 		    <input type="hidden" name="tables" value="yes">
-		    <button type="submit" class="btn btn-primary btn-small">+ tables</button>
+                    <?
+                        if ($db_state[$dbname] < 2)
+                            echo "<button type='submit' class='btn btn-primary btn-small'>+ tables</button>";
+                        else
+                            echo "<button type='submit' class='btn btn-small' disabled>+ tables</button>";
+                    ?>
 		</form>
 	    </td>
 	</tr>
-	<tr>
-	    <td>Database :  <b>LISPDB</b> (profiles)</td>
-	    <td>
-		<form action="<?=$target?>" method="post" class="inline-form">
-		    <input type="hidden" name="db" value="LISPDB">
-		    <input type="hidden" name="tables" value="no">
-		    <button type="submit" class="btn btn-primary btn-small">Create</button>
-		</form>
-	    </td>
-	    <td>
-		<form action="<?=$target?>" method="post" class="inline-form">
-		    <input type="hidden" name="db" value="LISPDB">
-		    <input type="hidden" name="tables" value="yes">
-		    <button type="submit" class="btn btn-primary btn-small">+ tables</button>
-		</form> 
-	    </td>
-	</tr>
-	<tr>
-	    <td>Database :  <b>LISSDB</b> (service)</td>
-	    <td>
-		<form action="<?=$target?>" method="post" class="inline-form">
-		    <input type="hidden" name="db" value="LISSDB">
-		    <input type="hidden" name="tables" value="no">
-		    <button type="submit" class="btn btn-primary btn-small">Create</button>
-		</form>
-	    </td>
-	    <td>
-		<form action="<?=$target?>" method="post" class="inline-form">
-		    <input type="hidden" name="db" value="LISSDB">
-		    <input type="hidden" name="tables" value="yes">
-		    <button type="submit" class="btn btn-primary btn-small">+ tables</button>
-		</form> 
-	    </td>
-	</tr>
-	<tr>
-	    <td>Database :  <b>LISDB</b> (accounts)</td>
-	    <td>
-		<form action="<?=$target?>" method="post" class="inline-form">
-		    <input type="hidden" name="db" value="LISDB">
-		    <input type="hidden" name="tables" value="no">
-		    <button type="submit" class="btn btn-primary btn-small">Create</button>
-		</form>
-	    </td>
-	    <td>
-		<form action="<?=$target?>" method="post" class="inline-form">
-		    <input type="hidden" name="db" value="LISDB">
-		    <input type="hidden" name="tables" value="yes">
-		    <button type="submit" class="btn btn-primary btn-small">+ tables</button>
-		</form>
-	    </td>
-	</tr>
+        <? } ?>
     </table>
 </div>

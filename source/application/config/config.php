@@ -357,6 +357,12 @@ $config['rewrite_short_tags'] = FALSE;
 */
 $config['proxy_ips'] = '';
 
+/*
+ * Extra parameters 
+ */
+$config['mysql_myroot_userbane'] = 'root';
+$config['mysql_myroot_password'] = 'mysqladmin';
+
 
 /* End of file config.php */
 /* Location: ./application/config/config.php */
