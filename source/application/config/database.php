@@ -53,6 +53,22 @@ $hostname = 'localhost';
 $username = 'dname';
 $password = 'dpass';
 
+$db['mysql1']['hostname'] = $hostname;
+$db['mysql1']['username'] = $username;
+$db['mysql1']['password'] = $password;
+$db['mysql1']['database'] = '';
+$db['mysql1']['dbdriver'] = 'mysql';
+$db['mysql1']['dbprefix'] = '';
+$db['mysql1']['pconnect'] = FALSE;
+$db['mysql1']['db_debug'] = TRUE;
+$db['mysql1']['cache_on'] = FALSE;
+$db['mysql1']['cachedir'] = '';
+$db['mysql1']['char_set'] = 'utf8';
+$db['mysql1']['dbcollat'] = 'utf8_general_ci';
+$db['mysql1']['swap_pre'] = '';
+$db['mysql1']['autoinit'] = TRUE;
+$db['mysql1']['stricton'] = FALSE;
+
 $db['lisdb']['hostname'] = $hostname;
 $db['lisdb']['username'] = $username;
 $db['lisdb']['password'] = $password;
