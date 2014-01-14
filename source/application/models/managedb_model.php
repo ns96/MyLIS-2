@@ -22,7 +22,7 @@ class Managedb_model extends CI_Model {
         'lispdb'    =>  0,
         'lissdb'    =>  0,
     );
-    
+     
     var $dbnames = array('lisdb','lismdb','lispdb','lissdb');
     
     public function __construct() {

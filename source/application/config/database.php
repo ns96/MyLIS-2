@@ -47,7 +47,7 @@
 
 // $active_group = 'default';
 $active_record = TRUE;
-
+ 
 // change these variables to the actual values
 $hostname = 'localhost';
 $username = 'dname';
