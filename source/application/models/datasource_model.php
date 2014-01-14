@@ -7,7 +7,7 @@
  * @author Nathan Stevens
  * @author Alexandros Gougousis 
  */
-class datasource {
+class Datasource_model extends CI_Model {
   var $properties = null;
   var $user = null;
   var $account_id = null;
@@ -68,7 +68,7 @@ class datasource {
    */
   function add_messages() {
     $table = $this->account_id.'_messages';
-    $date = $CI->get_lis_date_time();
+    $date = $this->CI->get_lis_date_time();
     $text1 = 'Some message of interest to the group in general dealing with chemicals';
     $text2 = 'Message about article which talks about the nature of the human animal';
     $text3 = 'Science article highlighting the discovery of intelligent life<br>found in the oceans of on an ice moon';
@@ -108,7 +108,7 @@ class datasource {
       $name2 = 'Chemical '.$i*rand(1, 3);
       $units = rand(1, 500).' ml';
       $user = 'user'.rand(1, 4);
-      $cas = 'ABC-0'.$amount.'00-0'.$i;
+      $cas = 'ABC-000-0'.$i;
       $loc = $locations[rand(0,3)];
       
       $sql .= "('', '$cas', '$name1', 'Aldrich', '3456-5ML', '1', '$units', '$date', 'instock', '$date', '500/C10H25N5', 'Organic', '?', 'None', '$user', 'myadmin'),";
@@ -538,7 +538,7 @@ class datasource {
         } else {
           $userid = 'user'.rand(1,4);
         }
-        
+        $description = "Some description goes here";
         $sql = "INSERT INTO $ftable VALUES('', 'url','$description', '$url', '$table', '0', '0', '$userid', '$userid')";
         $this->lisdb->query($sql);
         $file_id = $this->lisdb->insert_id();

@@ -72,6 +72,7 @@ class Managedb extends Admin_Controller {
 	if(isset($dbnames[$full_db_name]) && $tables == 'yes') {
 	    $this->managedb_model->$method_name();
 	} else if(!isset($dbnames[$full_db_name])){ // create database
+	    
 	    $this->managedb_model->create_db($db);
 
 	    if($tables == 'yes') {

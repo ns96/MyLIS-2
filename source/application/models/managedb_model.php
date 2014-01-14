@@ -177,10 +177,9 @@ class Managedb_model extends CI_Model {
      * @return string 
      */
     public function get_MyLIS_property($account_id, $key_id) {
-        mysql_select_db("mylis0_lisdb") or die(mysql_error()); 
 	$table = $account_id.'_properties';
 	$sql = "SELECT value FROM $table WHERE key_id = '$key_id'";
-	$records = $this->mysql->query($sql)->result_array();
+	$records = $this->lisdb->query($sql)->result_array();
 
 	return $records[0]['value'];
     }
@@ -191,12 +190,11 @@ class Managedb_model extends CI_Model {
      * @param string $account_id 
      */
     public function create_MyLIS_tables($account_id) {
-	$this->initialize_table_names();
-        mysql_select_db("mylis0_lisdb") or die(mysql_error()); 
+	$this->initialize_table_names(); 
 	foreach ($this->lis_tables as $key => $value) {
 	    if($key != 'lismessages') {
 		$sql  = 'CREATE TABLE IF NOT EXISTS '.$account_id."_$key ($value)";
-		$this->mysql->query($sql);
+		$this->lisdb->query($sql);
 	    }
 	}
     }

@@ -269,8 +269,8 @@ class Accounts extends Admin_Controller {
 	if($this->account_model->account_exists($account_id)) {
 	    $dir = $this->admin_filemanager->move_to_trash($account_id);
 	    // dump and then remove tables from LISDB
-	    $this->managedb_model->remove_MyLIS_tables($account_id);
-	    $this->managedb_model->remove_MyLIS_users($account_id);
+	    $this->account_model->remove_MyLIS_tables($account_id);
+	    $this->account_model->remove_MyLIS_users($account_id);
 	}
 
 	$data['account_id'] = $account_id;
@@ -357,11 +357,12 @@ class Accounts extends Admin_Controller {
 	$time_zone = 'UTC';
 	$notes = 'Sandbox User Account';
 	$group_pi = "$fname $mi. $lname";
-	$name = $this->user->name;
+	$name = $this->userobj->name;
 	$department_id = ''; // blank on purpose
-	$manager_id = $this->user->userid;
+	$manager_id = $this->userobj->userid;
 	$activate_code = $this->get_activation_code();
 	$login_count = 0;
+	$network_ids = '';
 
 	if(!empty($notes)) {
 	    $notes = $name.' ('.$this->get_lis_date_time().") >>Account Created\n$notes\n";
@@ -378,8 +379,8 @@ class Accounts extends Admin_Controller {
 	    $dir = $this->admin_filemanager->move_to_trash($account_id);
 	    $login_count = $this->managedb_model->get_MyLIS_property($account_id, 'login.count');
 	    // dump and then remove tables from LISDB
-	    $this->managedb_model->remove_MyLIS_tables($account_id);
-	    $this->managedb_model->remove_MyLIS_users($account_id);
+	    $this->account_model->remove_MyLIS_tables($account_id);
+	    $this->account_model->remove_MyLIS_users($account_id);
 	} else {
 	    $login_count = 0;
 	}
@@ -400,7 +401,7 @@ class Accounts extends Admin_Controller {
 	$data['password1'] = $password1;	    $data['group_pi'] = $group_pi;
 	$data['keywords'] = $keywords;		    $data['description'] = $description;
 	$data['piurl'] = $piurl;
-
+	
 	$this->account_model->add_account($data);
 
 	// create the tables associated wthis account
