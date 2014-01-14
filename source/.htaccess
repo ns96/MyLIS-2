@@ -1,4 +1,8 @@
-RewriteEngine on
+RewriteEngine On
+
+#set the rewrite base incase we running in a users public_html directory 
+RewriteBase /~nathan/MyLIS-2/source/
+
 RewriteCond $1 !^(robots\.txt|css)
 RewriteCond %{REQUEST_FILENAME} !-f
 RewriteCond %{REQUEST_FILENAME} !-d

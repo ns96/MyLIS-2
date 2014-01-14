@@ -17,14 +17,16 @@ class Login extends Admin_Controller {
          */
 	public function index()
 	{
+            $data['page_title'] = 'MyLIS Administrator Login';
+            
 	    if ($this->session->userdata('userid')) {
 		if (!($this->session->userdata('role') == 'admin')){
 		    $this->load_view('errors/unauthorized'); 
 		} else {
-		    redirect('admin/main');
+		    redirect('admin/main', $data);
 		}
 	    } else {
-		$this->load->view('admin/login'); 
+		$this->load->view('admin/login', $data); 
 	    }
 	}
 	

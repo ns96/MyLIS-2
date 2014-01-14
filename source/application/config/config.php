@@ -363,8 +363,10 @@ $config['proxy_ips'] = '';
 $config['mylis_admin_username'] = 'admin';
 $config['mylis_admin_password'] = 'admin';
 
-$config['mysql_myroot_username'] = 'root';
-$config['mysql_myroot_password'] = 'mysqladmin';
+$config['mysql_myroot_username'] = 'dname';
+$config['mysql_myroot_password'] = 'dpass';
+$config['mysql_hostname'] = 'localhost';
+
 
 
 /* End of file config.php */

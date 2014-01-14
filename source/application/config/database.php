@@ -50,8 +50,8 @@ $active_record = TRUE;
 
 // change these variables to the actual values
 $hostname = 'localhost';
-$username = 'root';
-$password = 'mysqladmin';
+$username = 'dname';
+$password = 'dpass';
 
 $db['lisdb']['hostname'] = $hostname;
 $db['lisdb']['username'] = $username;

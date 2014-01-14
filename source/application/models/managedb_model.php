@@ -25,11 +25,15 @@ class Managedb_model extends CI_Model {
 	parent::__construct();
         $root_name = $this->config->item('mysql_root_username');
         $root_pwd = $this->config->item('mysql_root_password');
-        $this->link = mysql_connect('localhost', $root_name, $root_pwd);
+        $hostname = $this->config->item('mysql_hostname');
+        
+        $this->link = mysql_connect($hostname, $root_name, $root_pwd);
+        
         if (!$this->link) {
                 die('Could not connect: ' . mysql_error());
         }
-	$this->count_database_tables();
+	
+        $this->count_database_tables();
     }
     
     /**
