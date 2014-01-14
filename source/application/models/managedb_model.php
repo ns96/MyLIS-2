@@ -22,7 +22,7 @@ class Managedb_model extends CI_Model {
         'lispdb'    =>  0,
         'lissdb'    =>  0,
     );
-     
+    
     var $dbnames = array('lisdb','lismdb','lispdb','lissdb');
     
     public function __construct() {
@@ -90,6 +90,7 @@ class Managedb_model extends CI_Model {
     public function create_db($db){
 	$sql = "CREATE DATABASE mylis0_$db";
         $this->mysql->query($sql);
+	$this->{$db} = $this->load->database($db,TRUE);
     }
     
     public function create_lisdb_tables(){
@@ -135,19 +136,34 @@ class Managedb_model extends CI_Model {
      * @param string $account
      */
     public function create_table($mode,$db,$key,$value=null,$account=null){
-        mysql_select_db("mylis0_".$db) or die(mysql_error()); 
+        
+	switch ($db) {
+		case 'lisdb':
+			$database = $this->lisdb;
+			break;
+		case 'lismdb':
+			$database = $this->lismdb;
+			break;
+		case 'lispdb':
+			$database = $this->lispdb;
+			break;
+		case 'lissdb':
+			$database = $this->lissdb;
+			break;
+	} 
+	
 	switch($mode){
 	    case 1:
 		$sql = "CREATE TABLE IF NOT EXISTS $key ($value)";
-		$this->mysql->query($sql);                  
+		$database->query($sql);                  
 		break;
 	    case 2:
 		$sql  = 'CREATE TABLE IF NOT EXISTS '.$account."$key ($value)";
-		$this->mysql->query($sql);
+		$database->query($sql);
 		break;
 	    case 3:
 		$sql  = 'CREATE TABLE IF NOT EXISTS lismessages ('.$value.')';
-		$this->mysql->query($sql);
+		$database->query($sql);
 		break;
 	}
 	
