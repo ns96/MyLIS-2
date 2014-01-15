@@ -50,8 +50,8 @@ $active_record = TRUE;
  
 // change these variables to the actual values
 $hostname = 'localhost';
-$username = 'dname';
-$password = 'dpass';
+$username = 'nathan';
+$password = 'none';
 
 $db['mysql1']['hostname'] = $hostname;
 $db['mysql1']['username'] = $username;

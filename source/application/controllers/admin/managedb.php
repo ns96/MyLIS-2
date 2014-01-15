@@ -57,21 +57,13 @@ class Managedb extends Admin_Controller {
 	$tables = $this->input->post('tables');
 
 	// load the names of the databases that are already in the database
-	$dbnames = array();
-
-	$this->load->model('managedb_model');
-	$databaseList = $this->managedb_model->current_databases();
-
-	foreach($databaseList as $array) {
-	    $dbname = $array['Database'];
-	    $dbnames[$dbname] = "db...";
-	}
+	$current_dbnames = $this->get_current_dbnames();
         
 	// check to see if the dn doesn't already exist
         $method_name = "create_".$db."_tables";
-	if(isset($dbnames[$full_db_name]) && $tables == 'yes') {
+	if(isset($current_dbnames[$full_db_name]) && $tables == 'yes') {
 	    $this->managedb_model->$method_name();
-	} else if(!isset($dbnames[$full_db_name])){ // create database
+	} else if(!isset($current_dbnames[$full_db_name])){ // create database
 	    
 	    $this->managedb_model->create_db($db);
 
@@ -83,6 +75,53 @@ class Managedb extends Admin_Controller {
     }
     
     /**
+     * Add all databases and tables in one go
+     */
+    public function create_all() {
+        // load the names of the databases that are already in the database
+    	$current_dbnames = $this->get_current_dbnames();
+        
+        // get the names of the list databases;
+        $dbnames = $this->managedb_model->get_dbnames();
+        
+        foreach($dbnames as $dbname) {
+            $full_db_name = 'mylis0_'.$dbname;
+            
+            echo "Creating Database: $dbname <br>";
+            
+            if(!isset($current_dbnames[$full_db_name])) {
+                $this->managedb_model->create_db($dbname);
+                $this->create_tables($dbname);
+            }
+        }
+        
+        redirect('admin/managedb');
+    }
+    
+    /**
+     * Delete all the LIS databases. This funtion is intended for use
+     * during development only, and should be commented out in production
+     * system
+     */
+    public function delete_all() {
+        // load the names of the databases that are already in the database
+    	$current_dbnames = $this->get_current_dbnames();
+        
+        // get the names of the list databases;
+        $dbnames = $this->managedb_model->get_dbnames();
+        
+        foreach($dbnames as $dbname) {
+            $full_db_name = 'mylis0_'.$dbname;
+            
+            if(isset($current_dbnames[$full_db_name])) {
+                $this->managedb_model->delete_db($dbname);
+            }
+        }
+        
+        redirect('admin/managedb');
+    }
+    
+    /**
      * Adds tables to a certain MyLIS database
      * 
      * @param string $db The database id
@@ -90,16 +129,16 @@ class Managedb extends Admin_Controller {
     public function create_tables($db) {
 	$this->managedb_model->initialize_table_names();
 
-	if(strstr($db, 'LISMDB')) {
+	if(stristr($db, 'LISMDB')) {
 	    $this->managedb_model->create_lismdb_tables($db);
 	}
-	else if(strstr($db, 'LISPDB')) {
+	else if(stristr($db, 'LISPDB')) {
 	    $this->managedb_model->create_lispdb_tables($db);
 	}
-	else if(strstr($db, 'LISSDB')) {
+	else if(stristr($db, 'LISSDB')) {
 	    $this->managedb_model->create_lissdb_tables($db);
 	}
-	else if(strstr($db, 'LISDB')) {
+	else if(stristr($db, 'LISDB')) {
 	    $this->managedb_model->create_lisdb_tables($db);
 	}
     }
@@ -118,6 +157,21 @@ class Managedb extends Admin_Controller {
 	$this->load_view('admin/managedb/account_db',$data);
     }
     
-    
+    /**
+     * load the names of all database current in the database
+     */
+    private function get_current_dbnames() {
+        $dbnames = array();
+
+	$this->load->model('managedb_model');
+	$databaseList = $this->managedb_model->current_databases();
+
+	foreach($databaseList as $array) {
+	    $dbname = $array['Database'];
+	    $dbnames[$dbname] = "db...";
+	}
+        
+        return $dbnames;
+    }
     
 }

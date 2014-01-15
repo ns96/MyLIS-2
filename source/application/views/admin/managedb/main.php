@@ -4,6 +4,8 @@
 // print out the current databases
 $info_link = base_url().'admin/managedb/info/';
 $target = base_url().'admin/managedb/create';
+$target_create_all = base_url().'admin/managedb/create_all';
+$target_delete_all = base_url().'admin/managedb/delete_all';
 $dbnames = array('lisdb','lismdb','lispdb','lissdb');
 $dbtitles = array(
     'lismdb'     =>  'management',
@@ -50,6 +52,20 @@ $dbtitles = array(
 	</tbody>
     </table>
     <table id="dblist_table">
+        <tr>
+            <td>Bulk Database Operations "<b>Development Mode Only</b>"</td>
+	    <td>
+		<form action="<?=$target_create_all?>" method="post" class="inline-form">
+                    <button type='submit' class='btn btn-primary btn-small'>Create All</button>
+		</form>
+	    </td>
+	    <td>
+		<form action="<?=$target_delete_all?>" method="post" class="inline-form">
+                    <button type='submit' class='btn btn-primary btn-small'>Delete All</button>
+		</form>
+	    </td>
+        </tr>
+        
         <? foreach($dbnames as $dbname) { ?>
 	<tr>
             <td>Database :  <b><?=strtoupper($dbname)?></b> (<?=$dbtitles[$dbname]?>)</td>

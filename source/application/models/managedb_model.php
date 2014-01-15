@@ -87,10 +87,19 @@ class Managedb_model extends CI_Model {
 	return $statusInfo;
     }
     
+    public function get_dbnames() {
+        return $this->dbnames;
+    }
+    
     public function create_db($db){
 	$sql = "CREATE DATABASE mylis0_$db";
         $this->mysql->query($sql);
 	$this->{$db} = $this->load->database($db,TRUE);
+    }
+    
+    public function delete_db($db) {
+        $sql = "DROP DATABASE mylis0_$db";
+        $this->mysql->query($sql);
     }
     
     public function create_lisdb_tables(){
