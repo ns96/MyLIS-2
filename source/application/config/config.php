@@ -358,12 +358,15 @@ $config['rewrite_short_tags'] = FALSE;
 $config['proxy_ips'] = '';
 
 /*
- * Extra parameters 
+ * MYLIS -- The default admin username and password 
  */
 $config['mylis_admin_username'] = 'admin';
 $config['mylis_admin_password'] = 'admin';
 
-
+/*
+ * MYLIS -- The delete code needed to permernently remove an account and all files
+ */
+$config['remove_code'] = 'XFG37';
 
 /* End of file config.php */
 /* Location: ./application/config/config.php */

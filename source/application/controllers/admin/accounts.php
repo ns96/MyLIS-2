@@ -11,12 +11,15 @@ class Accounts extends Admin_Controller {
     private $userobj = null;
     private $gtypes = null;
     private $disciplines = null;
-    private $remove_code = 'XFG37'; // must be entered for account to be deleted
+    private $remove_code = null;
     private $version = '1.0';
     
     public function __construct() {
 	parent::__construct();
-	$this->userobj = $this->session->userdata('user');
+	
+        $this->remove_code = $this->config->item('remove_code');
+        
+        $this->userobj = $this->session->userdata('user');
 	
 	$this->gtypes = array('Select One', 'Academia', 'Government', 'Research Instititue', 'Company');
 
