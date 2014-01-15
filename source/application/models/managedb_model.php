@@ -98,7 +98,7 @@ class Managedb_model extends CI_Model {
     }
     
     public function delete_db($db) {
-        $sql = "DROP DATABASE mylis0_$db";
+        $sql = "DROP DATABASE IF EXISTS mylis0_$db";
         $this->mysql->query($sql);
     }
     

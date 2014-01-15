@@ -104,18 +104,11 @@ class Managedb extends Admin_Controller {
      * system
      */
     public function delete_all() {
-        // load the names of the databases that are already in the database
-    	$current_dbnames = $this->get_current_dbnames();
-        
-        // get the names of the list databases;
+        $this->load->model('managedb_model');
         $dbnames = $this->managedb_model->get_dbnames();
         
         foreach($dbnames as $dbname) {
-            $full_db_name = 'mylis0_'.$dbname;
-            
-            if(isset($current_dbnames[$full_db_name])) {
-                $this->managedb_model->delete_db($dbname);
-            }
+            $this->managedb_model->delete_db($dbname);
         }
         
         redirect('admin/managedb');
