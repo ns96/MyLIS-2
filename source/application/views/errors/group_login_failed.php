@@ -9,7 +9,7 @@ $title = "MyLIS Admin Login Error";
   echo "<center>";
   echo "<h2>";
   echo "Invalid username or password <br>";
-  echo "To try again, click <a href='".base_url()."group/login?group=".$groupname."'>here</a>";
+  echo "To try again, return to the login page using your browser's 'Back' button!";
   echo "</h2>";
   echo "</center>";
   echo "</body>";

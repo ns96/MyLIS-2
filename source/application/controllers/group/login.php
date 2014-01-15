@@ -49,7 +49,8 @@ class Login extends Group_Controller {
                         
 		    // If the user credentials were not valid
 		    if(empty($user)) {
-			$this->load_view('errors/group_login_failed');
+			$data1['groupname'] = $this->input->get('group');
+			$this->load->view('errors/group_login_failed',$data1);
 		    } else {  
 		    // If the credentials were valid
 			//  If the account has not been expired
@@ -87,10 +88,8 @@ class Login extends Group_Controller {
 			}
 		    }
 		} else { 
-		    $data1['groupname'] = $this->properties['lis.account'];
-		    $data['login_error'] = $this->load->view('errors/group_login_failed',$data1,TRUE);
-                    $data['target'] = base_url().'group/login/login_request?group='.$this->properties['lis.account'];
-                    $this->load->view('group/login',$data);
+		    $data1['groupname'] = $this->input->get('group');
+		    $this->load->view('errors/group_login_failed',$data1);
 		}
 	    } else {
 		// If this is an already logged in user
