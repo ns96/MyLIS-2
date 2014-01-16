@@ -104,6 +104,7 @@ class Managedb extends Admin_Controller {
      * system
      */
     public function delete_all() {
+        // first delete the databases
         $this->load->model('managedb_model');
         $dbnames = $this->managedb_model->get_dbnames();
         
@@ -111,7 +112,14 @@ class Managedb extends Admin_Controller {
             $this->managedb_model->delete_db($dbname);
         }
         
-        redirect('admin/managedb');
+        // now delete any of the accounts directories
+        $params['properties'] = $this->properties;
+	$params['user'] = $this->userobj;
+	$this->load->model('admin_filemanager');
+	$this->admin_filemanager->initialize($params);
+	$this->admin_filemanager->delete_all();
+        
+        //redirect('admin/managedb');
     }
     
     /**
