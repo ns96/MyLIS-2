@@ -203,8 +203,8 @@ class Admin_Controller extends Lis_Controller {
 	    $conf_location= '/admin/conf/lisadmin.ini';
 	    $this->properties = $this->load_properties($conf_location); 
 	    // Add some extra configuration data
-	    $this->properties['version_number'] = "1.31";
-	    $this->properties['version'] = $this->properties['version_number']." 01/30/2012";
+	    $this->properties['version_number'] = "2.0";
+	    $this->properties['version'] = $this->properties['version_number']." 01/18/2014";
 	    $this->properties['home.directory'] = CIPATH."/admin/";
 	    $this->properties['home.url'] = base_url().'admin/main';
 	}
@@ -222,8 +222,8 @@ class Admin_Controller extends Lis_Controller {
 		'userid'    =>	$this->config->item('mylis_admin_username'), 
 		'password'  =>	$this->config->item('mylis_admin_password'), 
 		'role'	    =>	'admin', 
-		'name'	    =>	'John Smith',
-		'email'	    =>	'john@mylis.net', 
+		'name'	    =>	'My LIS Admin',
+		'email'	    =>	'admin@localhost.com', 
 		'status'    =>	'present', 
 		'info'	    =>	'Administrator'
 	    );
@@ -277,10 +277,9 @@ class Group_Controller extends Lis_Controller {
 	    $conf_location = '/accounts/mylis_'.$groupname.'/conf/lis.ini';
 	    $this->properties = $this->load_properties($conf_location);
 	    // Add some extra configuration data
-	    $this->properties['version_number'] = "1.31";
-	    $this->properties['version'] = $this->properties['version_number']." 01/30/2012";
+	    $this->properties['version_number'] = "2.0";
+	    $this->properties['version'] = $this->properties['version_number']." 01/18/2014";
 	    $this->properties['home.directory'] = CIPATH."/accounts/mylis_".$groupname;
-	    
 	}	
 	
 	/**
@@ -320,7 +319,7 @@ class Group_Controller extends Lis_Controller {
          * @return array
          */
 	protected function get_current_users() {
-	   $users = $this->load_users();
+            $users = $this->load_users();
 	    $current_users = array();
 
 	    foreach($users as $user) {
@@ -341,10 +340,10 @@ class Group_Controller extends Lis_Controller {
          */
 	protected function get_default_user() {
 	    $userdata = array(
-		    'userid'    =>	'myadmin', 
-		    'password'  =>	'change_password', 
+		    'userid'    =>	$this->config->item('mylis_default_username'), 
+		    'password'  =>	$this->config->item('mylis_default_password'), 
 		    'role'	=>	'admin', 
-		    'name'	=>	'MyLIS Admin',
+		    'name'	=>	'MyLIS Group Admin',
 		    'email'	=>	'n/a', 
 		    'status'    =>	'present', 
 		    'info'	=>	''

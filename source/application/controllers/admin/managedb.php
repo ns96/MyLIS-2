@@ -112,14 +112,14 @@ class Managedb extends Admin_Controller {
             $this->managedb_model->delete_db($dbname);
         }
         
-        // now delete any of the accounts directories
+        // now delete any of the accounts directories and trash directory
         $params['properties'] = $this->properties;
 	$params['user'] = $this->userobj;
 	$this->load->model('admin_filemanager');
 	$this->admin_filemanager->initialize($params);
 	$this->admin_filemanager->delete_all();
         
-        //redirect('admin/managedb');
+        redirect('admin/managedb');
     }
     
     /**

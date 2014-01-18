@@ -104,9 +104,15 @@ class Admin_filemanager extends CI_Model {
         foreach ($props as $key => $value) {
             if (isset($new_props[$key])) {
                 $props[$key] = $new_props[$key];
+                unset($new_props[$key]);
             }
         }
-
+        
+        // now add any properties that were not in the original properties file
+        foreach ($new_props as $key => $value) {
+            $props[$key] = $new_props[$key];
+        }
+        
         $this->write_initiation_file($account_id, $props);
     }
 
@@ -166,11 +172,13 @@ class Admin_filemanager extends CI_Model {
             $fullpath = $this->accounts_dir.$result;
             if (is_dir($fullpath)) {
                 if (strpos($result,'mylis_') !== false) {
-                    echo "Deleting: $fullpath <br>";
                     $this->del_dir($fullpath);
                 }
             }
         }
+        
+        // now for good measure delete the trash
+        $this->del_dir($this->trash_dir);
     }
     
     /**

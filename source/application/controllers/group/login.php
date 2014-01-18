@@ -26,6 +26,7 @@ class Login extends Group_Controller {
 		    redirect('group/main');
 		}
 	    } else {
+                $data['page_title'] = 'MyLIS Login';
 		$data['target'] = base_url().'group/login/login_request?group='.$this->properties['lis.account'];
 		$this->load->view('group/login',$data); 
 	    }
@@ -105,7 +106,7 @@ class Login extends Group_Controller {
          * @return object The object, if not null, will be of 'User' class
          */
 	protected function validate_user($userid, $password) {
-	    $users = $this->get_current_users(); // ony allow current users to login
+	    $users = $this->get_current_users(); // only allow current users to login
 
 	    // see if this userid is in the database
 	    if((isset($users[$userid]))&&($users[$userid]->password == $password)) {

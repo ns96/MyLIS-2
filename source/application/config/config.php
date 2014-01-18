@@ -363,6 +363,12 @@ $config['proxy_ips'] = '';
 $config['mylis_admin_username'] = 'admin';
 $config['mylis_admin_password'] = 'admin';
 
+/**
+ * MYLIS -- The accounts wide admin user needed to log into any account
+ */
+$config['mylis_default_username'] = 'myadmin';
+$config['mylis_default_password'] = 'myadmin';
+
 /*
  * MYLIS -- The delete code needed to permernently remove an account and all files
  */
