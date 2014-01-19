@@ -197,7 +197,7 @@ class Account_model extends CI_Model {
 	$this->load_table_names();
 
 	foreach ($this->lis_tables as $tableName) {
-	    $sql  = 'DROP TABLE IF EXISTS '.$account_id."$tableName";
+	    $sql  = 'DROP TABLE IF EXISTS '.$account_id."_$tableName";
 	    $this->lisdb->query($sql);
 	}
     }
@@ -208,7 +208,6 @@ class Account_model extends CI_Model {
      * @param type $account_id 
      */
     public function remove_MyLIS_users($account_id) {
-
 	// delete this accpunt from the database
 	$sql = "DELETE FROM users WHERE account_id = '$account_id'";
 	$this->lismdb->query($sql);
@@ -239,6 +238,5 @@ class Account_model extends CI_Model {
 	    'files',
 	    'properties'
 	);
-    }
-    
+    }  
 }
