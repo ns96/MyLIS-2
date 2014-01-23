@@ -37,8 +37,10 @@ class Lis_Controller extends CI_Controller {
 	    if (file_exists($propertiesFile))
 		$properties = parse_ini_file($propertiesFile,false,INI_SCANNER_RAW); // INI_SCANNER_RAW is used in order not
 	    								// to convert 'true' and 'false' values to 1 and o
-	    else
-		echo "Error: Configuration file could not be found!";
+	    else {
+		echo "Error: Account configuration file could not be found!"; 
+                die();
+            }
             /**Storage Cost Per Year Information */
             $properties['storage.cost.200MB'] = 100.0;
             $properties['storage.cost.1000MB'] = 300.0;

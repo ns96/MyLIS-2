@@ -393,7 +393,7 @@ class Accounts extends Group_Controller {
      * 
      * @return string
      */
-    protected function get_expire_date() {
+    public function get_expire_date() {
       $expire_date = '';
       $account_info = $this->account_model->getAccountInfo($this->properties['lis.account']);
 
